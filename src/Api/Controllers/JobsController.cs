@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace fastaffo_api.src.Api.Controllers;
-[Route("api/[controller]")]
+[Route("api/")]
 [ApiController]
 public class JobsController : ControllerBase
 {
@@ -49,6 +49,10 @@ public class JobsController : ControllerBase
         job.BaseRate = request.BaseRate;
         job.DateTime = request.DateTime;
         job.Location = request.Location;
+
+        // request.Staffs
+
+        job.Staffs = request.Staffs;
         
         _context.Jobs.Add(job);
         await _context.SaveChangesAsync();

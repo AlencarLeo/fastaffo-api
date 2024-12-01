@@ -8,4 +8,5 @@ public class JobDto
     public required float BaseRate { get; set; }
     public required DateTime DateTime { get; set; }
     public required string Location { get; set; }
+    public List<Guid>? Staffs { get; set; }
 }

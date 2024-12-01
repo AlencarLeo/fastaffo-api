@@ -5,7 +5,7 @@ using fastaffo_api.src.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace fastaffo_api.src.Api.Controllers;
-[Route("api/[controller]")]
+[Route("api/")]
 [ApiController]
 public class AuthController : ControllerBase
 {

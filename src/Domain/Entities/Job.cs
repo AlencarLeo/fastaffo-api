@@ -7,4 +7,6 @@ public class Job
     public float BaseRate { get; set; }
     public DateTime DateTime { get; set; }
     public string Location { get; set; } = string.Empty;
+    
+    public List<Guid>? Staffs { get; set; }
 }

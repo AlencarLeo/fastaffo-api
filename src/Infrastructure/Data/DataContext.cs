@@ -10,5 +10,6 @@ public class DataContext : DbContext
     }
 
     public DbSet<Job> Jobs { get; set; }
+    public DbSet<UserStaff> Staffs { get; set; }
 
 }
