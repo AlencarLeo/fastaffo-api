@@ -35,6 +35,7 @@ public class UserStaffController : ControllerBase
         newUserStaff.LastName = request.LastName;
         newUserStaff.Phone = request.Phone;
         newUserStaff.Email = request.Email;
+        newUserStaff.Password = request.Password;
 
         _context.Staffs.Add(newUserStaff);
         await _context.SaveChangesAsync();
