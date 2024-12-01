@@ -1,0 +1,6 @@
+@fastaffo_api_HostAddress = http://localhost:5168
+
+GET {{fastaffo_api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
