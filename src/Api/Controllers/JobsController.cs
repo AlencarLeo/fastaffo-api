@@ -30,8 +30,16 @@ public class JobsController : ControllerBase
         return Ok(job);
     }
 
-    [HttpGet("nextjob")]
-    public async Task<ActionResult<List<Job>>> GetNextJob()
+    [HttpGet("nextjobs")]
+    public async Task<ActionResult<List<Job>>> GetNextJobs()
+    {
+        var jobs = await _context.Jobs.ToListAsync();
+
+        return Ok(jobs);
+    }
+
+    [HttpGet("pastjobs")]
+    public async Task<ActionResult<List<Job>>> GetPastJobs()
     {
         var jobs = await _context.Jobs.ToListAsync();
 
