@@ -1,3 +1,5 @@
+using fastaffo_api.src.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,11 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "API for managing FastAffo app's resources and operations"
     });
+});
+
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 var app = builder.Build();
