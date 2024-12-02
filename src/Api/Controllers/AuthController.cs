@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
         userStaff.Email = request.Email;
         userStaff.Password = passwordHash;
 
-        _context.Staffs.Add(userStaff);
+        await _context.Staffs.AddAsync(userStaff);
         await _context.SaveChangesAsync();
 
         return Ok();
