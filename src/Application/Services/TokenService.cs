@@ -13,10 +13,11 @@ public class TokenService
         this._configuration = configuration;
     }
 
-    public string CreateToken(User user)
+    public string CreateToken(UserStaff userStaff, string role)
     {
         List<Claim> claims = new List<Claim> {
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Role, role),
+                new Claim("sub", userStaff.Id.ToString())
             };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
