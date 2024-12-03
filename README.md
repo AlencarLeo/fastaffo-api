@@ -38,3 +38,12 @@ Vunerabilidades:
         -> EMAIL: "Parece que voce tentou criar uma conta nova, mas voce ja tem clique aqui para recuperar a senha" -> recuperar senha exige 2 fatores com celular
     
     - Adicionar Captcha
+
+
+
+
+
+
+
+# Tasks
+- [ ] UserStaffDtoReq & UserStaffDtoRes repetidas 
