@@ -31,12 +31,15 @@ public class AuthController : ControllerBase
 
         string passwordHash
             = BCrypt.Net.BCrypt.HashPassword(request.Password);
-        
-        userStaff.FirstName = request.FirstName;
-        userStaff.LastName = request.LastName;
-        userStaff.Phone = request.Phone;
-        userStaff.Email = request.Email;
-        userStaff.Password = passwordHash;
+
+        userStaff = new UserStaff
+        {
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            Phone = request.Phone,
+            Email = request.Email,
+            Password = passwordHash
+        };
 
         await _context.Staffs.AddAsync(userStaff);
         await _context.SaveChangesAsync();
