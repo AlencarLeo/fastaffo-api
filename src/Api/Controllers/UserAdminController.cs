@@ -19,7 +19,9 @@ public class UserAdminController : ControllerBase
     [Route("admin")]
     public async Task<ActionResult<List<UserAdmin>>> GetUserAdmins()
     {
-        var userAdmins = await _context.Admins.ToListAsync();
+        var userAdmins = await _context.Admins
+                                        .Include(ua => ua.Company)
+                                        .ToListAsync();
 
         return Ok(userAdmins);
     }

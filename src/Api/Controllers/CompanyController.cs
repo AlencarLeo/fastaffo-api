@@ -1,7 +1,6 @@
 
 using fastaffo_api.src.Domain.Entities;
 using fastaffo_api.src.Application.DTOs;
-using fastaffo_api.src.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using fastaffo_api.src.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +14,33 @@ public class CompanyController : ControllerBase
     public CompanyController(DataContext context)
     {
         _context = context;
+    }
+
+    [HttpGet]
+    [Route("companies")]
+    public async Task<ActionResult> GetAllCompanies()
+    {
+        var companies = await _context.Companies
+            .AsNoTracking()
+            .Select(c => new CompanyDtoRes
+            {
+                Name = c.Name,
+                ABN = c.ABN,
+                OwnersAndAdmins = c.OwnersAndAdmins != null ? 
+                c.OwnersAndAdmins.Select(oa => new UserAdminDtoRes
+                {
+                    Id = oa.Id,
+                    FirstName = oa.FirstName,
+                    LastName = oa.LastName,
+                    Email = oa.Email,
+                    Phone = oa.Phone,
+                    IsOwner = oa.IsOwner,
+                    Role = oa.Role
+                }).ToList() : new List<UserAdminDtoRes>()
+            })
+            .ToListAsync();
+
+        return Ok(companies);
     }
 
     [HttpPost]

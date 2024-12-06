@@ -52,12 +52,10 @@ Vunerabilidades:
 - [ ] DTO Res para UserAdmin no get
 - [ ] DTO Res para UserAdmin no get -> inserir Company
 
-- [ ] Get Companies
+- [x] Get Companies
 - [ ] Post Companies need to be owner
 
 - [ ] Adicionar funcionarios em Company
-
-- [ ] Get Companies
 
 - [ ] Post Job need to be owner
 
