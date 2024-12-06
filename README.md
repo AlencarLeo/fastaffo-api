@@ -47,3 +47,23 @@ Vunerabilidades:
 
 # Tasks
 - [ ] UserStaffDtoReq & UserStaffDtoRes repetidas 
+- [ ] Criptografar senha UserAdmin
+- [ ] Mudar UserAdmin para controller de Auth?
+- [ ] DTO Res para UserAdmin no get
+- [ ] DTO Res para UserAdmin no get -> inserir Company
+
+- [ ] Get Companies
+- [ ] Post Companies need to be owner
+
+- [ ] Adicionar funcionarios em Company
+
+- [ ] Get Companies
+
+- [ ] Post Job need to be owner
+
+
+
+
+
+NEED TO BE SOMEONE
+NEED VERB ING
