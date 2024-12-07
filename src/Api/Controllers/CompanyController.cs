@@ -54,6 +54,10 @@ public class CompanyController : ControllerBase
             return NotFound("User does not exist.");
         }
 
+        if(!userAdmin.IsOwner && userAdmin.Role != "admin"){
+            return BadRequest("To create a company, you need to be a owner admin.");
+        }
+
         var company = new Company{
             Name = request.Name,
             ABN = request.ABN

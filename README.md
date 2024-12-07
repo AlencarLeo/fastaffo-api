@@ -53,8 +53,8 @@ Vunerabilidades:
 - [ ] DTO Res para UserAdmin no get -> inserir Company
 
 - [x] Get Companies
-- [ ] Post Companies need to be owner
-- [ ] Add Company member
+- [x] Post Companies need to be owner
+- [x] Add Company member
 - [ ] Put Companies need to be owner
 
 -------------------------------------------------------------
