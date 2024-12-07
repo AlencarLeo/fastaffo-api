@@ -59,6 +59,9 @@ Vunerabilidades:
 
 -------------------------------------------------------------
 
+- [ ] FIX LOGIN
+
+- [ ] FIX AND REVIEW ---JOB--- (not JOBS) CONTROLLER
 - [ ] Post Job need to be admin
 - [ ] Put Job need to be admin
 - [ ] Delete Job need to be admin
