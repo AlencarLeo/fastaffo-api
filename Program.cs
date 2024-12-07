@@ -1,3 +1,4 @@
+using fastaffo_api.src.Application.Services;
 using fastaffo_api.src.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -24,6 +25,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddScoped<TokenService>();
 
 var app = builder.Build();
 

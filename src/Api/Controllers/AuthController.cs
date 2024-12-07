@@ -20,8 +20,38 @@ public class AuthController : ControllerBase
         _tokenService = tokenService;
     }
 
+    [HttpPost]
+    [Route("register/admin")]
+    public async Task<ActionResult> RegisterUserAdmin(UserAdminDtoReq request)
+    {
+        UserAdmin? userAdmin = await _context.Admins.SingleOrDefaultAsync(s => s.Email == request.Email);
+
+        if(userAdmin is not null){
+            return Conflict("If you already have an account associated with this email, simply [click here] to reset your password and access your account.");
+        }
+
+        string passwordHash
+            = BCrypt.Net.BCrypt.HashPassword(request.Password);
+
+        userAdmin = new UserAdmin
+        {
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            Email = request.Email,
+            Phone = request.Phone,
+            Password = passwordHash,
+            IsOwner = request.IsOwner,
+            CompanyId = null
+        };
+
+        await _context.AddAsync(userAdmin);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
     [HttpPost("register/staff")]
-    public async Task<ActionResult> Register(UserStaffDto request)
+    public async Task<ActionResult> RegisterUserStaff(UserStaffDto request)
     {
         UserStaff? userStaff = await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
 

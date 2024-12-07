@@ -47,17 +47,23 @@ Vunerabilidades:
 
 # Tasks
 - [ ] UserStaffDtoReq & UserStaffDtoRes repetidas 
-- [ ] Criptografar senha UserAdmin
-- [ ] Mudar UserAdmin para controller de Auth?
+- [x] Criptografar senha UserAdmin
+- [x] Mudar UserAdmin para controller de Auth?
 - [ ] DTO Res para UserAdmin no get
 - [ ] DTO Res para UserAdmin no get -> inserir Company
 
 - [x] Get Companies
 - [ ] Post Companies need to be owner
+- [ ] Add Company member
+- [ ] Put Companies need to be owner
 
-- [ ] Adicionar funcionarios em Company
+-------------------------------------------------------------
 
-- [ ] Post Job need to be owner
+- [ ] Post Job need to be admin
+- [ ] Put Job need to be admin
+- [ ] Delete Job need to be admin
+
+- [ ] Pagination and logic past/next jobs
 
 
 
