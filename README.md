@@ -46,16 +46,16 @@ Vunerabilidades:
 
 
 # Tasks
-- [ ] UserStaffDtoReq & UserStaffDtoRes repetidas 
+- [x] fix UserStaffDtoReq & UserStaffDtoRes repetidas 
 - [x] Criptografar senha UserAdmin
 - [x] Mudar UserAdmin para controller de Auth?
-- [ ] DTO Res para UserAdmin no get
-- [ ] DTO Res para UserAdmin no get -> inserir Company
+- [x] DTO Res para UserAdmin no get
+- [x] DTO Res para UserAdmin no get -> inserir Company
 
 - [x] Get Companies
 - [x] Post Companies need to be owner
 - [x] Add Company member
-- [ ] Put Companies need to be owner
+- [x] Put Companies need to be owner
 
 -------------------------------------------------------------
 

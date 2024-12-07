@@ -24,22 +24,4 @@ public class UserStaffController : ControllerBase
 
         return Ok(userStaffs);
     }
-
-    [HttpPost]
-    [Route("staff")]
-    public async Task<ActionResult> CreateUserStaffs(UserStaffDto request)
-    {
-        var newUserStaff = new UserStaff();
-
-        newUserStaff.FirstName = request.FirstName;
-        newUserStaff.LastName = request.LastName;
-        newUserStaff.Phone = request.Phone;
-        newUserStaff.Email = request.Email;
-        newUserStaff.Password = request.Password;
-
-        _context.Staffs.Add(newUserStaff);
-        await _context.SaveChangesAsync();
-
-        return Ok();
-    }
 }

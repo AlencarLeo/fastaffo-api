@@ -1,4 +1,5 @@
 using fastaffo_api.src.Application.DTOs;
+using fastaffo_api.src.Domain.Entities;
 using fastaffo_api.src.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,25 @@ public class UserAdminController : ControllerBase
 
     [HttpGet]
     [Route("admin")]
-    public async Task<ActionResult<List<UserAdminDtoRes>>> GetUserAdmins()
+    public async Task<ActionResult<List<UserAdminCompanyDtoRes>>> GetUserAdmins()
     {
         var userAdmins = await _context.Admins
-                                        .Include(ua => ua.Company)
-                                        .ToListAsync();
+                                        .Select(ua => new UserAdminCompanyDtoRes{
+                                            Id = ua.Id,
+                                            FirstName = ua.FirstName,
+                                            LastName = ua.LastName,
+                                            Email = ua.Email,
+                                            Phone = ua.Phone,
+                                            IsOwner = ua.IsOwner,
+                                            Role = ua.Role,
+                                            CompanyId = ua.CompanyId,
+                                            Company = ua.Company != null ? new CompanyDtoRes
+                                            {
+                                                Id = ua.Company.Id,
+                                                Name = ua.Company.Name,
+                                                ABN = ua.Company.ABN
+                                            } : null
+                                        }).ToListAsync();
 
         return Ok(userAdmins);
     }

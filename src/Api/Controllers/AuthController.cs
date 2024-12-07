@@ -51,7 +51,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register/staff")]
-    public async Task<ActionResult> RegisterUserStaff(UserStaffDto request)
+    public async Task<ActionResult> RegisterUserStaff(UserStaffDtoReq request)
     {
         UserStaff? userStaff = await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
 
