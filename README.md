@@ -68,6 +68,12 @@ Vunerabilidades:
 
 - [ ] Pagination and logic past/next jobs
 
+------------------------------------------------------------
+FEATURE META THIS WEEK:
+- base NEXT and PAST jobs working completely (labour app and admin)
+- base CALENDAR jobs working completely (labour app and admin)
+- base CONFLICTS jobs started
+
 
 
 
