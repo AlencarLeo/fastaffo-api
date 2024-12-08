@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 namespace fastaffo_api.src.Api.Controllers;
 [Route("api/")]
 [ApiController]
-public class JobsController : ControllerBase
+public class JobController : ControllerBase
 {
 
     private readonly DataContext _context;
-    public JobsController(DataContext context)
+    public JobController(DataContext context)
     {
         _context = context;
     }
