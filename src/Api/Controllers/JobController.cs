@@ -1,6 +1,7 @@
 using fastaffo_api.src.Application.DTOs;
 using fastaffo_api.src.Domain.Entities;
 using fastaffo_api.src.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,42 @@ public class JobController : ControllerBase
         return Ok(job);
     }
 
+    [HttpGet("daysofjobsbymonth")]
+    public async Task<ActionResult<List<MonthJobsDtoRes>>> GetDaysOfJobsByMonth(int month, int year)
+    {
+        var jobs = await _context.Jobs
+            .Where(e => e.DateTime.Year == year && e.DateTime.Month == month)
+            .ToListAsync();
+
+
+        var groupedByDay = jobs
+            .GroupBy(job => job.DateTime.Day)
+            .Select(group => new DayJobsDtoRes
+            {
+                day = group.Key,
+                jobQuantity = group.Count(),
+                jobs = group.Select(job => new JobDto
+                {
+                    Id = job.Id,
+                    Title = job.Title,
+                    Company = job.Company,
+                    BaseRate = job.BaseRate,
+                    DateTime = job.DateTime,
+                    Location = job.Location,
+                    Staffs = job.Staffs
+                }).ToList()
+            }).ToList();
+
+
+        MonthJobsDtoRes monthJobs = new MonthJobsDtoRes{
+            year = year,
+            month = month,
+            days = groupedByDay
+        };
+
+        return Ok(monthJobs);
+    }
+
     [HttpGet("nextjobs")]
     public async Task<ActionResult<List<Job>>> GetNextJobs()
     {
@@ -47,6 +84,7 @@ public class JobController : ControllerBase
     }
 
     [HttpPost]
+    // [Route("job"), Authorize(Roles = "admin,staff")]
     [Route("job")]
     public async Task<ActionResult> CreateJob(JobDto request)
     {
@@ -59,6 +97,8 @@ public class JobController : ControllerBase
         job.Location = request.Location;
 
         // request.Staffs
+
+        // CONFIRMAR EXISTENCIA DA EMPRESA
 
         job.Staffs = request.Staffs;
         
