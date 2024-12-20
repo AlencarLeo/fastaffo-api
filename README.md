@@ -60,16 +60,20 @@ Vunerabilidades:
 -------------------------------------------------------------
 
 - [ ] FIX LOGIN
+- [ ] AUTHORIZATION
 
 - [ ] FIX AND REVIEW ---JOB--- (not JOBS) CONTROLLER
 - [ ] Post Job need to be admin
 - [ ] Put Job need to be admin
 - [ ] Delete Job need to be admin
 
+- [ ] job entity - assineged to -> accept, denied, ...
+
 - [ ] Pagination and logic past/next jobs
 
 ------------------------------------------------------------
 FEATURE META THIS WEEK:
+- base LOGIN/REGISTER working completely (labour app and admin)
 - base NEXT and PAST jobs working completely (labour app and admin)
 - base CALENDAR jobs working completely (labour app and admin)
 - base CONFLICTS jobs started
