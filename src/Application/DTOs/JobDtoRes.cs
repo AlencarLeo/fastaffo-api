@@ -1,12 +1,12 @@
 namespace fastaffo_api.src.Application.DTOs;
-public class JobDto
+public class JobDtoRes
 {
     public Guid Id { get; set; }
 
     public required string Title { get; set; }
-    public required Guid Company { get; set; }
+    public required Guid CompanyId { get; set; }
     public required float BaseRate { get; set; }
     public required DateTime DateTime { get; set; }
     public required string Location { get; set; }
-    public List<Guid>? Staffs { get; set; }
+    public List<Guid>? StaffsId { get; set; }
 }

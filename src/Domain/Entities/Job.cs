@@ -3,9 +3,9 @@ public class Job
 {
     public Guid Id { get; set; }
     public string Title { get; set; } = string.Empty;
-    public Guid Company { get; set; }
+    public Guid CompanyId { get; set; }
     public float BaseRate { get; set; }
     public DateTime DateTime { get; set; }
     public string Location { get; set; } = string.Empty;
-    public List<Guid>? Staffs { get; set; }
+    public List<Guid>? StaffsId { get; set; }
 }

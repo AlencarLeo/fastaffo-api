@@ -45,15 +45,15 @@ public class JobController : ControllerBase
             {
                 day = group.Key,
                 jobQuantity = group.Count(),
-                jobs = group.Select(job => new JobDto
+                jobs = group.Select(job => new JobDtoRes
                 {
                     Id = job.Id,
                     Title = job.Title,
-                    Company = job.Company,
+                    CompanyId = job.CompanyId,
                     BaseRate = job.BaseRate,
                     DateTime = job.DateTime,
                     Location = job.Location,
-                    Staffs = job.Staffs
+                    StaffsId = job.StaffsId
                 }).ToList()
             }).ToList();
 
@@ -86,22 +86,22 @@ public class JobController : ControllerBase
     [HttpPost]
     // [Route("job"), Authorize(Roles = "admin,staff")]
     [Route("job")]
-    public async Task<ActionResult> CreateJob(JobDto request)
+    public async Task<ActionResult> CreateJob(JobDtoReq request)
     {
         Job job = new Job();
 
-        var company = await _context.Companies.FindAsync(request.Company);
+        var company = await _context.Companies.FindAsync(request.CompanyId);
 
         if(company is null){
             return BadRequest("Company does not exist");
         }
         
         job.Title = request.Title;
-        job.Company = request.Company;
+        job.CompanyId = request.CompanyId;
         job.BaseRate = request.BaseRate;
         job.DateTime = request.DateTime;
         job.Location = request.Location;
-        job.Staffs = request.Staffs;
+        job.StaffsId = request.StaffsId;
         
         _context.Jobs.Add(job);
         await _context.SaveChangesAsync();
