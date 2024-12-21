@@ -89,17 +89,18 @@ public class JobController : ControllerBase
     public async Task<ActionResult> CreateJob(JobDto request)
     {
         Job job = new Job();
+
+        var company = await _context.Companies.FindAsync(request.Company);
+
+        if(company is null){
+            return BadRequest("Company does not exist");
+        }
         
         job.Title = request.Title;
         job.Company = request.Company;
         job.BaseRate = request.BaseRate;
         job.DateTime = request.DateTime;
         job.Location = request.Location;
-
-        // request.Staffs
-
-        // CONFIRMAR EXISTENCIA DA EMPRESA
-
         job.Staffs = request.Staffs;
         
         _context.Jobs.Add(job);
