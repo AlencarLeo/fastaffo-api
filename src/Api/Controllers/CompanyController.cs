@@ -125,7 +125,7 @@ public class CompanyController : ControllerBase
     }
 
     [HttpPatch]
-    [Route("company/{companyId}/useradmin/{useradminId}/remove/{newUseradminId}")]
+    [Route("company/{companyId}/useradmin/{useradminId}/remove/{oldUseradminId}")]
     public async Task<ActionResult<CompanyDtoRes>> RemoveUserAdminFromCompany(Guid companyId, Guid useradminId, Guid newUseradminId)
     {
         var company = await _context.Companies.FindAsync(companyId);
