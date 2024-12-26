@@ -19,7 +19,7 @@ public class JobController : ControllerBase
 
     [HttpGet]
     [Route("job/{id}")]
-    public async Task<ActionResult<Job>> GetJobById(Guid id)
+    public async Task<ActionResult<JobDtoRes>> GetJobById(Guid id)
     {
         var job = await _context.Jobs.FindAsync(id);
 
@@ -28,12 +28,24 @@ public class JobController : ControllerBase
             return NotFound("Job not found.");
         }
 
-        return Ok(job);
+        JobDtoRes jobRes = new JobDtoRes{
+            Title = job.Title,
+            CompanyId = job.CompanyId ,
+            CompanyName = job.CompanyName ,
+            BaseRate = job.BaseRate ,
+            DateTime = job.DateTime ,
+            Location = job.Location ,
+            StaffsId = job.StaffsId ,
+        };
+
+        return Ok(jobRes);
     }
 
     [HttpGet("daysofjobsbymonth")]
     public async Task<ActionResult<List<MonthJobsDtoRes>>> GetDaysOfJobsByMonth(int month, int year)
     {
+        // FIX: FILTRAR O USUARIO -> suggest url = jobs/{userId}/{month}/{year} or daysofjobsbymonth/{userId} e mantem month e year como param
+
         var jobs = await _context.Jobs
             .Where(e => e.DateTime.Year == year && e.DateTime.Month == month)
             .ToListAsync();
@@ -50,6 +62,7 @@ public class JobController : ControllerBase
                     Id = job.Id,
                     Title = job.Title,
                     CompanyId = job.CompanyId,
+                    CompanyName = job.CompanyName,
                     BaseRate = job.BaseRate,
                     DateTime = job.DateTime,
                     Location = job.Location,
@@ -68,19 +81,45 @@ public class JobController : ControllerBase
     }
 
     [HttpGet("nextjobs")]
-    public async Task<ActionResult<List<Job>>> GetNextJobs()
+    public async Task<ActionResult<List<JobDtoRes>>> GetNextJobs()
     {
         var jobs = await _context.Jobs.ToListAsync();
 
-        return Ok(jobs);
+        List<JobDtoRes> jobDtos = jobs
+        .Where(job => job.DateTime > DateTime.Now)
+        .Select(job => new JobDtoRes
+        {
+            Title = job.Title,
+            CompanyId = job.CompanyId,
+            CompanyName = job.CompanyName,
+            BaseRate = job.BaseRate,
+            DateTime = job.DateTime,
+            Location = job.Location,
+            StaffsId = job.StaffsId
+        }).ToList();
+        
+        return Ok(jobDtos);
     }
 
     [HttpGet("pastjobs")]
-    public async Task<ActionResult<List<Job>>> GetPastJobs()
+    public async Task<ActionResult<List<JobDtoRes>>> GetPastJobs()
     {
         var jobs = await _context.Jobs.ToListAsync();
 
-        return Ok(jobs);
+        List<JobDtoRes> jobDtos = jobs
+        .Where(job => job.DateTime < DateTime.Now)
+        .Select(job => new JobDtoRes
+        {
+            Title = job.Title,
+            CompanyId = job.CompanyId,
+            CompanyName = job.CompanyName,
+            BaseRate = job.BaseRate,
+            DateTime = job.DateTime,
+            Location = job.Location,
+            StaffsId = job.StaffsId
+        }).ToList();
+        
+        return Ok(jobDtos);
     }
 
     [HttpPost]
@@ -98,16 +137,44 @@ public class JobController : ControllerBase
         
         job.Title = request.Title;
         job.CompanyId = request.CompanyId;
+        job.CompanyName = company.Name;
         job.BaseRate = request.BaseRate;
         job.DateTime = request.DateTime;
         job.Location = request.Location;
-        job.StaffsId = request.StaffsId;
+        job.StaffsId = request.StaffsId?.Count > 0 ? request.StaffsId : null;
+
         
         _context.Jobs.Add(job);
         await _context.SaveChangesAsync();
 
         return Ok();
     }
+
+    // [HttpPost]
+    // // [Route("job"), Authorize(Roles = "admin,staff")]
+    // [Route("job/myself")]
+    // public async Task<ActionResult> CreateJobToMyself(JobDtoReq request)
+    // {
+    //     Job job = new Job();
+
+    //     var company = await _context.Companies.FindAsync(request.CompanyId);
+
+    //     if(company is null){
+    //         return BadRequest("Company does not exist");
+    //     }
+        
+    //     job.Title = request.Title;
+    //     job.CompanyId = request.CompanyId;
+    //     job.BaseRate = request.BaseRate;
+    //     job.DateTime = request.DateTime;
+    //     job.Location = request.Location;
+    //     job.StaffsId = request.StaffsId;
+        
+    //     _context.Jobs.Add(job);
+    //     await _context.SaveChangesAsync();
+
+    //     return Ok();
+    // }
 
     [HttpDelete]
     [Route("job/{id}")]
