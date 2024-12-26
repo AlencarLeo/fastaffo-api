@@ -78,6 +78,7 @@ FEATURE META THIS WEEK:
 - base CALENDAR jobs working completely (labour app and admin)
 - base CONFLICTS jobs started
 
+- ADD A JOB TO MYSELF
 
 
 
