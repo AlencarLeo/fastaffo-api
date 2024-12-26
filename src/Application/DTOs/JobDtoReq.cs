@@ -5,7 +5,7 @@ public class JobDtoReq
     public required Guid CompanyId { get; set; }
     public required string CompanyName { get; set; }
     public required float BaseRate { get; set; }
-    public required DateTime DateTime { get; set; }
+    public required DateTime StartDateTime { get; set; }
     public required string Location { get; set; }
     public List<Guid>? StaffsId { get; set; }
 }

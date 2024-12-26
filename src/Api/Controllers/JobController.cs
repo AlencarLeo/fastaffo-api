@@ -33,7 +33,7 @@ public class JobController : ControllerBase
             CompanyId = job.CompanyId ,
             CompanyName = job.CompanyName ,
             BaseRate = job.BaseRate ,
-            DateTime = job.DateTime ,
+            StartDateTime = job.StartDateTime ,
             Location = job.Location ,
             StaffsId = job.StaffsId ,
         };
@@ -47,12 +47,12 @@ public class JobController : ControllerBase
         // FIX: FILTRAR O USUARIO -> suggest url = jobs/{userId}/{month}/{year} or daysofjobsbymonth/{userId} e mantem month e year como param
 
         var jobs = await _context.Jobs
-            .Where(e => e.DateTime.Year == year && e.DateTime.Month == month)
+            .Where(e => e.StartDateTime.Year == year && e.StartDateTime.Month == month)
             .ToListAsync();
 
 
         var groupedByDay = jobs
-            .GroupBy(job => job.DateTime.Day)
+            .GroupBy(job => job.StartDateTime.Day)
             .Select(group => new DayJobsDtoRes
             {
                 day = group.Key,
@@ -64,7 +64,7 @@ public class JobController : ControllerBase
                     CompanyId = job.CompanyId,
                     CompanyName = job.CompanyName,
                     BaseRate = job.BaseRate,
-                    DateTime = job.DateTime,
+                    StartDateTime = job.StartDateTime,
                     Location = job.Location,
                     StaffsId = job.StaffsId
                 }).ToList()
@@ -86,14 +86,14 @@ public class JobController : ControllerBase
         var jobs = await _context.Jobs.ToListAsync();
 
         List<JobDtoRes> jobDtos = jobs
-        .Where(job => job.DateTime > DateTime.Now)
+        .Where(job => job.StartDateTime > DateTime.Now)
         .Select(job => new JobDtoRes
         {
             Title = job.Title,
             CompanyId = job.CompanyId,
             CompanyName = job.CompanyName,
             BaseRate = job.BaseRate,
-            DateTime = job.DateTime,
+            StartDateTime = job.StartDateTime,
             Location = job.Location,
             StaffsId = job.StaffsId
         }).ToList();
@@ -107,14 +107,14 @@ public class JobController : ControllerBase
         var jobs = await _context.Jobs.ToListAsync();
 
         List<JobDtoRes> jobDtos = jobs
-        .Where(job => job.DateTime < DateTime.Now)
+        .Where(job => job.StartDateTime < DateTime.Now)
         .Select(job => new JobDtoRes
         {
             Title = job.Title,
             CompanyId = job.CompanyId,
             CompanyName = job.CompanyName,
             BaseRate = job.BaseRate,
-            DateTime = job.DateTime,
+            StartDateTime = job.StartDateTime,
             Location = job.Location,
             StaffsId = job.StaffsId
         }).ToList();
@@ -139,7 +139,7 @@ public class JobController : ControllerBase
         job.CompanyId = request.CompanyId;
         job.CompanyName = company.Name;
         job.BaseRate = request.BaseRate;
-        job.DateTime = request.DateTime;
+        job.StartDateTime = request.StartDateTime;
         job.Location = request.Location;
         job.StaffsId = request.StaffsId?.Count > 0 ? request.StaffsId : null;
 
@@ -166,7 +166,7 @@ public class JobController : ControllerBase
     //     job.Title = request.Title;
     //     job.CompanyId = request.CompanyId;
     //     job.BaseRate = request.BaseRate;
-    //     job.DateTime = request.DateTime;
+    //     job.StartDateTime = request.StartDateTime;
     //     job.Location = request.Location;
     //     job.StaffsId = request.StaffsId;
         
