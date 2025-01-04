@@ -81,12 +81,17 @@ public class JobController : ControllerBase
     }
 
     [HttpGet("nextjobs")]
-    public async Task<ActionResult<List<JobDtoRes>>> GetNextJobs()
+    public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetNextJobs(int page = 1, int pageSize = 5)
     {
-        var jobs = await _context.Jobs.ToListAsync();
+        var totalCount = await _context.Jobs.Where(job => job.StartDateTime < DateTime.Now).CountAsync();
+        var jobs = await _context.Jobs
+            .Where(job => job.StartDateTime > DateTime.Now)
+            .OrderBy(i => i.StartDateTime)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
         List<JobDtoRes> jobDtos = jobs
-        .Where(job => job.StartDateTime > DateTime.Now)
         .Select(job => new JobDtoRes
         {
             Title = job.Title,
@@ -97,17 +102,25 @@ public class JobController : ControllerBase
             Location = job.Location,
             StaffsId = job.StaffsId
         }).ToList();
-        
-        return Ok(jobDtos);
+
+        var result = new PaginatedDto<JobDtoRes>(jobDtos, totalCount, page, pageSize);
+                
+        return Ok(result);
     }
 
     [HttpGet("pastjobs")]
-    public async Task<ActionResult<List<JobDtoRes>>> GetPastJobs()
+    public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetPastJobs(int page = 1, int pageSize = 5)
     {
-        var jobs = await _context.Jobs.ToListAsync();
+        var totalCount = await _context.Jobs.Where(job => job.StartDateTime < DateTime.Now).CountAsync();
+
+        var jobs = await _context.Jobs
+            .Where(job => job.StartDateTime < DateTime.Now)
+            .OrderByDescending(i => i.StartDateTime)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
         List<JobDtoRes> jobDtos = jobs
-        .Where(job => job.StartDateTime < DateTime.Now)
         .Select(job => new JobDtoRes
         {
             Title = job.Title,
@@ -118,8 +131,10 @@ public class JobController : ControllerBase
             Location = job.Location,
             StaffsId = job.StaffsId
         }).ToList();
+
+        var result = new PaginatedDto<JobDtoRes>(jobDtos, totalCount, page, pageSize);
         
-        return Ok(jobDtos);
+        return Ok(result);
     }
 
     [HttpPost]
