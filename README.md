@@ -78,7 +78,11 @@ FEATURE META THIS WEEK:
 - base CALENDAR jobs working completely (labour app and admin)
 - base CONFLICTS jobs started
 
+
+- ID JOBS TODOS 0000000000 (verificar outros)
+
 - ADD A JOB TO MYSELF
+- PUSH NOTIFICATION
 
 
 
