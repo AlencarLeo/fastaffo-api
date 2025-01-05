@@ -21,7 +21,10 @@ public class JobController : ControllerBase
     [Route("job/{id}")]
     public async Task<ActionResult<JobDtoRes>> GetJobById(Guid id)
     {
-        var job = await _context.Jobs.FindAsync(id);
+        var job = await _context.Jobs
+        .Include(j => j.JobRequests)
+        .Include(j => j.JobStaffs)
+        .FirstOrDefaultAsync(j => j.Id == id);
 
         if(job is null)
         {
@@ -29,13 +32,18 @@ public class JobController : ControllerBase
         }
 
         JobDtoRes jobRes = new JobDtoRes{
+            Id = job.Id,
             Title = job.Title,
             CompanyId = job.CompanyId ,
             CompanyName = job.CompanyName ,
             BaseRate = job.BaseRate ,
             StartDateTime = job.StartDateTime ,
             Location = job.Location ,
-            StaffsId = job.StaffsId ,
+            IsClosed =  job.IsClosed,
+            MaxStaffNumber =  job.MaxStaffNumber,
+            CurrentStaffCount =  job.CurrentStaffCount,
+            JobRequests =  job.JobRequests,
+            JobStaffs =  job.JobStaffs
         };
 
         return Ok(jobRes);
@@ -48,6 +56,8 @@ public class JobController : ControllerBase
 
         var jobs = await _context.Jobs
             .Where(e => e.StartDateTime.Year == year && e.StartDateTime.Month == month)
+            .Include(job => job.JobRequests)
+            .Include(job => job.JobStaffs)
             .ToListAsync();
 
 
@@ -66,7 +76,11 @@ public class JobController : ControllerBase
                     BaseRate = job.BaseRate,
                     StartDateTime = job.StartDateTime,
                     Location = job.Location,
-                    StaffsId = job.StaffsId
+                    IsClosed = job.IsClosed,
+                    MaxStaffNumber = job.MaxStaffNumber,
+                    CurrentStaffCount = job.CurrentStaffCount,
+                    JobRequests = job.JobRequests,
+                    JobStaffs = job.JobStaffs
                 }).ToList()
             }).ToList();
 
@@ -80,62 +94,62 @@ public class JobController : ControllerBase
         return Ok(monthJobs);
     }
 
-    [HttpGet("nextjobs")]
-    public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetNextJobs(int page = 1, int pageSize = 5)
-    {
-        var totalCount = await _context.Jobs.Where(job => job.StartDateTime < DateTime.Now).CountAsync();
-        var jobs = await _context.Jobs
-            .Where(job => job.StartDateTime > DateTime.Now)
-            .OrderBy(i => i.StartDateTime)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+    // [HttpGet("nextjobs")]
+    // public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetNextJobs(int page = 1, int pageSize = 5)
+    // {
+    //     var totalCount = await _context.Jobs.Where(job => job.StartDateTime < DateTime.Now).CountAsync();
+    //     var jobs = await _context.Jobs
+    //         .Where(job => job.StartDateTime > DateTime.Now)
+    //         .OrderBy(i => i.StartDateTime)
+    //         .Skip((page - 1) * pageSize)
+    //         .Take(pageSize)
+    //         .ToListAsync();
 
-        List<JobDtoRes> jobDtos = jobs
-        .Select(job => new JobDtoRes
-        {
-            Title = job.Title,
-            CompanyId = job.CompanyId,
-            CompanyName = job.CompanyName,
-            BaseRate = job.BaseRate,
-            StartDateTime = job.StartDateTime,
-            Location = job.Location,
-            StaffsId = job.StaffsId
-        }).ToList();
+    //     List<JobDtoRes> jobDtos = jobs
+    //     .Select(job => new JobDtoRes
+    //     {
+    //         Title = job.Title,
+    //         CompanyId = job.CompanyId,
+    //         CompanyName = job.CompanyName,
+    //         BaseRate = job.BaseRate,
+    //         StartDateTime = job.StartDateTime,
+    //         Location = job.Location,
+    //         StaffsId = job.StaffsId
+    //     }).ToList();
 
-        var result = new PaginatedDto<JobDtoRes>(jobDtos, totalCount, page, pageSize);
+    //     var result = new PaginatedDto<JobDtoRes>(jobDtos, totalCount, page, pageSize);
                 
-        return Ok(result);
-    }
+    //     return Ok(result);
+    // }
 
-    [HttpGet("pastjobs")]
-    public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetPastJobs(int page = 1, int pageSize = 5)
-    {
-        var totalCount = await _context.Jobs.Where(job => job.StartDateTime < DateTime.Now).CountAsync();
+    // [HttpGet("pastjobs")]
+    // public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetPastJobs(int page = 1, int pageSize = 5)
+    // {
+    //     var totalCount = await _context.Jobs.Where(job => job.StartDateTime < DateTime.Now).CountAsync();
 
-        var jobs = await _context.Jobs
-            .Where(job => job.StartDateTime < DateTime.Now)
-            .OrderByDescending(i => i.StartDateTime)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+    //     var jobs = await _context.Jobs
+    //         .Where(job => job.StartDateTime < DateTime.Now)
+    //         .OrderByDescending(i => i.StartDateTime)
+    //         .Skip((page - 1) * pageSize)
+    //         .Take(pageSize)
+    //         .ToListAsync();
 
-        List<JobDtoRes> jobDtos = jobs
-        .Select(job => new JobDtoRes
-        {
-            Title = job.Title,
-            CompanyId = job.CompanyId,
-            CompanyName = job.CompanyName,
-            BaseRate = job.BaseRate,
-            StartDateTime = job.StartDateTime,
-            Location = job.Location,
-            StaffsId = job.StaffsId
-        }).ToList();
+    //     List<JobDtoRes> jobDtos = jobs
+    //     .Select(job => new JobDtoRes
+    //     {
+    //         Title = job.Title,
+    //         CompanyId = job.CompanyId,
+    //         CompanyName = job.CompanyName,
+    //         BaseRate = job.BaseRate,
+    //         StartDateTime = job.StartDateTime,
+    //         Location = job.Location,
+    //         StaffsId = job.StaffsId
+    //     }).ToList();
 
-        var result = new PaginatedDto<JobDtoRes>(jobDtos, totalCount, page, pageSize);
+    //     var result = new PaginatedDto<JobDtoRes>(jobDtos, totalCount, page, pageSize);
         
-        return Ok(result);
-    }
+    //     return Ok(result);
+    // }
 
     [HttpPost]
     // [Route("job"), Authorize(Roles = "admin,staff")]
@@ -149,63 +163,63 @@ public class JobController : ControllerBase
         if(company is null){
             return BadRequest("Company does not exist");
         }
-        
+                
         job.Title = request.Title;
         job.CompanyId = request.CompanyId;
         job.CompanyName = company.Name;
         job.BaseRate = request.BaseRate;
         job.StartDateTime = request.StartDateTime;
         job.Location = request.Location;
-        job.StaffsId = request.StaffsId?.Count > 0 ? request.StaffsId : null;
+        job.MaxStaffNumber = request.MaxStaffNumber;
 
-        
         _context.Jobs.Add(job);
         await _context.SaveChangesAsync();
 
         return Ok();
     }
 
-    // [HttpPost]
-    // // [Route("job"), Authorize(Roles = "admin,staff")]
-    // [Route("job/myself")]
-    // public async Task<ActionResult> CreateJobToMyself(JobDtoReq request)
+
+//     // [HttpPost]
+//     // // [Route("job"), Authorize(Roles = "admin,staff")]
+//     // [Route("job/myself")]
+//     // public async Task<ActionResult> CreateJobToMyself(JobDtoReq request)
+//     // {
+//     //     Job job = new Job();
+
+//     //     var company = await _context.Companies.FindAsync(request.CompanyId);
+
+//     //     if(company is null){
+//     //         return BadRequest("Company does not exist");
+//     //     }
+        
+//     //     job.Title = request.Title;
+//     //     job.CompanyId = request.CompanyId;
+//     //     job.BaseRate = request.BaseRate;
+//     //     job.StartDateTime = request.StartDateTime;
+//     //     job.Location = request.Location;
+//     //     job.StaffsId = request.StaffsId;
+        
+//     //     _context.Jobs.Add(job);
+//     //     await _context.SaveChangesAsync();
+
+//     //     return Ok();
+//     // }
+
+    // [HttpDelete]
+    // [Route("job/{id}")]
+    // public async Task<ActionResult> DeleteJob(Guid id)
     // {
-    //     Job job = new Job();
+    //     var job = await _context.Jobs.FindAsync(id);
 
-    //     var company = await _context.Companies.FindAsync(request.CompanyId);
-
-    //     if(company is null){
-    //         return BadRequest("Company does not exist");
+    //     if(job is null)
+    //     {
+    //         return NotFound("Job not found.");
     //     }
-        
-    //     job.Title = request.Title;
-    //     job.CompanyId = request.CompanyId;
-    //     job.BaseRate = request.BaseRate;
-    //     job.StartDateTime = request.StartDateTime;
-    //     job.Location = request.Location;
-    //     job.StaffsId = request.StaffsId;
-        
-    //     _context.Jobs.Add(job);
+
+    //     _context.Jobs.Remove(job);
     //     await _context.SaveChangesAsync();
 
     //     return Ok();
     // }
-
-    [HttpDelete]
-    [Route("job/{id}")]
-    public async Task<ActionResult> DeleteJob(Guid id)
-    {
-        var job = await _context.Jobs.FindAsync(id);
-
-        if(job is null)
-        {
-            return NotFound("Job not found.");
-        }
-
-        _context.Jobs.Remove(job);
-        await _context.SaveChangesAsync();
-
-        return Ok();
-    }
 
 }
