@@ -8,16 +8,10 @@ public class Job
     public float BaseRate { get; set; }
     public DateTime StartDateTime { get; set; }
     public string Location { get; set; } = string.Empty;
-
     public bool IsClosed { get; set; } = false;
     // public string WhyClosed { get; set; } =  string.Empty; // FUTURAMENTE
-
     public int MaxStaffNumber { get; set; }
-    public int CurrentStaffCount { get; set; } = 0;
-
-    public List<Guid>? JobRequestsId { get; set; } = null;
+    public int CurrentStaffCount { get; set; } = 0;    
     public List<JobRequest>? JobRequests { get; set; } = null;
-    
-    public List<Guid>? JobStaffsId { get; set; } = null;
     public List<JobStaff>? JobStaffs { get; set; } = null;
 }

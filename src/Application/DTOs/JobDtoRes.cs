@@ -1,3 +1,5 @@
+using fastaffo_api.src.Domain.Entities;
+
 namespace fastaffo_api.src.Application.DTOs;
 public class JobDtoRes
 {
@@ -8,5 +10,9 @@ public class JobDtoRes
     public required float BaseRate { get; set; }
     public required DateTime StartDateTime { get; set; }
     public required string Location { get; set; }
-    public List<Guid>? StaffsId { get; set; }
+    public required bool IsClosed { get; set; }
+    public required int MaxStaffNumber { get; set; }
+    public required int CurrentStaffCount { get; set; }
+    public List<JobRequest>? JobRequests { get; set; } 
+    public List<JobStaff>? JobStaffs { get; set; }
 }

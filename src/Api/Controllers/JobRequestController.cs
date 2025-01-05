@@ -73,12 +73,6 @@ public class JobRequestController : ControllerBase
                 };
                 _context.JobStaffs.Add(jobStaff);
                 await _context.SaveChangesAsync();
-
-                job.JobRequestsId ??= new List<Guid>();
-                job.JobStaffsId ??= new List<Guid>();
-
-                job.JobRequestsId.Add(jobRequest.Id);
-                job.JobStaffsId.Add(jobStaff.Id);
                 job.CurrentStaffCount++;
                 await _context.SaveChangesAsync();
 
@@ -103,12 +97,6 @@ public class JobRequestController : ControllerBase
                 };
                 _context.JobStaffs.Add(jobStaff);
                 await _context.SaveChangesAsync();
-
-                job.JobRequestsId ??= new List<Guid>();
-                job.JobStaffsId ??= new List<Guid>();
-
-                job.JobRequestsId.Add(jobRequest.Id);
-                job.JobStaffsId.Add(jobStaff.Id);
                 job.CurrentStaffCount++;
                 await _context.SaveChangesAsync();
                 return Ok("Request automatically accepted");

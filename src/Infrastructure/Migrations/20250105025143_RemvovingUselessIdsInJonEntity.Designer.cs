@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using fastaffo_api.src.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using fastaffo_api.src.Infrastructure.Data;
 namespace fastaffo_api.src.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250105025143_RemvovingUselessIdsInJonEntity")]
+    partial class RemvovingUselessIdsInJonEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,6 +110,8 @@ namespace fastaffo_api.src.Infrastructure.Migrations
 
                     b.HasIndex("JobId");
 
+                    b.HasIndex("StaffId");
+
                     b.ToTable("JobRequests");
                 });
 
@@ -135,6 +140,8 @@ namespace fastaffo_api.src.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("JobId");
+
+                    b.HasIndex("StaffId");
 
                     b.ToTable("JobStaffs");
                 });
@@ -211,20 +218,40 @@ namespace fastaffo_api.src.Infrastructure.Migrations
 
             modelBuilder.Entity("fastaffo_api.src.Domain.Entities.JobRequest", b =>
                 {
-                    b.HasOne("fastaffo_api.src.Domain.Entities.Job", null)
+                    b.HasOne("fastaffo_api.src.Domain.Entities.Job", "Job")
                         .WithMany("JobRequests")
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("fastaffo_api.src.Domain.Entities.UserStaff", "Staff")
+                        .WithMany()
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Job");
+
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("fastaffo_api.src.Domain.Entities.JobStaff", b =>
                 {
-                    b.HasOne("fastaffo_api.src.Domain.Entities.Job", null)
+                    b.HasOne("fastaffo_api.src.Domain.Entities.Job", "Job")
                         .WithMany("JobStaffs")
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("fastaffo_api.src.Domain.Entities.UserStaff", "Staff")
+                        .WithMany()
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Job");
+
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("fastaffo_api.src.Domain.Entities.UserAdmin", b =>
