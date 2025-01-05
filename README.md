@@ -71,6 +71,13 @@ Vunerabilidades:
 
 - [ ] Pagination and logic past/next jobs
 
+- [ ] REMOVER STAFF DO jobs
+
+
+
+- APOS CRIAR REQUEST E FOR ACEITO -> MUDAR LISTA DE IDS EM JOBS
+
+
 ------------------------------------------------------------
 FEATURE META THIS WEEK:
 - base LOGIN/REGISTER working completely (labour app and admin)
