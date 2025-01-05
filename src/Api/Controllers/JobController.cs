@@ -94,62 +94,76 @@ public class JobController : ControllerBase
         return Ok(monthJobs);
     }
 
-    // [HttpGet("nextjobs")]
-    // public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetNextJobs(int page = 1, int pageSize = 5)
-    // {
-    //     var totalCount = await _context.Jobs.Where(job => job.StartDateTime < DateTime.Now).CountAsync();
-    //     var jobs = await _context.Jobs
-    //         .Where(job => job.StartDateTime > DateTime.Now)
-    //         .OrderBy(i => i.StartDateTime)
-    //         .Skip((page - 1) * pageSize)
-    //         .Take(pageSize)
-    //         .ToListAsync();
+    [HttpGet("nextjobs")]
+    public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetNextJobs(int page = 1, int pageSize = 5)
+    {
+        var totalCount = await _context.Jobs.Where(job => job.StartDateTime < DateTime.Now).CountAsync();
+        var jobs = await _context.Jobs
+            .Where(job => job.StartDateTime > DateTime.Now)
+            .OrderBy(i => i.StartDateTime)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Include(job => job.JobRequests)
+            .Include(job => job.JobStaffs)
+            .ToListAsync();
 
-    //     List<JobDtoRes> jobDtos = jobs
-    //     .Select(job => new JobDtoRes
-    //     {
-    //         Title = job.Title,
-    //         CompanyId = job.CompanyId,
-    //         CompanyName = job.CompanyName,
-    //         BaseRate = job.BaseRate,
-    //         StartDateTime = job.StartDateTime,
-    //         Location = job.Location,
-    //         StaffsId = job.StaffsId
-    //     }).ToList();
+        List<JobDtoRes> jobDtos = jobs
+        .Select(job => new JobDtoRes
+        {
+            Id = job.Id,
+            Title = job.Title,
+            CompanyId = job.CompanyId,
+            CompanyName = job.CompanyName,
+            BaseRate = job.BaseRate,
+            StartDateTime = job.StartDateTime,
+            Location = job.Location,
+            IsClosed = job.IsClosed,
+            MaxStaffNumber = job.MaxStaffNumber,
+            CurrentStaffCount = job.CurrentStaffCount,
+            JobRequests = job.JobRequests,
+            JobStaffs = job.JobStaffs
+        }).ToList();
 
-    //     var result = new PaginatedDto<JobDtoRes>(jobDtos, totalCount, page, pageSize);
+        var result = new PaginatedDto<JobDtoRes>(jobDtos, totalCount, page, pageSize);
                 
-    //     return Ok(result);
-    // }
+        return Ok(result);
+    }
 
-    // [HttpGet("pastjobs")]
-    // public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetPastJobs(int page = 1, int pageSize = 5)
-    // {
-    //     var totalCount = await _context.Jobs.Where(job => job.StartDateTime < DateTime.Now).CountAsync();
+    [HttpGet("pastjobs")]
+    public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetPastJobs(int page = 1, int pageSize = 5)
+    {
+        var totalCount = await _context.Jobs.Where(job => job.StartDateTime < DateTime.Now).CountAsync();
 
-    //     var jobs = await _context.Jobs
-    //         .Where(job => job.StartDateTime < DateTime.Now)
-    //         .OrderByDescending(i => i.StartDateTime)
-    //         .Skip((page - 1) * pageSize)
-    //         .Take(pageSize)
-    //         .ToListAsync();
+        var jobs = await _context.Jobs
+            .Where(job => job.StartDateTime < DateTime.Now)
+            .OrderByDescending(i => i.StartDateTime)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Include(job => job.JobRequests)
+            .Include(job => job.JobStaffs)
+            .ToListAsync();
 
-    //     List<JobDtoRes> jobDtos = jobs
-    //     .Select(job => new JobDtoRes
-    //     {
-    //         Title = job.Title,
-    //         CompanyId = job.CompanyId,
-    //         CompanyName = job.CompanyName,
-    //         BaseRate = job.BaseRate,
-    //         StartDateTime = job.StartDateTime,
-    //         Location = job.Location,
-    //         StaffsId = job.StaffsId
-    //     }).ToList();
+        List<JobDtoRes> jobDtos = jobs
+        .Select(job => new JobDtoRes
+        {
+            Id = job.Id,
+            Title = job.Title,
+            CompanyId = job.CompanyId,
+            CompanyName = job.CompanyName,
+            BaseRate = job.BaseRate,
+            StartDateTime = job.StartDateTime,
+            Location = job.Location,
+            IsClosed = job.IsClosed,
+            MaxStaffNumber = job.MaxStaffNumber,
+            CurrentStaffCount = job.CurrentStaffCount,
+            JobRequests = job.JobRequests,
+            JobStaffs = job.JobStaffs
+        }).ToList();
 
-    //     var result = new PaginatedDto<JobDtoRes>(jobDtos, totalCount, page, pageSize);
+        var result = new PaginatedDto<JobDtoRes>(jobDtos, totalCount, page, pageSize);
         
-    //     return Ok(result);
-    // }
+        return Ok(result);
+    }
 
     [HttpPost]
     // [Route("job"), Authorize(Roles = "admin,staff")]
