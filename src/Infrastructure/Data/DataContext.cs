@@ -10,8 +10,10 @@ public class DataContext : DbContext
     }
 
     public DbSet<Company> Companies { get; set; }
-    public DbSet<UserAdmin> Admins { get; set; }
     public DbSet<Job> Jobs { get; set; }
+    public DbSet<JobRequest> JobRequests { get; set; }
+    public DbSet<JobStaff> JobStaffs { get; set; }
+    public DbSet<UserAdmin> Admins { get; set; }
     public DbSet<UserStaff> Staffs { get; set; }
 
 }

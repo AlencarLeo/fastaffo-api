@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using fastaffo_api.src.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using fastaffo_api.src.Infrastructure.Data;
 namespace fastaffo_api.src.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250104080909_NewJobEntity")]
+    partial class NewJobEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,7 +118,7 @@ namespace fastaffo_api.src.Infrastructure.Migrations
 
                     b.HasIndex("StaffId");
 
-                    b.ToTable("JobRequests");
+                    b.ToTable("JobRequest");
                 });
 
             modelBuilder.Entity("fastaffo_api.src.Domain.Entities.JobStaff", b =>
@@ -146,7 +149,7 @@ namespace fastaffo_api.src.Infrastructure.Migrations
 
                     b.HasIndex("StaffId");
 
-                    b.ToTable("JobStaffs");
+                    b.ToTable("JobStaff");
                 });
 
             modelBuilder.Entity("fastaffo_api.src.Domain.Entities.UserAdmin", b =>
