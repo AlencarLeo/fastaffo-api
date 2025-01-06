@@ -12,6 +12,8 @@ public class Job
     // public string WhyClosed { get; set; } =  string.Empty; // FUTURAMENTE
     public int MaxStaffNumber { get; set; }
     public int CurrentStaffCount { get; set; } = 0;    
+    public bool AcceptingReqs { get; set; }
+    public List<Guid>? AllowedForJobStaffIds { get; set; } // SE FOR NULL TODOS PODEM APLICAR
     public List<JobRequest>? JobRequests { get; set; } = null;
     public List<JobStaff>? JobStaffs { get; set; } = null;
 }

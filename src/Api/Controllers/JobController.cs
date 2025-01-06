@@ -42,11 +42,57 @@ public class JobController : ControllerBase
             IsClosed =  job.IsClosed,
             MaxStaffNumber =  job.MaxStaffNumber,
             CurrentStaffCount =  job.CurrentStaffCount,
+            AcceptingReqs = job.AcceptingReqs,
+            AllowedForJobStaffIds = job.AllowedForJobStaffIds,
             JobRequests =  job.JobRequests,
             JobStaffs =  job.JobStaffs
         };
 
         return Ok(jobRes);
+    }
+
+    [HttpGet]
+    [Route("openedjobs/{staffId}")]
+    public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetOpenedJobs(Guid staffId, int page = 1, int pageSize = 10)
+    {
+        var jobs = await _context.Jobs
+            .Where(j => j.AcceptingReqs)
+            .Where(j => j.AllowedForJobStaffIds == null || !j.AllowedForJobStaffIds.Any() || j.AllowedForJobStaffIds.Contains(staffId))
+            .Where(j => !j.IsClosed)
+            .Where(j => j.StartDateTime > DateTime.Now)
+            .Where(j => j.CurrentStaffCount < j.MaxStaffNumber)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Include(job => job.JobRequests)
+            .Include(job => job.JobStaffs)
+            .ToListAsync();
+
+        if(jobs is null || jobs.Count == 0)
+        {
+            return NotFound("No opened jobs found.");
+        }
+
+        var jobRes = jobs.Select(job => new JobDtoRes{
+            Id = job.Id,
+            Title = job.Title,
+            CompanyId = job.CompanyId ,
+            CompanyName = job.CompanyName ,
+            BaseRate = job.BaseRate ,
+            StartDateTime = job.StartDateTime ,
+            Location = job.Location ,
+            IsClosed =  job.IsClosed,
+            MaxStaffNumber =  job.MaxStaffNumber,
+            CurrentStaffCount =  job.CurrentStaffCount,
+            AcceptingReqs = job.AcceptingReqs,
+            AllowedForJobStaffIds = job.AllowedForJobStaffIds, 
+            JobRequests =  job.JobRequests,
+            JobStaffs =  job.JobStaffs
+        }).ToList();
+
+        int totalCount = jobs.Count;
+        var result = new PaginatedDto<JobDtoRes>(jobRes, totalCount, page, pageSize);
+
+        return Ok(result);
     }
 
     [HttpGet("daysofjobsbymonth")]
@@ -79,6 +125,8 @@ public class JobController : ControllerBase
                     IsClosed = job.IsClosed,
                     MaxStaffNumber = job.MaxStaffNumber,
                     CurrentStaffCount = job.CurrentStaffCount,
+                    AcceptingReqs = job.AcceptingReqs,
+                    AllowedForJobStaffIds = job.AllowedForJobStaffIds,
                     JobRequests = job.JobRequests,
                     JobStaffs = job.JobStaffs
                 }).ToList()
@@ -120,6 +168,8 @@ public class JobController : ControllerBase
             IsClosed = job.IsClosed,
             MaxStaffNumber = job.MaxStaffNumber,
             CurrentStaffCount = job.CurrentStaffCount,
+            AcceptingReqs = job.AcceptingReqs,
+            AllowedForJobStaffIds = job.AllowedForJobStaffIds,
             JobRequests = job.JobRequests,
             JobStaffs = job.JobStaffs
         }).ToList();
@@ -156,6 +206,8 @@ public class JobController : ControllerBase
             IsClosed = job.IsClosed,
             MaxStaffNumber = job.MaxStaffNumber,
             CurrentStaffCount = job.CurrentStaffCount,
+            AcceptingReqs = job.AcceptingReqs,
+            AllowedForJobStaffIds = job.AllowedForJobStaffIds,
             JobRequests = job.JobRequests,
             JobStaffs = job.JobStaffs
         }).ToList();
