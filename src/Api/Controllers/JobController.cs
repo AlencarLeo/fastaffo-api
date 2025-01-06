@@ -95,7 +95,8 @@ public class JobController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("daysofjobsbymonth")]
+    [HttpGet]
+    [Route("daysofjobsbymonth")]
     public async Task<ActionResult<List<MonthJobsDtoRes>>> GetDaysOfJobsByMonth(int month, int year)
     {
         // FIX: FILTRAR O USUARIO -> suggest url = jobs/{userId}/{month}/{year} or daysofjobsbymonth/{userId} e mantem month e year como param
@@ -142,8 +143,10 @@ public class JobController : ControllerBase
         return Ok(monthJobs);
     }
 
-    [HttpGet("nextjobs")]
-    public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetNextJobs(int page = 1, int pageSize = 5)
+    [HttpGet]
+    [Route("nextjobs"), Authorize(Roles = "admin")]
+
+        public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetNextJobs(int page = 1, int pageSize = 5)
     {
         var totalCount = await _context.Jobs.Where(job => job.StartDateTime < DateTime.Now).CountAsync();
         var jobs = await _context.Jobs
