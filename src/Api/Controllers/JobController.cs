@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using fastaffo_api.src.Application.DTOs;
 using fastaffo_api.src.Domain.Entities;
 using fastaffo_api.src.Infrastructure.Data;
@@ -18,7 +19,7 @@ public class JobController : ControllerBase
     }
 
     [HttpGet]
-    [Route("job/{id}")]
+    [Route("job/{id}"), Authorize]
     public async Task<ActionResult<JobDtoRes>> GetJobById(Guid id)
     {
         var job = await _context.Jobs
@@ -52,12 +53,14 @@ public class JobController : ControllerBase
     }
 
     [HttpGet]
-    [Route("openedjobs/{staffId}")]
-    public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetOpenedJobs(Guid staffId, int page = 1, int pageSize = 10)
+    [Route("openedjobs"), Authorize]
+    public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetOpenedJobs(int page = 1, int pageSize = 10)
     {
+        var id = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
         var jobs = await _context.Jobs
             .Where(j => j.AcceptingReqs)
-            .Where(j => j.AllowedForJobStaffIds == null || !j.AllowedForJobStaffIds.Any() || j.AllowedForJobStaffIds.Contains(staffId))
+            .Where(j => j.AllowedForJobStaffIds == null || !j.AllowedForJobStaffIds.Any() || j.AllowedForJobStaffIds.Contains(Guid.Parse(id!)))
             .Where(j => !j.IsClosed)
             .Where(j => j.StartDateTime > DateTime.Now)
             .Where(j => j.CurrentStaffCount < j.MaxStaffNumber)
@@ -96,19 +99,22 @@ public class JobController : ControllerBase
     }
 
     [HttpGet]
-    [Route("daysofjobsbymonth")]
+    [Route("daysofjobsbymonth"), Authorize]
     public async Task<ActionResult<List<MonthJobsDtoRes>>> GetDaysOfJobsByMonth(int month, int year)
     {
-        // FIX: FILTRAR O USUARIO -> suggest url = jobs/{userId}/{month}/{year} or daysofjobsbymonth/{userId} e mantem month e year como param
-
+        var id = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
         var jobs = await _context.Jobs
             .Where(e => e.StartDateTime.Year == year && e.StartDateTime.Month == month)
             .Include(job => job.JobRequests)
             .Include(job => job.JobStaffs)
             .ToListAsync();
 
+        var signedJobs = jobs
+            .Where(job => job.JobStaffs != null && job.JobStaffs.Any(s => s.StaffId ==  Guid.Parse(id!)))
+            .ToList();
 
-        var groupedByDay = jobs
+        var groupedByDay = signedJobs
             .GroupBy(job => job.StartDateTime.Day)
             .Select(group => new DayJobsDtoRes
             {
@@ -144,12 +150,15 @@ public class JobController : ControllerBase
     }
 
     [HttpGet]
-    [Route("nextjobs"), Authorize(Roles = "admin")]
+    [Route("nextjobs"), Authorize]
 
-        public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetNextJobs(int page = 1, int pageSize = 5)
+    public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetNextJobs(int page = 1, int pageSize = 5)
     {
+        var id = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
         var totalCount = await _context.Jobs.Where(job => job.StartDateTime < DateTime.Now).CountAsync();
         var jobs = await _context.Jobs
+            .Where(job => job.JobStaffs != null && job.JobStaffs.Any(s => s.StaffId ==  Guid.Parse(id!)))
             .Where(job => job.StartDateTime > DateTime.Now)
             .OrderBy(i => i.StartDateTime)
             .Skip((page - 1) * pageSize)
@@ -182,12 +191,15 @@ public class JobController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("pastjobs")]
+    [HttpGet("pastjobs"), Authorize]
     public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetPastJobs(int page = 1, int pageSize = 5)
     {
+        var id = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
         var totalCount = await _context.Jobs.Where(job => job.StartDateTime < DateTime.Now).CountAsync();
 
         var jobs = await _context.Jobs
+            .Where(job => job.JobStaffs != null && job.JobStaffs.Any(s => s.StaffId ==  Guid.Parse(id!)))
             .Where(job => job.StartDateTime < DateTime.Now)
             .OrderByDescending(i => i.StartDateTime)
             .Skip((page - 1) * pageSize)
