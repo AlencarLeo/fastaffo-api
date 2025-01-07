@@ -106,3 +106,7 @@ NEED VERB ING
 
 
 - MELHORAR AUTH E SEGURANCA GERAL
+
+- adicionar no token:
+    issuer: "SeuApp",
+    audience: "SeuPublico",
