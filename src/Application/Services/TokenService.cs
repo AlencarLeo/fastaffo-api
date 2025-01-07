@@ -17,7 +17,7 @@ public class TokenService
     {
         List<Claim> claims = new List<Claim> {
                 new Claim(ClaimTypes.Role, role),
-                new Claim("sub", userStaff.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, userStaff.Id.ToString())
             };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(

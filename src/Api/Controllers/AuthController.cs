@@ -5,6 +5,8 @@ using fastaffo_api.src.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using fastaffo_api.src.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace fastaffo_api.src.Api.Controllers;
 [Route("api/")]
@@ -19,6 +21,17 @@ public class AuthController : ControllerBase
         _context = context;
         _tokenService = tokenService;
     }
+
+    [HttpGet]
+    [Route("me"), Authorize]
+    public ActionResult<string> GetMe()
+    {
+        var id = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var roleClaims = User?.FindAll(ClaimTypes.Role);
+        var roles = roleClaims?.Select(c => c.Value).ToList();
+        return Ok(new { id, roles });
+    }
+
 
     [HttpPost]
     [Route("register/admin")]
@@ -77,10 +90,9 @@ public class AuthController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("login")]
-    public async Task<ActionResult> Login(AuthDtoReq request)
+    [HttpPost("singin")]
+    public async Task<ActionResult<TokenUserDto<UserStaffDtoRes>>> Singin(AuthDtoReq request)
     {
-        // UserStaff? userStaff =  await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
         UserStaff? userStaff =  await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
 
         if(userStaff is null || !BCrypt.Net.BCrypt.Verify(request.Password, userStaff.Password)){
@@ -89,6 +101,17 @@ public class AuthController : ControllerBase
 
         string token = _tokenService.CreateToken(userStaff, userStaff.Role);
 
-        return Ok(token);
+        UserStaffDtoRes userStaffDtoRes = new UserStaffDtoRes{
+            Id = userStaff.Id,
+            Role = userStaff.Role,    
+            FirstName = userStaff.FirstName,
+            LastName = userStaff.LastName,
+            Phone = userStaff.Phone,
+            Email = userStaff.Email
+        };
+
+        var result = new TokenUserDto<UserStaffDtoRes>(userStaffDtoRes, token);
+
+        return Ok(result);
     }
 }
