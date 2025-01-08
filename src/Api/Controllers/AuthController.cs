@@ -90,8 +90,8 @@ public class AuthController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("singin")]
-    public async Task<ActionResult<TokenUserDto<UserStaffDtoRes>>> Singin(AuthDtoReq request)
+    [HttpPost("singin/staff")]
+    public async Task<ActionResult<TokenUserDto<UserStaffDtoRes>>> SinginStaff(AuthDtoReq request)
     {
         UserStaff? userStaff =  await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
 
@@ -99,7 +99,7 @@ public class AuthController : ControllerBase
             return BadRequest("User not found or wrong password.");
         }
 
-        string token = _tokenService.CreateToken(userStaff, userStaff.Role);
+        string token = _tokenService.CreateToken(userStaff.Id, userStaff.Role);
 
         UserStaffDtoRes userStaffDtoRes = new UserStaffDtoRes{
             Id = userStaff.Id,
@@ -111,6 +111,32 @@ public class AuthController : ControllerBase
         };
 
         var result = new TokenUserDto<UserStaffDtoRes>(userStaffDtoRes, token);
+
+        return Ok(result);
+    }
+
+    [HttpPost("singin/admin")]
+    public async Task<ActionResult<TokenUserDto<UserAdminDtoRes>>> SinginAdmin(AuthDtoReq request)
+    {
+        UserAdmin? userAdmin =  await _context.Admins.SingleOrDefaultAsync(s => s.Email == request.Email);
+
+        if(userAdmin is null || !BCrypt.Net.BCrypt.Verify(request.Password, userAdmin.Password)){
+            return BadRequest("User not found or wrong password.");
+        }
+
+        string token = _tokenService.CreateToken(userAdmin.Id, userAdmin.Role);
+
+        UserAdminDtoRes userAdminDtoRes = new UserAdminDtoRes{
+            Id = userAdmin.Id,
+            FirstName = userAdmin.FirstName,
+            LastName = userAdmin.LastName,
+            Email = userAdmin.Email,
+            Phone = userAdmin.Phone,
+            IsOwner = userAdmin.IsOwner,
+            Role = userAdmin.Role
+        };
+
+        var result = new TokenUserDto<UserAdminDtoRes>(userAdminDtoRes, token);
 
         return Ok(result);
     }
