@@ -34,19 +34,25 @@ public class JobController : ControllerBase
 
         JobDtoRes jobRes = new JobDtoRes{
             Id = job.Id,
+            JobNumber = job.JobNumber,
+            Client = job.Client,
+            Event = job.Event,
+            TotalChargedValue = job.TotalChargedValue,
+            JobDuration = job.JobDuration,
             Title = job.Title,
-            CompanyId = job.CompanyId ,
-            CompanyName = job.CompanyName ,
-            BaseRate = job.BaseRate ,
-            StartDateTime = job.StartDateTime ,
-            Location = job.Location ,
-            IsClosed =  job.IsClosed,
-            MaxStaffNumber =  job.MaxStaffNumber,
-            CurrentStaffCount =  job.CurrentStaffCount,
+            CompanyId = job.CompanyId,
+            CompanyName = job.CompanyName,
+            BaseRate = job.BaseRate,
+            StartDateTime = job.StartDateTime,
+            FinishDateTime = job.FinishDateTime,
+            Location = job.Location,
+            IsClosed = job.IsClosed,
+            MaxStaffNumber = job.MaxStaffNumber,
+            CurrentStaffCount = job.CurrentStaffCount,
             AcceptingReqs = job.AcceptingReqs,
-            AllowedForJobStaffIds = job.AllowedForJobStaffIds,
-            JobRequests =  job.JobRequests,
-            JobStaffs =  job.JobStaffs
+            AllowedForJobStaffIds  = job.AllowedForJobStaffIds ,
+            JobRequests  = job.JobRequests ,
+            JobStaffs = job.JobStaffs
         };
 
         return Ok(jobRes);
@@ -77,19 +83,25 @@ public class JobController : ControllerBase
 
         var jobRes = jobs.Select(job => new JobDtoRes{
             Id = job.Id,
+            JobNumber = job.JobNumber,
+            Client = job.Client,
+            Event = job.Event,
+            TotalChargedValue = job.TotalChargedValue,
+            JobDuration = job.JobDuration,
             Title = job.Title,
-            CompanyId = job.CompanyId ,
-            CompanyName = job.CompanyName ,
-            BaseRate = job.BaseRate ,
-            StartDateTime = job.StartDateTime ,
-            Location = job.Location ,
-            IsClosed =  job.IsClosed,
-            MaxStaffNumber =  job.MaxStaffNumber,
-            CurrentStaffCount =  job.CurrentStaffCount,
+            CompanyId = job.CompanyId,
+            CompanyName = job.CompanyName,
+            BaseRate = job.BaseRate,
+            StartDateTime = job.StartDateTime,
+            FinishDateTime = job.FinishDateTime,
+            Location = job.Location,
+            IsClosed = job.IsClosed,
+            MaxStaffNumber = job.MaxStaffNumber,
+            CurrentStaffCount = job.CurrentStaffCount,
             AcceptingReqs = job.AcceptingReqs,
-            AllowedForJobStaffIds = job.AllowedForJobStaffIds, 
-            JobRequests =  job.JobRequests,
-            JobStaffs =  job.JobStaffs
+            AllowedForJobStaffIds  = job.AllowedForJobStaffIds ,
+            JobRequests  = job.JobRequests ,
+            JobStaffs = job.JobStaffs
         }).ToList();
 
         int totalCount = jobs.Count;
@@ -99,22 +111,25 @@ public class JobController : ControllerBase
     }
 
     [HttpGet]
-    [Route("daysofjobsbymonth"), Authorize]
-    public async Task<ActionResult<List<MonthJobsDtoRes>>> GetDaysOfJobsByMonth(int month, int year)
+    [Route("companyjobsbydate"), Authorize(Roles = "admin")]
+    public async Task<ActionResult<List<MonthJobsDtoRes>>> GetCompanyJobs(int month, int year)
     {
         var id = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        
+
+        var userAdmin = await _context.Admins.FindAsync(Guid.Parse(id!));
+
+        if (userAdmin is null){
+            return NotFound("Admin user not found.");
+        }
+
         var jobs = await _context.Jobs
+            .Where(j => j.CompanyId == userAdmin.CompanyId)
             .Where(e => e.StartDateTime.Year == year && e.StartDateTime.Month == month)
-            .Include(job => job.JobRequests)
-            .Include(job => job.JobStaffs)
+            .Include(j => j.JobRequests)
+            .Include(j => j.JobStaffs)
             .ToListAsync();
 
-        var signedJobs = jobs
-            .Where(job => job.JobStaffs != null && job.JobStaffs.Any(s => s.StaffId ==  Guid.Parse(id!)))
-            .ToList();
-
-        var groupedByDay = signedJobs
+                var groupedByDay = jobs
             .GroupBy(job => job.StartDateTime.Day)
             .Select(group => new DayJobsDtoRes
             {
@@ -123,18 +138,78 @@ public class JobController : ControllerBase
                 jobs = group.Select(job => new JobDtoRes
                 {
                     Id = job.Id,
+                    JobNumber = job.JobNumber,
+                    Client = job.Client,
+                    Event = job.Event,
+                    TotalChargedValue = job.TotalChargedValue,
+                    JobDuration = job.JobDuration,
                     Title = job.Title,
                     CompanyId = job.CompanyId,
                     CompanyName = job.CompanyName,
                     BaseRate = job.BaseRate,
                     StartDateTime = job.StartDateTime,
+                    FinishDateTime = job.FinishDateTime,
                     Location = job.Location,
                     IsClosed = job.IsClosed,
                     MaxStaffNumber = job.MaxStaffNumber,
                     CurrentStaffCount = job.CurrentStaffCount,
                     AcceptingReqs = job.AcceptingReqs,
-                    AllowedForJobStaffIds = job.AllowedForJobStaffIds,
-                    JobRequests = job.JobRequests,
+                    AllowedForJobStaffIds  = job.AllowedForJobStaffIds ,
+                    JobRequests  = job.JobRequests ,
+                    JobStaffs = job.JobStaffs
+                }).ToList()
+            }).ToList();
+
+
+        MonthJobsDtoRes monthJobs = new MonthJobsDtoRes{
+            year = year,
+            month = month,
+            days = groupedByDay
+        };
+
+        return Ok(monthJobs);
+    }
+
+    [HttpGet]
+    [Route("daysofjobsbymonth"), Authorize]
+    public async Task<ActionResult<List<MonthJobsDtoRes>>> GetDaysOfJobsByMonth(int month, int year)
+    {
+        var id = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
+        var jobs = await _context.Jobs
+            .Where(job => job.JobStaffs != null && job.JobStaffs.Any(s => s.StaffId ==  Guid.Parse(id!)))
+            .Where(e => e.StartDateTime.Year == year && e.StartDateTime.Month == month)
+            .Include(job => job.JobRequests)
+            .Include(job => job.JobStaffs)
+            .ToListAsync();
+
+        var groupedByDay = jobs
+            .GroupBy(job => job.StartDateTime.Day)
+            .Select(group => new DayJobsDtoRes
+            {
+                day = group.Key,
+                jobQuantity = group.Count(),
+                jobs = group.Select(job => new JobDtoRes
+                {
+                    Id = job.Id,
+                    JobNumber = job.JobNumber,
+                    Client = job.Client,
+                    Event = job.Event,
+                    TotalChargedValue = job.TotalChargedValue,
+                    JobDuration = job.JobDuration,
+                    Title = job.Title,
+                    CompanyId = job.CompanyId,
+                    CompanyName = job.CompanyName,
+                    BaseRate = job.BaseRate,
+                    StartDateTime = job.StartDateTime,
+                    FinishDateTime = job.FinishDateTime,
+                    Location = job.Location,
+                    IsClosed = job.IsClosed,
+                    MaxStaffNumber = job.MaxStaffNumber,
+                    CurrentStaffCount = job.CurrentStaffCount,
+                    AcceptingReqs = job.AcceptingReqs,
+                    AllowedForJobStaffIds  = job.AllowedForJobStaffIds ,
+                    JobRequests  = job.JobRequests ,
                     JobStaffs = job.JobStaffs
                 }).ToList()
             }).ToList();
@@ -171,18 +246,24 @@ public class JobController : ControllerBase
         .Select(job => new JobDtoRes
         {
             Id = job.Id,
+            JobNumber = job.JobNumber,
+            Client = job.Client,
+            Event = job.Event,
+            TotalChargedValue = job.TotalChargedValue,
+            JobDuration = job.JobDuration,
             Title = job.Title,
             CompanyId = job.CompanyId,
             CompanyName = job.CompanyName,
             BaseRate = job.BaseRate,
             StartDateTime = job.StartDateTime,
+            FinishDateTime = job.FinishDateTime,
             Location = job.Location,
             IsClosed = job.IsClosed,
             MaxStaffNumber = job.MaxStaffNumber,
             CurrentStaffCount = job.CurrentStaffCount,
             AcceptingReqs = job.AcceptingReqs,
-            AllowedForJobStaffIds = job.AllowedForJobStaffIds,
-            JobRequests = job.JobRequests,
+            AllowedForJobStaffIds  = job.AllowedForJobStaffIds ,
+            JobRequests  = job.JobRequests ,
             JobStaffs = job.JobStaffs
         }).ToList();
 
@@ -212,18 +293,24 @@ public class JobController : ControllerBase
         .Select(job => new JobDtoRes
         {
             Id = job.Id,
+            JobNumber = job.JobNumber,
+            Client = job.Client,
+            Event = job.Event,
+            TotalChargedValue = job.TotalChargedValue,
+            JobDuration = job.JobDuration,
             Title = job.Title,
             CompanyId = job.CompanyId,
             CompanyName = job.CompanyName,
             BaseRate = job.BaseRate,
             StartDateTime = job.StartDateTime,
+            FinishDateTime = job.FinishDateTime,
             Location = job.Location,
             IsClosed = job.IsClosed,
             MaxStaffNumber = job.MaxStaffNumber,
             CurrentStaffCount = job.CurrentStaffCount,
             AcceptingReqs = job.AcceptingReqs,
-            AllowedForJobStaffIds = job.AllowedForJobStaffIds,
-            JobRequests = job.JobRequests,
+            AllowedForJobStaffIds  = job.AllowedForJobStaffIds ,
+            JobRequests  = job.JobRequests ,
             JobStaffs = job.JobStaffs
         }).ToList();
 

@@ -110,3 +110,15 @@ NEED VERB ING
 - adicionar no token:
     issuer: "SeuApp",
     audience: "SeuPublico",
+
+
+
+- REFACT PRA SERVICES E TRY CATCHS
+- ADD JOB NUMBER, CLIENT, EVENT
+
+<!-- - JOB STATUS??? -->
+
+-GET JOBS BY WEEK
+-GET JOBS BY DAY
+-GET JOBS BY MONTH
+-GET JOBS BY YEAR
