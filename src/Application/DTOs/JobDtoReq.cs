@@ -2,7 +2,6 @@ namespace fastaffo_api.src.Application.DTOs;
 public class JobDtoReq
 {
     public required string Title { get; set; }
-    public required int JobNumber { get; set; }
     public string Client { get; set; } = string.Empty;
     public string Event { get; set; } = string.Empty;
     public float? TotalChargedValue { get; set; }

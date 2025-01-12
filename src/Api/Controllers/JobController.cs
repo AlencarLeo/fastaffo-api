@@ -76,10 +76,10 @@ public class JobController : ControllerBase
             .Include(job => job.JobStaffs)
             .ToListAsync();
 
-        if(jobs is null || jobs.Count == 0)
-        {
-            return NotFound("No opened jobs found.");
-        }
+        // if(jobs is null || jobs.Count == 0)
+        // {
+        //     return NotFound("No opened jobs found.");
+        // }
 
         var jobRes = jobs.Select(job => new JobDtoRes{
             Id = job.Id,
@@ -111,8 +111,8 @@ public class JobController : ControllerBase
     }
 
     [HttpGet]
-    [Route("companyjobsbydate"), Authorize(Roles = "admin")]
-    public async Task<ActionResult<List<MonthJobsDtoRes>>> GetCompanyJobs(int month, int year)
+    [Route("CompanyJobsByDateRange"), Authorize(Roles = "admin")]
+    public async Task<ActionResult<List<JobDtoRes>>> GetCompanyJobsByDateRange(DateTime startDate, DateTime endDate)
     {
         var id = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -124,50 +124,35 @@ public class JobController : ControllerBase
 
         var jobs = await _context.Jobs
             .Where(j => j.CompanyId == userAdmin.CompanyId)
-            .Where(e => e.StartDateTime.Year == year && e.StartDateTime.Month == month)
+            .Where(j => j.StartDateTime >= startDate && j.StartDateTime <= endDate)
             .Include(j => j.JobRequests)
             .Include(j => j.JobStaffs)
             .ToListAsync();
 
-                var groupedByDay = jobs
-            .GroupBy(job => job.StartDateTime.Day)
-            .Select(group => new DayJobsDtoRes
-            {
-                day = group.Key,
-                jobQuantity = group.Count(),
-                jobs = group.Select(job => new JobDtoRes
-                {
-                    Id = job.Id,
-                    JobNumber = job.JobNumber,
-                    Client = job.Client,
-                    Event = job.Event,
-                    TotalChargedValue = job.TotalChargedValue,
-                    JobDuration = job.JobDuration,
-                    Title = job.Title,
-                    CompanyId = job.CompanyId,
-                    CompanyName = job.CompanyName,
-                    BaseRate = job.BaseRate,
-                    StartDateTime = job.StartDateTime,
-                    FinishDateTime = job.FinishDateTime,
-                    Location = job.Location,
-                    IsClosed = job.IsClosed,
-                    MaxStaffNumber = job.MaxStaffNumber,
-                    CurrentStaffCount = job.CurrentStaffCount,
-                    AcceptingReqs = job.AcceptingReqs,
-                    AllowedForJobStaffIds  = job.AllowedForJobStaffIds ,
-                    JobRequests  = job.JobRequests ,
-                    JobStaffs = job.JobStaffs
-                }).ToList()
-            }).ToList();
+        var jobDtoRes = jobs.Select(job => new JobDtoRes{
+            Id = job.Id,
+            JobNumber = job.JobNumber,
+            Client = job.Client,
+            Event = job.Event,
+            TotalChargedValue = job.TotalChargedValue,
+            JobDuration = job.JobDuration,
+            Title = job.Title,
+            CompanyId = job.CompanyId,
+            CompanyName = job.CompanyName,
+            BaseRate = job.BaseRate,
+            StartDateTime = job.StartDateTime,
+            FinishDateTime = job.FinishDateTime,
+            Location = job.Location,
+            IsClosed = job.IsClosed,
+            MaxStaffNumber = job.MaxStaffNumber,
+            CurrentStaffCount = job.CurrentStaffCount,
+            AcceptingReqs = job.AcceptingReqs,
+            AllowedForJobStaffIds  = job.AllowedForJobStaffIds ,
+            JobRequests  = job.JobRequests ,
+            JobStaffs = job.JobStaffs
+        }).ToList();
 
-
-        MonthJobsDtoRes monthJobs = new MonthJobsDtoRes{
-            year = year,
-            month = month,
-            days = groupedByDay
-        };
-
-        return Ok(monthJobs);
+        return Ok(jobDtoRes);
     }
 
     [HttpGet]
@@ -327,16 +312,23 @@ public class JobController : ControllerBase
         Job job = new Job();
 
         var company = await _context.Companies.FindAsync(request.CompanyId);
+        var companyJobsCount = await _context.Jobs.Where(j => j.CompanyId == request.CompanyId).CountAsync();
 
         if(company is null){
             return BadRequest("Company does not exist");
         }
-                
+        
         job.Title = request.Title;
+        job.JobNumber = companyJobsCount + 1;
+        job.Client = request.Client;
+        job.Event = request.Event ;
+        job.TotalChargedValue = request.TotalChargedValue ;
+        job.JobDuration = request.JobDuration ;
         job.CompanyId = request.CompanyId;
         job.CompanyName = company.Name;
         job.BaseRate = request.BaseRate;
         job.StartDateTime = request.StartDateTime;
+        job.FinishDateTime = request.FinishDateTime;
         job.Location = request.Location;
         job.MaxStaffNumber = request.MaxStaffNumber;
 
