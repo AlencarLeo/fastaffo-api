@@ -125,6 +125,7 @@ public class AuthController : ControllerBase
         }
 
         string token = _tokenService.CreateToken(userAdmin.Id, userAdmin.Role);
+        
 
         UserAdminDtoRes userAdminDtoRes = new UserAdminDtoRes{
             Id = userAdmin.Id,

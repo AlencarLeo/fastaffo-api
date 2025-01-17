@@ -7,6 +7,7 @@ namespace fastaffo_api.src.Domain.Entities
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string ABN { get; set; } = string.Empty;
+        // public List<Guid>? TopCollaborationsStaffsIds { get; set; }
         [JsonIgnore]
         public ICollection<UserAdmin>? OwnersAndAdmins { get; set; }
     }
