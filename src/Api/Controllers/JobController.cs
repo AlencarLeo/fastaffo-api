@@ -124,7 +124,7 @@ public class JobController : ControllerBase
 
         var jobs = await _context.Jobs
             .Where(j => j.CompanyId == userAdmin.CompanyId)
-            .Where(j => j.StartDateTime >= startDate && j.StartDateTime <= endDate)
+            .Where(j => j.StartDateTime >= startDate.Date && j.StartDateTime <= endDate.Date.AddDays(1).AddTicks(-1))
             .Include(j => j.JobRequests)
             .Include(j => j.JobStaffs)
             .ToListAsync();
@@ -305,14 +305,26 @@ public class JobController : ControllerBase
     }
 
     [HttpPost]
-    // [Route("job"), Authorize(Roles = "admin,staff")]
-    [Route("job")]
+    [Route("job"), Authorize(Roles = "admin")]
     public async Task<ActionResult> CreateJob(JobDtoReq request)
     {
+        var id = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userAdmin = await _context.Admins.FindAsync(Guid.Parse(id!));
+
         Job job = new Job();
 
-        var company = await _context.Companies.FindAsync(request.CompanyId);
-        var companyJobsCount = await _context.Jobs.Where(j => j.CompanyId == request.CompanyId).CountAsync();
+        if(userAdmin is null){
+            return NotFound();
+        }
+        if (userAdmin.CompanyId == null)
+        {
+            return BadRequest("Admin does not have an associated company.");
+        }
+
+        var companyId = userAdmin.CompanyId.Value;
+
+        var company = await _context.Companies.FindAsync(companyId);
+        var companyJobsCount = await _context.Jobs.Where(j => j.CompanyId == companyId).CountAsync();
 
         if(company is null){
             return BadRequest("Company does not exist");
@@ -323,14 +335,15 @@ public class JobController : ControllerBase
         job.Client = request.Client;
         job.Event = request.Event ;
         job.TotalChargedValue = request.TotalChargedValue ;
-        job.JobDuration = request.JobDuration ;
-        job.CompanyId = request.CompanyId;
+        job.CompanyId = companyId;
         job.CompanyName = company.Name;
         job.BaseRate = request.BaseRate;
         job.StartDateTime = request.StartDateTime;
-        job.FinishDateTime = request.FinishDateTime;
         job.Location = request.Location;
         job.MaxStaffNumber = request.MaxStaffNumber;
+        job.AcceptingReqs = request.AcceptingReqs;
+        job.AllowedForJobStaffIds = request.AllowedForJobStaffIds ?? null;
+
 
         _context.Jobs.Add(job);
         await _context.SaveChangesAsync();
