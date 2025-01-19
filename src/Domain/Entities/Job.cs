@@ -11,8 +11,11 @@ public class Job
     public Guid CompanyId { get; set; }
     public string CompanyName { get; set; } = string.Empty;
     public float BaseRate { get; set; }
-    public DateTime StartDateTime { get; set; }
-    public DateTime? FinishDateTime { get; set; }
+    public string StartDateTimeZoneLocation { get; set; } = string.Empty;
+    public DateTimeOffset UtcStartDateTime { get; set; }
+    public DateTimeOffset LocalStartDateTime { get; set; }
+    // public string? FinishDateTimeTimeZoneLocation { get; set; }
+    // public DateTimeOffset? FinishDateTime { get; set; }
     public string Location { get; set; } = string.Empty;
     public bool IsClosed { get; set; } = false;
     // public string WhyClosed { get; set; } =  string.Empty; // FUTURAMENTE

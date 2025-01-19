@@ -68,7 +68,7 @@ public class JobRequestController : ControllerBase
                     JobId = job.Id,
                     StaffId = jobRequest.StaffId,
                     AddRate = job.BaseRate,
-                    AddStartDateTime = job.StartDateTime,
+                    AddStartDateTime = job.LocalStartDateTime.DateTime,
                     JobRole = "Default" // Pode ser ajustado
                 };
                 _context.JobStaffs.Add(jobStaff);
@@ -92,7 +92,7 @@ public class JobRequestController : ControllerBase
                     JobId = job.Id,
                     StaffId = jobRequest.StaffId,
                     AddRate = job.BaseRate,
-                    AddStartDateTime = job.StartDateTime,
+                    AddStartDateTime = job.LocalStartDateTime.DateTime,
                     JobRole = "Default" // Pode ser ajustado
                 };
                 _context.JobStaffs.Add(jobStaff);

@@ -6,7 +6,8 @@ public class JobDtoReq
     public string Event { get; set; } = string.Empty;
     public float? TotalChargedValue { get; set; }
     public required float BaseRate { get; set; }
-    public required DateTime StartDateTime { get; set; }
+    public required string StartDateTimeZoneLocation { get; set; }
+    public required DateTime LocalStartDateTime { get; set; }
     public required string Location { get; set; }
     public required int MaxStaffNumber { get; set; }
     public required bool AcceptingReqs { get; set; }

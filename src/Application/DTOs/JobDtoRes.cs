@@ -13,8 +13,10 @@ public class JobDtoRes
     public required Guid CompanyId { get; set; }
     public required string CompanyName { get; set; }
     public required float BaseRate { get; set; }
-    public required DateTime StartDateTime { get; set; }
-    public DateTime? FinishDateTime { get; set; }
+    public required string StartDateTimeZoneLocation { get; set; }
+    public required DateTimeOffset UtcStartDateTime { get; set; }
+    public required DateTimeOffset OriginalLocalStartDateTime { get; set; }
+    public required DateTime ReconstructedLocalStartDateTime { get; set; }
     public required string Location { get; set; }
     public required bool IsClosed { get; set; }
     public required int MaxStaffNumber { get; set; }
