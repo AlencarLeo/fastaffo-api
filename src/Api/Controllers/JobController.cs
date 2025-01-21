@@ -18,97 +18,115 @@ public class JobController : ControllerBase
         _context = context;
     }
 
-    // [HttpGet]
-    // [Route("job/{id}"), Authorize]
-    // public async Task<ActionResult<JobDtoRes>> GetJobById(Guid id)
-    // {
-    //     var job = await _context.Jobs
-    //     .Include(j => j.JobRequests)
-    //     .Include(j => j.JobStaffs)
-    //     .FirstOrDefaultAsync(j => j.Id == id);
+    [HttpGet]
+    [Route("job/{id}"), Authorize]
+    public async Task<ActionResult<JobDtoRes>> GetJobById(Guid id)
+    {
+        var job = await _context.Jobs
+        .Include(j => j.JobRequests)
+        .Include(j => j.JobStaffs)
+        .FirstOrDefaultAsync(j => j.Id == id);
 
-    //     if(job is null)
-    //     {
-    //         return NotFound("Job not found.");
-    //     }
+        if(job is null)
+        {
+            return NotFound("Job not found.");
+        }
 
-    //     JobDtoRes jobRes = new JobDtoRes{
-    //         Id = job.Id,
-    //         JobNumber = job.JobNumber,
-    //         Client = job.Client,
-    //         Event = job.Event,
-    //         TotalChargedValue = job.TotalChargedValue,
-    //         JobDuration = job.JobDuration,
-    //         Title = job.Title,
-    //         CompanyId = job.CompanyId,
-    //         CompanyName = job.CompanyName,
-    //         BaseRate = job.BaseRate,
-    //         StartDateTime = job.StartDateTime,
-    //         FinishDateTime = job.FinishDateTime,
-    //         Location = job.Location,
-    //         IsClosed = job.IsClosed,
-    //         MaxStaffNumber = job.MaxStaffNumber,
-    //         CurrentStaffCount = job.CurrentStaffCount,
-    //         AcceptingReqs = job.AcceptingReqs,
-    //         AllowedForJobStaffIds  = job.AllowedForJobStaffIds ,
-    //         JobRequests  = job.JobRequests ,
-    //         JobStaffs = job.JobStaffs
-    //     };
+        JobDtoRes jobRes = new JobDtoRes{
+            Id = job.Id,
+            JobNumber = job.JobNumber,
+            Client = job.Client,
+            Event = job.Event,
+            TotalChargedValue = job.TotalChargedValue,
+            JobDuration = job.JobDuration,
+            Title = job.Title,
+            CompanyId = job.CompanyId,
+            CompanyName = job.CompanyName,
+            BaseRate = job.BaseRate,
 
-    //     return Ok(jobRes);
-    // }
+            UtcStartDateTime = job.UtcStartDateTime.UtcDateTime,
+            OriginalLocalStartDateTime = job.LocalStartDateTime,
+            ReconstructedLocalStartDateTime = job.UtcStartDateTime.UtcDateTime
+                                                .Add(
+                                                    TimeZoneInfo
+                                                    .FindSystemTimeZoneById(job.StartDateTimeZoneLocation)
+                                                    .GetUtcOffset(job.UtcStartDateTime.UtcDateTime)
+                                                ),
+            StartDateTimeZoneLocation = job.StartDateTimeZoneLocation,
 
-    // [HttpGet]
-    // [Route("openedjobs"), Authorize]
-    // public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetOpenedJobs(int page = 1, int pageSize = 10)
-    // {
-    //     var id = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Location = job.Location,
+            IsClosed = job.IsClosed,
+            MaxStaffNumber = job.MaxStaffNumber,
+            CurrentStaffCount = job.CurrentStaffCount,
+            AcceptingReqs = job.AcceptingReqs,
+            AllowedForJobStaffIds = job.AllowedForJobStaffIds, 
+            JobRequests = job.JobRequests, 
+            JobStaffs = job.JobStaffs,
+        };
 
-    //     var jobs = await _context.Jobs
-    //         .Where(j => j.AcceptingReqs)
-    //         .Where(j => j.AllowedForJobStaffIds == null || !j.AllowedForJobStaffIds.Any() || j.AllowedForJobStaffIds.Contains(Guid.Parse(id!)))
-    //         .Where(j => !j.IsClosed)
-    //         .Where(j => j.StartDateTime > DateTime.Now)
-    //         .Where(j => j.CurrentStaffCount < j.MaxStaffNumber)
-    //         .Skip((page - 1) * pageSize)
-    //         .Take(pageSize)
-    //         .Include(job => job.JobRequests)
-    //         .Include(job => job.JobStaffs)
-    //         .ToListAsync();
+        return Ok(jobRes);
+    }
 
-    //     // if(jobs is null || jobs.Count == 0)
-    //     // {
-    //     //     return NotFound("No opened jobs found.");
-    //     // }
+    [HttpGet]
+    [Route("openedjobs"), Authorize]
+    public async Task<ActionResult<PaginatedDto<JobDtoRes>>> GetOpenedJobs(int page = 1, int pageSize = 10)
+    {
+        var id = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    //     var jobRes = jobs.Select(job => new JobDtoRes{
-    //         Id = job.Id,
-    //         JobNumber = job.JobNumber,
-    //         Client = job.Client,
-    //         Event = job.Event,
-    //         TotalChargedValue = job.TotalChargedValue,
-    //         JobDuration = job.JobDuration,
-    //         Title = job.Title,
-    //         CompanyId = job.CompanyId,
-    //         CompanyName = job.CompanyName,
-    //         BaseRate = job.BaseRate,
-    //         StartDateTime = job.StartDateTime,
-    //         FinishDateTime = job.FinishDateTime,
-    //         Location = job.Location,
-    //         IsClosed = job.IsClosed,
-    //         MaxStaffNumber = job.MaxStaffNumber,
-    //         CurrentStaffCount = job.CurrentStaffCount,
-    //         AcceptingReqs = job.AcceptingReqs,
-    //         AllowedForJobStaffIds  = job.AllowedForJobStaffIds ,
-    //         JobRequests  = job.JobRequests ,
-    //         JobStaffs = job.JobStaffs
-    //     }).ToList();
+        var jobs = await _context.Jobs
+            .Where(j => j.AcceptingReqs)
+            .Where(j => j.AllowedForJobStaffIds == null || !j.AllowedForJobStaffIds.Any() || j.AllowedForJobStaffIds.Contains(Guid.Parse(id!)))
+            .Where(j => !j.IsClosed)
+            .Where(j => j.LocalStartDateTime > DateTime.Now)
+            .Where(j => j.CurrentStaffCount < j.MaxStaffNumber)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Include(job => job.JobRequests)
+            .Include(job => job.JobStaffs)
+            .ToListAsync();
 
-    //     int totalCount = jobs.Count;
-    //     var result = new PaginatedDto<JobDtoRes>(jobRes, totalCount, page, pageSize);
+        // if(jobs is null || jobs.Count == 0)
+        // {
+        //     return NotFound("No opened jobs found.");
+        // }
 
-    //     return Ok(result);
-    // }
+        var jobRes = jobs.Select(job => new JobDtoRes{
+            Id = job.Id,
+            JobNumber = job.JobNumber,
+            Client = job.Client,
+            Event = job.Event,
+            TotalChargedValue = job.TotalChargedValue,
+            JobDuration = job.JobDuration,
+            Title = job.Title,
+            CompanyId = job.CompanyId,
+            CompanyName = job.CompanyName,
+            BaseRate = job.BaseRate,
+
+            UtcStartDateTime = job.UtcStartDateTime.UtcDateTime,
+            OriginalLocalStartDateTime = job.LocalStartDateTime,
+            ReconstructedLocalStartDateTime = job.UtcStartDateTime.UtcDateTime
+                                                .Add(
+                                                    TimeZoneInfo
+                                                    .FindSystemTimeZoneById(job.StartDateTimeZoneLocation)
+                                                    .GetUtcOffset(job.UtcStartDateTime.UtcDateTime)
+                                                ),
+            StartDateTimeZoneLocation = job.StartDateTimeZoneLocation,
+
+            Location = job.Location,
+            IsClosed = job.IsClosed,
+            MaxStaffNumber = job.MaxStaffNumber,
+            CurrentStaffCount = job.CurrentStaffCount,
+            AcceptingReqs = job.AcceptingReqs,
+            AllowedForJobStaffIds = job.AllowedForJobStaffIds, 
+            JobRequests = job.JobRequests, 
+            JobStaffs = job.JobStaffs,
+        }).ToList();
+
+        int totalCount = jobs.Count;
+        var result = new PaginatedDto<JobDtoRes>(jobRes, totalCount, page, pageSize);
+
+        return Ok(result);
+    }
 
     [HttpGet]
     [Route("CompanyJobsByDateRange"), Authorize(Roles = "admin")]
@@ -137,6 +155,10 @@ public class JobController : ControllerBase
             .Include(j => j.JobRequests)
             .Include(j => j.JobStaffs)
             .ToListAsync();
+
+        if(jobs is null){
+            return NotFound("No jobs found.");
+        }
 
 
         // string StartDateTimeZoneLocation -> Time zone da location do job
@@ -177,7 +199,7 @@ public class JobController : ControllerBase
             JobStaffs = job.JobStaffs
         }).ToList();
 
-        return Ok(jobs);
+        return Ok(jobDtoRes);
     }
 
     // [HttpGet]
