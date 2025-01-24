@@ -1,13 +1,15 @@
-using fastaffo_api.src.Domain.Entities;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using fastaffo_api.src.Application.Interfaces;
 
 namespace fastaffo_api.src.Application.Services;
-public class TokenService
+
+public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
+
     public TokenService(IConfiguration configuration)
     {
         this._configuration = configuration;
@@ -16,9 +18,9 @@ public class TokenService
     public string CreateToken(Guid id, string role)
     {
         List<Claim> claims = new List<Claim> {
-                new Claim(ClaimTypes.Role, role),
-                new Claim(ClaimTypes.NameIdentifier, id.ToString())
-            };
+            new Claim(ClaimTypes.Role, role),
+            new Claim(ClaimTypes.NameIdentifier, id.ToString())
+        };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
             _configuration.GetSection("AppSettings:Token").Value!
@@ -32,8 +34,6 @@ public class TokenService
             signingCredentials: creds
         );
 
-        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return jwt;
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

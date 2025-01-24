@@ -1,4 +1,5 @@
 using System.Text;
+using fastaffo_api.src.Application.Interfaces;
 using fastaffo_api.src.Application.Services;
 using fastaffo_api.src.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +61,10 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
+
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+
 var app = builder.Build();
 app.UseCors("AllowAll");
 

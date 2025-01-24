@@ -1,12 +1,12 @@
 
 using fastaffo_api.src.Domain.Entities;
 using fastaffo_api.src.Application.DTOs;
-using fastaffo_api.src.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using fastaffo_api.src.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using fastaffo_api.src.Application.Interfaces;
 
 namespace fastaffo_api.src.Api.Controllers;
 [Route("api/")]
@@ -14,9 +14,9 @@ namespace fastaffo_api.src.Api.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly DataContext _context;
-    private readonly TokenService _tokenService;
+    private readonly ITokenService _tokenService;
      
-    public AuthController(TokenService tokenService, DataContext context)
+    public AuthController(ITokenService tokenService, DataContext context)
     {
         _context = context;
         _tokenService = tokenService;
