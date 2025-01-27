@@ -1,38 +1,3 @@
-metodo construtores:
-- nao pode retornar nada
-- mesmo nome da classe
-- executa toda vez que classe e criada
-
-
-
-appsettigns.json
-- geral
-- default, mas sobreescrita por ambientes
-
-appsettigns.dev.json
-- ambiente dev
-
-appsettigns.prd.json
-- ambiente prd
-
-appsettigns.test.json
-- ambiente test
-
-
-
--> COMO DEFINIR O AMBIENTE Q ESTA SENDO USADO PARA USAR O APPSETTINGS???
--> RELACAO ENTRE VERSAO DO CODIGO, AMBIENTE E VARIAVEIS DE AMBIENTE
-
-
-FEATURES
-Adicionar email para criacao de conta, recuperacao e auth em geral...
-
-
-
-SEGURANCA
-
-Brute force e bots ->
-
 Vunerabilidades:
     - REgistro de usuario revela q email esta em uso, SOLUCAO -> criar conta com o mesmo email vai "repetir" o processo de recuperacao,
         -> EMAIL: "Parece que voce tentou criar uma conta nova, mas voce ja tem clique aqui para recuperar a senha" -> recuperar senha exige 2 fatores com celular
@@ -40,12 +5,28 @@ Vunerabilidades:
     - Adicionar Captcha
 
 
+# Current Tasks
+- [ ] Refact job controller to services.
 
+# Next Tasks
+- [ ] Refact to services and add try catch
 
+- [ ] New route -> Add Job to myself.
 
+- [ ] Improve token with -> issuer: "SeuApp" and audience: "SeuPublico".
+- [ ] Improve token with -> Refresh
 
+- [ ] Feature new prop on Admin and Staffs => TopCollaborations - (add icon on staff and number of jobs per company, staff on company preferencies)
 
-# Tasks
+- [ ] Push notifications Feature.
+- [ ] Config appsettings to dev, test and prod environments.
+- [ ] API Version.
+- [ ] Forget password feature.
+- [ ] Password, Email, Phone... WHOLE API VALIDATION.
+- [ ] Feature against bots and brute force auth.
+- [ ] Improve login auth and authorization on routes.
+
+# Past Tasks
 - [x] fix UserStaffDtoReq & UserStaffDtoRes repetidas 
 - [x] Criptografar senha UserAdmin
 - [x] Mudar UserAdmin para controller de Auth?
@@ -59,82 +40,11 @@ Vunerabilidades:
 
 -------------------------------------------------------------
 
-- [ ] FIX LOGIN
-- [ ] AUTHORIZATION
-
-- [ ] FIX AND REVIEW ---JOB--- (not JOBS) CONTROLLER
-- [ ] Post Job need to be admin
-- [ ] Put Job need to be admin
-- [ ] Delete Job need to be admin
-
-- [ ] job entity - assineged to -> accept, denied, ...
-
-- [ ] Pagination and logic past/next jobs
-
-- [ ] REMOVER STAFF DO jobs
-
-
-
-- APOS CRIAR REQUEST E FOR ACEITO -> MUDAR LISTA DE IDS EM JOBS
-
-
-------------------------------------------------------------
-FEATURE META THIS WEEK:
-- base LOGIN/REGISTER working completely (labour app and admin)
-- base NEXT and PAST jobs working completely (labour app and admin)
-- base CALENDAR jobs working completely (labour app and admin)
-- base CONFLICTS jobs started
-
-
-- ID JOBS TODOS 0000000000 (verificar outros)
-
-- ADD A JOB TO MYSELF
-- PUSH NOTIFICATION
-
-- JOB VISIBLE FOR (NEW PROP IN JOBS???)
-
-
-NEED TO BE SOMEONE
-NEED VERB ING
-
-
-
-
-- ELE CRIOU O JWT, NO VIDEO SO VAI USAR O GERADOR DE TOKEN DO DOTNET
-
-
-
-
-- MELHORAR AUTH E SEGURANCA GERAL
-
-- adicionar no token:
-    issuer: "SeuApp",
-    audience: "SeuPublico",
-
-
-
-- REFACT PRA SERVICES E TRY CATCHS
-- ADD JOB NUMBER, CLIENT, EVENT
-
-<!-- - JOB STATUS??? -->
-
--GET JOBS BY WEEK
--GET JOBS BY DAY
--GET JOBS BY MONTH
--GET JOBS BY YEAR
-
-
 
 - FEATURE CATEGORIAS CORES NOS CARDS -> PARA BUMP IN, BUMP OUT OU UTRAS MARCACOES, (TIPOS DE JOBS)
 - PONTINHOS COM CORES NOS CARDS COM STATUS
 
-
-- TopCollaborations -> ADICIONA STAFF NA LISTA DE PREFERENCIA EM JOBS E MOSTRA NO PERFIL DO STAFF
-
-
-
--> REFACT API TO SERVICES AND DEP INJ
--> REFACT JOBREQS
-
 -> TRATAR EXEPTIONS COM CODIGO E MNSG PARA RETORNAR NAS CONTROLLERS
 -> melhorar service auth
+
+-> refact jobs, melhorar chamada de jobs por id, mandar somente job e deixar staffjob e req com chamadas separadas
