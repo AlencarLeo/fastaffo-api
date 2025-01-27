@@ -1,12 +1,12 @@
 using fastaffo_api.src.Domain.Enums;
 
-namespace fastaffo_api.src.Domain.Entities;
-public class JobRequest
+namespace fastaffo_api.src.Application.DTOs;
+public class JobRequestDtoRes
 {
     public Guid Id { get; set; }
     public Guid JobId { get; set; }
     public Guid StaffId { get; set; }
-    public UserStaff Staff { get; set; }
+    public UserStaffDtoRes Staff { get; set; }
     public RequestStatus Status { get; set; }
     public RequestType Type { get; set; }
     public DateTime RequestedAt { get; set; }

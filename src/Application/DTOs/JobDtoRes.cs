@@ -23,6 +23,6 @@ public class JobDtoRes
     public required int CurrentStaffCount { get; set; }
     public required bool AcceptingReqs { get; set; }
     public List<Guid>? AllowedForJobStaffIds { get; set; } 
-    public List<JobRequest>? JobRequests { get; set; } 
-    public List<JobStaff>? JobStaffs { get; set; }
+    public List<JobRequestDtoRes>? JobRequests { get; set; } 
+    public List<JobStaffDtoRes>? JobStaffs { get; set; }
 }

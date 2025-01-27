@@ -24,7 +24,9 @@ public class JobController : ControllerBase
     {
         var job = await _context.Jobs
         .Include(j => j.JobRequests)
+            .ThenInclude(jr => jr.Staff)
         .Include(j => j.JobStaffs)
+            .ThenInclude(js => js.Staff)
         .FirstOrDefaultAsync(j => j.Id == id);
 
         if(job is null)
@@ -60,8 +62,38 @@ public class JobController : ControllerBase
             CurrentStaffCount = job.CurrentStaffCount,
             AcceptingReqs = job.AcceptingReqs,
             AllowedForJobStaffIds = job.AllowedForJobStaffIds, 
-            JobRequests = job.JobRequests, 
-            JobStaffs = job.JobStaffs,
+            JobRequests = job.JobRequests?.Select(jr => new JobRequestDtoRes{
+                Id = jr.Id,
+                JobId = jr.JobId,
+                StaffId = jr.StaffId,
+                Staff = new UserStaffDtoRes{
+                    Id = jr.Staff.Id,
+                    Role = jr.Staff.Role,    
+                    FirstName = jr.Staff.FirstName,
+                    LastName = jr.Staff.LastName,
+                    Phone = jr.Staff.Phone,
+                    Email = jr.Staff.Email
+                },
+                Status = jr.Status,
+                Type = jr.Type,
+                RequestedAt = jr.RequestedAt,
+            }).ToList(), 
+            JobStaffs = job.JobStaffs?.Select(js => new JobStaffDtoRes{
+                Id = js.Id,
+                JobId = js.JobId,
+                StaffId = js.StaffId,
+                Staff = new UserStaffDtoRes{
+                    Id = js.Staff.Id,
+                    Role = js.Staff.Role,    
+                    FirstName = js.Staff.FirstName,
+                    LastName = js.Staff.LastName,
+                    Phone = js.Staff.Phone,
+                    Email = js.Staff.Email
+                },
+                JobRole = js.JobRole,
+                AddRate = js.AddRate,
+                AddStartDateTime = js.AddStartDateTime
+            }).ToList()
         };
 
         return Ok(jobRes);
@@ -81,8 +113,10 @@ public class JobController : ControllerBase
             .Where(j => j.CurrentStaffCount < j.MaxStaffNumber)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Include(job => job.JobRequests)
-            .Include(job => job.JobStaffs)
+            .Include(j => j.JobRequests)
+                .ThenInclude(jr => jr.Staff)
+            .Include(j => j.JobStaffs)
+                .ThenInclude(js => js.Staff)
             .ToListAsync();
 
         // if(jobs is null || jobs.Count == 0)
@@ -118,8 +152,38 @@ public class JobController : ControllerBase
             CurrentStaffCount = job.CurrentStaffCount,
             AcceptingReqs = job.AcceptingReqs,
             AllowedForJobStaffIds = job.AllowedForJobStaffIds, 
-            JobRequests = job.JobRequests, 
-            JobStaffs = job.JobStaffs,
+            JobRequests = job.JobRequests?.Select(jr => new JobRequestDtoRes{
+                Id = jr.Id,
+                JobId = jr.JobId,
+                StaffId = jr.StaffId,
+                Staff = new UserStaffDtoRes{
+                    Id = jr.Staff.Id,
+                    Role = jr.Staff.Role,    
+                    FirstName = jr.Staff.FirstName,
+                    LastName = jr.Staff.LastName,
+                    Phone = jr.Staff.Phone,
+                    Email = jr.Staff.Email
+                },
+                Status = jr.Status,
+                Type = jr.Type,
+                RequestedAt = jr.RequestedAt,
+            }).ToList(), 
+            JobStaffs = job.JobStaffs?.Select(js => new JobStaffDtoRes{
+                Id = js.Id,
+                JobId = js.JobId,
+                StaffId = js.StaffId,
+                Staff = new UserStaffDtoRes{
+                    Id = js.Staff.Id,
+                    Role = js.Staff.Role,    
+                    FirstName = js.Staff.FirstName,
+                    LastName = js.Staff.LastName,
+                    Phone = js.Staff.Phone,
+                    Email = js.Staff.Email
+                },
+                JobRole = js.JobRole,
+                AddRate = js.AddRate,
+                AddStartDateTime = js.AddStartDateTime
+            }).ToList()
         }).ToList();
 
         int totalCount = jobs.Count;
@@ -153,7 +217,9 @@ public class JobController : ControllerBase
             .Where(j => j.CompanyId == userAdmin.CompanyId)
             .Where(j => j.LocalStartDateTime >= jobLocalStartDate.Date && j.LocalStartDateTime <= jobLocalEndDate.Date.AddDays(1).AddTicks(-1))
             .Include(j => j.JobRequests)
+                .ThenInclude(jr => jr.Staff)
             .Include(j => j.JobStaffs)
+                .ThenInclude(js => js.Staff)
             .ToListAsync();
 
         if(jobs is null){
@@ -195,8 +261,38 @@ public class JobController : ControllerBase
             CurrentStaffCount = job.CurrentStaffCount,
             AcceptingReqs = job.AcceptingReqs,
             AllowedForJobStaffIds  = job.AllowedForJobStaffIds ,
-            JobRequests  = job.JobRequests ,
-            JobStaffs = job.JobStaffs
+            JobRequests = job.JobRequests?.Select(jr => new JobRequestDtoRes{
+                Id = jr.Id,
+                JobId = jr.JobId,
+                StaffId = jr.StaffId,
+                Staff = new UserStaffDtoRes{
+                    Id = jr.Staff.Id,
+                    Role = jr.Staff.Role,    
+                    FirstName = jr.Staff.FirstName,
+                    LastName = jr.Staff.LastName,
+                    Phone = jr.Staff.Phone,
+                    Email = jr.Staff.Email
+                },
+                Status = jr.Status,
+                Type = jr.Type,
+                RequestedAt = jr.RequestedAt,
+            }).ToList(), 
+            JobStaffs = job.JobStaffs?.Select(js => new JobStaffDtoRes{
+                Id = js.Id,
+                JobId = js.JobId,
+                StaffId = js.StaffId,
+                Staff = new UserStaffDtoRes{
+                    Id = js.Staff.Id,
+                    Role = js.Staff.Role,    
+                    FirstName = js.Staff.FirstName,
+                    LastName = js.Staff.LastName,
+                    Phone = js.Staff.Phone,
+                    Email = js.Staff.Email
+                },
+                JobRole = js.JobRole,
+                AddRate = js.AddRate,
+                AddStartDateTime = js.AddStartDateTime
+            }).ToList()
         }).ToList();
 
         return Ok(jobDtoRes);
