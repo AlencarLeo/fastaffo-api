@@ -9,6 +9,7 @@ Vunerabilidades:
 - [ ] Refact job controller to services.
 
 # Next Tasks
+- [ ] Fix code warnings
 - [ ] Refact to services and add try catch
 
 - [ ] New route -> Add Job to myself.
