@@ -27,6 +27,8 @@ Vunerabilidades:
 - [ ] Feature against bots and brute force auth.
 - [ ] Improve login auth and authorization on routes.
 
+- [ ] Add prop ApprovedBy: Guid UserAdmin.Id on JobRequest Entity
+
 # Past Tasks
 - [x] fix UserStaffDtoReq & UserStaffDtoRes repetidas 
 - [x] Criptografar senha UserAdmin
