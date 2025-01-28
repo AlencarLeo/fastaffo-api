@@ -21,4 +21,20 @@ public class JobRequestController : ControllerBase
         return StatusCode(response.StatusCode, new { message = response.Message });
     }
 
+    [HttpPatch]
+    [Route("job-request/accept")]
+    public async Task<ActionResult> AcceptJobRequest(Guid jobRequestId, JobRequestDtoReq request)
+    {
+        var response = await _jobRequestService.ApproveJobRequest(jobRequestId, request.JobId, request.StaffId);
+        return StatusCode(response.StatusCode, new { message = response.Message });
+    }
+
+    [HttpPatch]
+    [Route("job-request/decline")]
+    public async Task<ActionResult> DeclineJobRequest(Guid jobRequestId)
+    {
+        var response = await _jobRequestService.DeclineJobRequest(jobRequestId);
+        return StatusCode(response.StatusCode, new { message = response.Message });
+    }
+
 }
