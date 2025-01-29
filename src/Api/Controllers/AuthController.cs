@@ -8,9 +8,9 @@ namespace fastaffo_api.src.Api.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly IAuthservice _authService;
+    private readonly IAuthService _authService;
 
-    public AuthController(IAuthservice authService)
+    public AuthController(IAuthService authService)
     {
         _authService = authService;
     }

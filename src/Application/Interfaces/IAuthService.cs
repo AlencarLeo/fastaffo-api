@@ -1,7 +1,7 @@
 using fastaffo_api.src.Application.DTOs;
 
 namespace fastaffo_api.src.Application.Interfaces;
-public interface IAuthservice
+public interface IAuthService
 {
     (string? Id, List<string>? Roles) GetCurrentUser();
     Task RegisterUserAdminAsync(UserAdminDtoReq request);
