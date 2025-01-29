@@ -6,7 +6,7 @@ Vunerabilidades:
 
 
 # Current Tasks
-- [ ] Refact job controller to services.
+- [ ] Refact job controller to services. (JobStaffService can inject a remove staff from job of JobService)
 
 # Next Tasks
 - [ ] Fix code warnings
