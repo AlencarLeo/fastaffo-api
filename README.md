@@ -12,7 +12,11 @@ Vunerabilidades:
 - [ ] Fix code warnings
 - [ ] Refact to services and add try catch
 
-- [ ] New route -> Add Job to myself.
+- [ ] New route -> Add Job to myself (mobile (labour) create a job for themself).
+
+- [ ] Add JobNumberDone for staff and how much for each company.
+
+- [ ] Split data to different reqs on GetJobById (each req will be done on each navbar item on front)
 
 - [ ] Improve token with -> issuer: "SeuApp" and audience: "SeuPublico".
 - [ ] Improve token with -> Refresh
@@ -28,6 +32,7 @@ Vunerabilidades:
 - [ ] Improve login auth and authorization on routes.
 
 - [ ] Add prop ApprovedBy: Guid UserAdmin.Id on JobRequest Entity
+
 
 # Past Tasks
 - [x] fix UserStaffDtoReq & UserStaffDtoRes repetidas 
