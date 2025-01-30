@@ -6,7 +6,7 @@ using fastaffo_api.src.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace fastaffo_api.src.Application.Services;
-public class AuthService : IAuthservice
+public class AuthService : IAuthService
 {    
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly DataContext _context;
