@@ -9,6 +9,8 @@ Vunerabilidades:
 - [ ] Refact job controller to services. (JobStaffService can inject a remove staff from job of JobService)
 
 # Next Tasks
+- [ ] Apos RemoveJobStaff, staff pode aplicar para job novamente?
+
 - [ ] Fix code warnings
 - [ ] Refact to services and add try catch
 
