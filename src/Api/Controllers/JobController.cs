@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using fastaffo_api.src.Application.DTOs;
+using fastaffo_api.src.Application.Interfaces;
 using fastaffo_api.src.Domain.Entities;
 using fastaffo_api.src.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -12,9 +13,12 @@ namespace fastaffo_api.src.Api.Controllers;
 public class JobController : ControllerBase
 {
 
+
+    private readonly IJobService _jobService;
     private readonly DataContext _context;
-    public JobController(DataContext context)
+    public JobController(IJobService jobService, DataContext context)
     {
+        _jobService = jobService;
         _context = context;
     }
 
@@ -501,55 +505,8 @@ public class JobController : ControllerBase
     [Route("job"), Authorize(Roles = "admin")]
     public async Task<ActionResult> CreateJob(JobDtoReq request)
     {
-        var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(request.StartDateTimeZoneLocation);
-        var originalLocalDate = request.LocalStartDateTime;
-        var originalLocalDateByTimeZoneInfo = new DateTimeOffset(originalLocalDate, timeZoneInfo.GetUtcOffset(originalLocalDate)); ;
-        var utcDate = TimeZoneInfo.ConvertTimeToUtc(originalLocalDate, timeZoneInfo);
-
-        var id = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var userAdmin = await _context.Admins.FindAsync(Guid.Parse(id!));
-
-        Job job = new Job();
-
-        if (userAdmin is null)
-        {
-            return NotFound();
-        }
-        if (userAdmin.CompanyId == null)
-        {
-            return BadRequest("Admin does not have an associated company.");
-        }
-
-        var companyId = userAdmin.CompanyId.Value;
-
-        var company = await _context.Companies.FindAsync(companyId);
-        var companyJobsCount = await _context.Jobs.Where(j => j.CompanyId == companyId).CountAsync();
-
-        if (company is null)
-        {
-            return BadRequest("Company does not exist");
-        }
-
-        job.Title = request.Title;
-        job.JobNumber = companyJobsCount + 1;
-        job.Client = request.Client;
-        job.Event = request.Event;
-        job.TotalChargedValue = request.TotalChargedValue;
-        job.CompanyId = companyId;
-        job.CompanyName = company.Name;
-        job.BaseRate = request.BaseRate;
-        job.StartDateTimeZoneLocation = request.StartDateTimeZoneLocation;
-        job.UtcStartDateTime = new DateTimeOffset(utcDate);
-        job.LocalStartDateTime = originalLocalDateByTimeZoneInfo;
-        job.Location = request.Location;
-        job.MaxStaffNumber = request.MaxStaffNumber;
-        job.AcceptingReqs = request.AcceptingReqs;
-        job.AllowedForJobStaffIds = request.AllowedForJobStaffIds ?? null;
-
-        _context.Jobs.Add(job);
-        await _context.SaveChangesAsync();
-
-        return Ok();
+        var response = await _jobService.CreateJob(request);
+        return StatusCode(response.StatusCode, new { message = response.Message });
     }
 
 
