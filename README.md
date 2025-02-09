@@ -6,7 +6,11 @@ Vunerabilidades:
 
 
 # Current Tasks
+- [ ] REVER JOBREQUEST E TESTAR TUDO (LOGICA DE RESPONSEDAT)
+
 - [ ] Refact job controller to services. (JobStaffService can inject a remove staff from job of JobService)
+- [ ] Add prop ApprovedBy: Guid UserAdmin.Id on JobRequest Entity
+- [ ] Substituir DateTime to DateTimeOffSet em JobRequest Entity 
 
 # Next Tasks
 - [ ] Apos RemoveJobStaff, staff pode aplicar para job novamente?
@@ -32,9 +36,6 @@ Vunerabilidades:
 - [ ] Password, Email, Phone... WHOLE API VALIDATION.
 - [ ] Feature against bots and brute force auth.
 - [ ] Improve login auth and authorization on routes.
-
-- [ ] Add prop ApprovedBy: Guid UserAdmin.Id on JobRequest Entity
-
 
 # Past Tasks
 - [x] fix UserStaffDtoReq & UserStaffDtoRes repetidas 

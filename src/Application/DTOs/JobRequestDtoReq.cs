@@ -5,5 +5,6 @@ public class JobRequestDtoReq
 {
     public required Guid JobId { get; set; }
     public required Guid StaffId { get; set; }
+    public Guid? AdminId { get; set; }
     public required RequestType Type { get; set; }
 }

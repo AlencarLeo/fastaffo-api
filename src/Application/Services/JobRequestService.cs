@@ -14,9 +14,19 @@ public class JobRequestService : IJobRequestService
         _context = context;
     }
 
-    private async Task AssignStaffToJob(JobRequest jobRequest, Job job, Guid staffId)
+    private async Task<ServiceResponseDto> AssignStaffToJob(JobRequest jobRequest, Job job, Guid adminId, Guid staffId)
     {
+        var admin = await _context.Admins.FindAsync(adminId);
+        if (admin is null){
+            return new ServiceResponseDto("Job Request done, but admin was not found", 202);
+        }
+
+        jobRequest.AdminId = adminId;
+        jobRequest.StaffId = staffId;
+
         jobRequest.Status = RequestStatus.Accepted;
+        jobRequest.ResponsedAt = DateTime.Now;
+
         job.CurrentStaffCount++;
         
         var jobStaff = new JobStaff
@@ -30,10 +40,29 @@ public class JobRequestService : IJobRequestService
         
         _context.JobStaffs.Add(jobStaff);
         await _context.SaveChangesAsync();
+        return new ServiceResponseDto("Request accept", 200);
     }
 
+    private async Task<ServiceResponseDto> TryAutoAcceptRequestAsync(RequestType requestType, Job job,  Guid adminId, Guid staffId, JobRequest jobRequest)
+    {
+        var oppositeRequestType = requestType == RequestType.AdminRequest
+            ? RequestType.StaffRequest
+            : RequestType.AdminRequest;
 
-    public async Task<ServiceResponseDto> CreateJobRequestAsync(RequestType requestType, Guid jobId, Guid staffId)
+        var matchingRequest = await _context.JobRequests
+            .FirstOrDefaultAsync(r => r.JobId == job.Id && r.StaffId == staffId && r.Type == oppositeRequestType);
+
+
+        if (matchingRequest != null && matchingRequest.Status == RequestStatus.Pending)
+        {
+            var result = await AssignStaffToJob(jobRequest, job, adminId, staffId);
+            return new ServiceResponseDto(result.Message, result.StatusCode);
+        }
+
+        return new ServiceResponseDto("Request done", 200);
+    }
+
+    public async Task<ServiceResponseDto> CreateJobRequestAsync(RequestType requestType, Guid jobId, Guid? adminId, Guid staffId)
     {
         var job = await _context.Jobs.FindAsync(jobId);
         var staff = await _context.Staffs.FindAsync(staffId);
@@ -65,39 +94,18 @@ public class JobRequestService : IJobRequestService
             RequestedAt = DateTime.UtcNow
         };
 
-        var autoAccept = await this.TryAutoAcceptRequestAsync(requestType, job, staffId, jobRequest);
-
         _context.JobRequests.Add(jobRequest);
+
+        if(adminId.HasValue){
+            var autoAccept = await TryAutoAcceptRequestAsync(requestType, job, adminId.Value, staffId, jobRequest);
+            return new ServiceResponseDto(autoAccept.Message, autoAccept.StatusCode);
+        }
+
         await _context.SaveChangesAsync();
-
-        if(autoAccept){
-            return new ServiceResponseDto("Request accept", 200);
-        }else{
-            return new ServiceResponseDto("Request done", 200);
-        }
+        return new ServiceResponseDto("Request done", 200);
     }
 
-
-    public async Task<bool> TryAutoAcceptRequestAsync(RequestType requestType, Job job, Guid staffId, JobRequest jobRequest)
-    {
-        var oppositeRequestType = requestType == RequestType.AdminRequest
-            ? RequestType.StaffRequest
-            : RequestType.AdminRequest;
-
-        var matchingRequest = await _context.JobRequests
-            .FirstOrDefaultAsync(r => r.JobId == job.Id && r.StaffId == staffId && r.Type == oppositeRequestType);
-
-
-        if (matchingRequest != null && matchingRequest.Status == RequestStatus.Pending)
-        {
-            await this.AssignStaffToJob(jobRequest, job, staffId);
-            return true;
-        }
-
-        return false;
-    }
-
-    public async Task<ServiceResponseDto> DeclineJobRequest(Guid jobRequestId)
+    public async Task<ServiceResponseDto> DeclineJobRequest(Guid jobRequestId, Guid adminId, Guid staffId)
     {
         var jobRequest = await _context.JobRequests.FindAsync(jobRequestId);
 
@@ -105,15 +113,22 @@ public class JobRequestService : IJobRequestService
             return new ServiceResponseDto("This request don't exist ", 404);
         }
 
+        jobRequest.AdminId = adminId;
+        jobRequest.StaffId = staffId;
+
         jobRequest.Status = RequestStatus.Rejected;
+        jobRequest.ResponsedAt = DateTime.Now;
+
+        await _context.SaveChangesAsync();
         return new ServiceResponseDto("Request done", 200);
     }
 
-    public async Task<ServiceResponseDto> ApproveJobRequest(Guid jobRequestId, Guid jobId, Guid staffId)
+    public async Task<ServiceResponseDto> ApproveJobRequest(Guid jobRequestId, Guid jobId, Guid adminId, Guid staffId)
     {
         var jobRequest = await _context.JobRequests.FindAsync(jobRequestId);
         var job = await _context.Jobs.FindAsync(jobId);
         var staff = await _context.Staffs.FindAsync(staffId);
+        var admin = await _context.Admins.FindAsync(adminId);
 
         if(jobRequest == null){
             return new ServiceResponseDto("This request doesn't exist ", 404);
@@ -127,11 +142,15 @@ public class JobRequestService : IJobRequestService
             return new ServiceResponseDto("This staff doesn't exist ", 404);
         }
 
+        if(admin == null){
+            return new ServiceResponseDto("This admin doesn't exist ", 404);
+        }
+
         if(job.CurrentStaffCount >= job.MaxStaffNumber){
             return new ServiceResponseDto("Job staff limit reached ", 409);
         }
 
-        await this.AssignStaffToJob(jobRequest, job, staffId);
+        await AssignStaffToJob(jobRequest, job, adminId, staffId);
 
         return new ServiceResponseDto("Request done", 200);
     }

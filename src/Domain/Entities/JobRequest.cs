@@ -7,7 +7,11 @@ public class JobRequest
     public Guid JobId { get; set; }
     public Guid StaffId { get; set; }
     public UserStaff Staff { get; set; }
+    public Guid? AdminId { get; set; }
+    public UserAdmin? Admin { get; set; }
     public RequestStatus Status { get; set; }
     public RequestType Type { get; set; }
     public DateTime RequestedAt { get; set; }
+    public DateTime? ResponsedAt { get; set; }
+
 }

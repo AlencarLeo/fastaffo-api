@@ -21,7 +21,7 @@ public class JobService : IJobService
     }
 
     private JobDtoRes ConvertJobToDto(Job job)
-    {        
+    {
         // DateTime jobLocalStartDate => HORARIO EM Q STAFF TEM Q TAR NO LOCAL DO JOB (INDEPENDENTE DO FUSO)
         // DateTime jobLocalEndDate => HORARIO EM Q STAFF TEM Q TAR NO LOCAL DO JOB (INDEPENDENTE DO FUSO)
 
@@ -85,9 +85,12 @@ public class JobService : IJobService
             JobId = jr.JobId,
             StaffId = jr.StaffId,
             Staff = ConvertUserStaffToDto(jr.Staff),
+            AdminId = jr.AdminId,
+            Admin = jr.Admin is not null ? ConvertUserAdminToDto(jr.Admin) : null,
             Status = jr.Status,
             Type = jr.Type,
             RequestedAt = jr.RequestedAt,
+            ResponsedAt = jr.ResponsedAt
         };
     }
 
@@ -102,6 +105,20 @@ public class JobService : IJobService
             JobRole = js.JobRole,
             AddRate = js.AddRate,
             AddStartDateTime = js.AddStartDateTime
+        };
+    }
+
+    private UserAdminDtoRes ConvertUserAdminToDto(UserAdmin admin)
+    {
+        return new UserAdminDtoRes
+        {
+            Id = admin.Id,
+            FirstName = admin.FirstName,
+            LastName = admin.LastName,
+            Email = admin.Email,
+            Phone = admin.Phone,
+            IsOwner = admin.IsOwner,
+            Role = admin.Role
         };
     }
 
@@ -125,8 +142,11 @@ public class JobService : IJobService
         var job = await _context.Jobs
         .Include(j => j.JobRequests)
             .ThenInclude(jr => jr.Staff)
+        .Include(j => j.JobRequests)
+            .ThenInclude(jr => jr.Admin)
         .Include(j => j.JobStaffs)
-            .ThenInclude(js => js.Staff)
+            .ThenInclude(jr => jr.Staff)
+        .AsNoTracking()
         .FirstOrDefaultAsync(j => j.Id == id);
 
         if (job is null)
@@ -136,7 +156,7 @@ public class JobService : IJobService
 
         JobDtoRes jobRes = ConvertJobToDto(job);
 
-        return new ServiceResponseDto<JobDtoRes>(jobRes, "Success.", 200);;
+        return new ServiceResponseDto<JobDtoRes>(jobRes, "Success.", 200); ;
     }
 
     public async Task<ServiceResponseDto<PaginatedDto<JobDtoRes>>> GetOpenedJobs(int page = 1, int pageSize = 10)
@@ -159,8 +179,11 @@ public class JobService : IJobService
             .Take(pageSize)
             .Include(j => j.JobRequests)
                 .ThenInclude(jr => jr.Staff)
+            .Include(j => j.JobRequests)
+                .ThenInclude(jr => jr.Admin)
             .Include(j => j.JobStaffs)
-                .ThenInclude(js => js.Staff)
+                .ThenInclude(jr => jr.Staff)
+            .AsNoTracking()
             .ToListAsync();
 
         // if(jobs is null || jobs.Count == 0)
@@ -197,8 +220,11 @@ public class JobService : IJobService
             .Where(j => j.LocalStartDateTime >= jobLocalStartDate.Date && j.LocalStartDateTime <= jobLocalEndDate.Date.AddDays(1).AddTicks(-1))
             .Include(j => j.JobRequests)
                 .ThenInclude(jr => jr.Staff)
+            .Include(j => j.JobRequests)
+                .ThenInclude(jr => jr.Admin)
             .Include(j => j.JobStaffs)
-                .ThenInclude(js => js.Staff)
+                .ThenInclude(jr => jr.Staff)
+            .AsNoTracking()
             .ToListAsync();
 
         if (jobs is null)
@@ -221,10 +247,15 @@ public class JobService : IJobService
         var id = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         var jobs = await _context.Jobs
-            .Where(job => job.JobStaffs != null && job.JobStaffs.Any(s => s.StaffId ==  Guid.Parse(id!)))
+            .Where(job => job.JobStaffs != null && job.JobStaffs.Any(s => s.StaffId == Guid.Parse(id!)))
             .Where(e => e.LocalStartDateTime.Year == year && e.LocalStartDateTime.Month == month)
-            .Include(job => job.JobRequests)
-            .Include(job => job.JobStaffs)
+            .Include(j => j.JobRequests)
+                .ThenInclude(jr => jr.Staff)
+            .Include(j => j.JobRequests)
+                .ThenInclude(jr => jr.Admin)
+            .Include(j => j.JobStaffs)
+                .ThenInclude(jr => jr.Staff)
+            .AsNoTracking()
             .ToListAsync();
 
         var groupedByDay = jobs
@@ -237,7 +268,8 @@ public class JobService : IJobService
             }).ToList();
 
 
-        MonthJobsDtoRes monthJobs = new MonthJobsDtoRes{
+        MonthJobsDtoRes monthJobs = new MonthJobsDtoRes
+        {
             year = year,
             month = month,
             days = groupedByDay
@@ -258,13 +290,18 @@ public class JobService : IJobService
         var totalCount = await _context.Jobs.Where(job => job.LocalStartDateTime < DateTime.Now).CountAsync();
 
         var jobs = await _context.Jobs
-            .Where(job => job.JobStaffs != null && job.JobStaffs.Any(s => s.StaffId ==  Guid.Parse(id!)))
+            .Where(job => job.JobStaffs != null && job.JobStaffs.Any(s => s.StaffId == Guid.Parse(id!)))
             .Where(job => job.LocalStartDateTime < DateTime.Now)
             .OrderByDescending(i => i.LocalStartDateTime)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Include(job => job.JobRequests)
-            .Include(job => job.JobStaffs)
+            .Include(j => j.JobRequests)
+                .ThenInclude(jr => jr.Staff)
+            .Include(j => j.JobRequests)
+                .ThenInclude(jr => jr.Admin)
+            .Include(j => j.JobStaffs)
+                .ThenInclude(jr => jr.Staff)
+            .AsNoTracking()
             .ToListAsync();
 
         var jobDtos = ConvertJobsToDto(jobs);
@@ -284,13 +321,18 @@ public class JobService : IJobService
 
         var totalCount = await _context.Jobs.Where(job => job.LocalStartDateTime < DateTime.Now).CountAsync();
         var jobs = await _context.Jobs
-            .Where(job => job.JobStaffs != null && job.JobStaffs.Any(s => s.StaffId ==  Guid.Parse(id!)))
+            .Where(job => job.JobStaffs != null && job.JobStaffs.Any(s => s.StaffId == Guid.Parse(id!)))
             .Where(job => job.LocalStartDateTime > DateTime.Now)
             .OrderBy(i => i.LocalStartDateTime)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Include(job => job.JobRequests)
-            .Include(job => job.JobStaffs)
+            .Include(j => j.JobRequests)
+                .ThenInclude(jr => jr.Staff)
+            .Include(j => j.JobRequests)
+                .ThenInclude(jr => jr.Admin)
+            .Include(j => j.JobStaffs)
+                .ThenInclude(jr => jr.Staff)
+            .AsNoTracking()
             .ToListAsync();
 
         var jobDtos = ConvertJobsToDto(jobs);
