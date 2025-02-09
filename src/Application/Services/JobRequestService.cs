@@ -43,21 +43,33 @@ public class JobRequestService : IJobRequestService
         return new ServiceResponseDto("Request accept", 200);
     }
 
-    private async Task<ServiceResponseDto> TryAutoAcceptRequestAsync(RequestType requestType, Job job,  Guid adminId, Guid staffId, JobRequest jobRequest)
+    private async Task<ServiceResponseDto> TryAutoAcceptRequestAsync(RequestType requestType, Job job,  Guid adminId, Guid staffId)
     {
         var oppositeRequestType = requestType == RequestType.AdminRequest
             ? RequestType.StaffRequest
             : RequestType.AdminRequest;
 
         var matchingRequest = await _context.JobRequests
-            .FirstOrDefaultAsync(r => r.JobId == job.Id && r.StaffId == staffId && r.Type == oppositeRequestType);
+            .FirstOrDefaultAsync(r => r.JobId == job.Id && r.StaffId == staffId && r.Type == oppositeRequestType && r.Status == RequestStatus.Pending);
 
 
         if (matchingRequest != null && matchingRequest.Status == RequestStatus.Pending)
         {
-            var result = await AssignStaffToJob(jobRequest, job, adminId, staffId);
+            var result = await AssignStaffToJob(matchingRequest, job, adminId, staffId);
+            await _context.SaveChangesAsync();
             return new ServiceResponseDto(result.Message, result.StatusCode);
         }
+
+        var jobRequest = new JobRequest
+        {
+            JobId = job.Id,
+            StaffId = staffId,
+            Status = RequestStatus.Pending,
+            Type = requestType,
+            RequestedAt = DateTime.Now
+        };
+        _context.JobRequests.Add(jobRequest);
+        await _context.SaveChangesAsync();
 
         return new ServiceResponseDto("Request done", 200);
     }
@@ -80,9 +92,24 @@ public class JobRequestService : IJobRequestService
         }
 
         var existingRequest = await _context.JobRequests
-            .FirstOrDefaultAsync(r => r.JobId == jobId && r.StaffId == staffId && r.Type == requestType);
+            .FirstOrDefaultAsync(r => 
+                r.JobId == jobId && 
+                r.StaffId == staffId && 
+                r.Type == requestType && 
+                r.Status != RequestStatus.Pending);
+
         if (existingRequest != null){
             return new ServiceResponseDto("Request already exists", 409);
+        }
+        
+        if(job.JobStaffs?.Any(js => js.Id == staffId) == true){
+            return new ServiceResponseDto("Staff is already on this job", 409);
+        }
+        
+
+        if(adminId.HasValue){
+            var autoAccept = await TryAutoAcceptRequestAsync(requestType, job, adminId.Value, staffId);
+            return new ServiceResponseDto(autoAccept.Message, autoAccept.StatusCode);
         }
 
         var jobRequest = new JobRequest
@@ -91,17 +118,11 @@ public class JobRequestService : IJobRequestService
             StaffId = staffId,
             Status = RequestStatus.Pending,
             Type = requestType,
-            RequestedAt = DateTime.UtcNow
+            RequestedAt = DateTime.Now
         };
-
         _context.JobRequests.Add(jobRequest);
-
-        if(adminId.HasValue){
-            var autoAccept = await TryAutoAcceptRequestAsync(requestType, job, adminId.Value, staffId, jobRequest);
-            return new ServiceResponseDto(autoAccept.Message, autoAccept.StatusCode);
-        }
-
         await _context.SaveChangesAsync();
+        
         return new ServiceResponseDto("Request done", 200);
     }
 
