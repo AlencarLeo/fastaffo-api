@@ -341,6 +341,12 @@ public class JobService : IJobService
         return new ServiceResponseDto<PaginatedDto<JobDtoRes>>(result, "Success.", 200);
     }
 
+    public async Task<ServiceResponseDto> CreateJobToMySelf(Object request)
+    {
+        
+        return new ServiceResponseDto("Job created", 200);
+    }
+    
     public async Task<ServiceResponseDto> CreateJob(JobDtoReq request)
     {
         var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(request.StartDateTimeZoneLocation);

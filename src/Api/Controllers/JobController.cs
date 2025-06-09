@@ -77,31 +77,30 @@ public class JobController : ControllerBase
         return StatusCode(response.StatusCode, new { message = response.Message });
     }
 
-    //     // [HttpPost]
-    //     // // [Route("job"), Authorize(Roles = "staff")]
-    //     // [Route("job/myself")]
-    //     // public async Task<ActionResult> CreateJobToMyself(JobDtoReq request)
-    //     // {
-    //     //     Job job = new Job();
+    // [HttpPost]
+    // [Route("job/myself"), Authorize(Roles = "staff")]
+    // public async Task<ActionResult> CreateJobToMyself(JobDtoReq request)
+    // {
+    //     Job job = new Job();
 
-    //     //     var company = await _context.Companies.FindAsync(request.CompanyId);
+    //     var company = await _context.Companies.FindAsync(request.CompanyId);
 
-    //     //     if(company is null){
-    //     //         return BadRequest("Company does not exist");
-    //     //     }
+    //     if(company is null){
+    //         return BadRequest("Company does not exist");
+    //     }
 
-    //     //     job.Title = request.Title;
-    //     //     job.CompanyId = request.CompanyId;
-    //     //     job.BaseRate = request.BaseRate;
-    //     //     job.StartDateTime = request.StartDateTime;
-    //     //     job.Location = request.Location;
-    //     //     job.StaffsId = request.StaffsId;
+    //     job.Title = request.Title;
+    //     job.CompanyId = request.CompanyId;
+    //     job.BaseRate = request.BaseRate;
+    //     job.StartDateTime = request.StartDateTime;
+    //     job.Location = request.Location;
+    //     job.StaffsId = request.StaffsId;
 
-    //     //     _context.Jobs.Add(job);
-    //     //     await _context.SaveChangesAsync();
+    //     _context.Jobs.Add(job);
+    //     await _context.SaveChangesAsync();
 
-    //     //     return Ok();
-    //     // }
+    //     return Ok();
+    // }
 
     // [HttpDelete]
     // [Route("job/{id}")]
