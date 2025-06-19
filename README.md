@@ -60,3 +60,9 @@ Vunerabilidades:
 -> melhorar service auth
 
 -> refact jobs, melhorar chamada de jobs por id, mandar somente job e deixar staffjob e req com chamadas separadas
+
+
+
+
+
+--FOCCAR MVP -> RECOMECAR DO ZERO?
