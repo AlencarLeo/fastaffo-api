@@ -64,9 +64,6 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IJobRequestService, JobRequestService>();
-builder.Services.AddScoped<IJobStaffService, JobStaffService>();
-builder.Services.AddScoped<IJobService, JobService>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 

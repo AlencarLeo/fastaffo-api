@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using fastaffo_api.src.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using fastaffo_api.src.Infrastructure.Data;
 namespace fastaffo_api.src.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250622043117_NewDataBaseModel")]
+    partial class NewDataBaseModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,15 +209,13 @@ namespace fastaffo_api.src.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("day_multiplier")
-                        .HasPrecision(10, 4)
-                        .HasColumnType("decimal(10,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("kilometers_rate")
                         .HasColumnType("int");
 
                     b.Property<decimal>("overtime_multiplier")
-                        .HasPrecision(10, 4)
-                        .HasColumnType("decimal(10,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("overtime_start_minutes")
                         .HasColumnType("int");
@@ -332,8 +333,7 @@ namespace fastaffo_api.src.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Kilometers")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
@@ -479,7 +479,7 @@ namespace fastaffo_api.src.Infrastructure.Migrations
                     b.HasOne("fastaffo_api.src.Domain.Entities.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("fastaffo_api.src.Domain.Entities.Admin", "CreatedBy")

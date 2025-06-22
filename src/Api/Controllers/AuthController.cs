@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using fastaffo_api.src.Application.Interfaces;
 using fastaffo_api.src.Application.DTOs;
+using fastaffo_api.src.Domain.Entities;
 
 namespace fastaffo_api.src.Api.Controllers;
 [Route("api/")]
@@ -32,7 +33,7 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("register/admin")]
-    public async Task<ActionResult> RegisterUserAdmin(UserAdminDtoReq request)
+    public async Task<ActionResult> RegisterUserAdmin(Admin request)
     {
         try
         {
@@ -46,7 +47,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register/staff")]
-    public async Task<ActionResult> RegisterUserStaff(UserStaffDtoReq request)
+    public async Task<ActionResult> RegisterUserStaff(Staff request)
     {
         try
         {
@@ -60,7 +61,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("singin/staff")]
-    public async Task<ActionResult<TokenUserDto<UserStaffDtoRes>>> SinginStaff(AuthDtoReq request)
+    public async Task<ActionResult<TokenUserDto<Staff>>> SinginStaff(AuthDtoReq request)
     {
         try
         {
@@ -74,7 +75,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("singin/admin")]
-    public async Task<ActionResult<TokenUserDto<UserAdminDtoRes>>> SinginAdmin(AuthDtoReq request)
+    public async Task<ActionResult<TokenUserDto<Admin>>> SinginAdmin(AuthDtoReq request)
     {
         try
         {
