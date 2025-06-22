@@ -3,6 +3,9 @@
 > This document defines the complete database structure and business logic behind the platform.  
 It supports a multi-tenant architecture for companies managing jobs and teams, with staff using a mobile app and admins using a web interface.
 
+https://dbdiagram.io/d/6856419ff039ec6d36397813
+
+
 ---
 
 ## 🧱 Tables & Relationships

@@ -1,14 +1,10 @@
-using System.Text.Json.Serialization;
-
-namespace fastaffo_api.src.Domain.Entities
+namespace fastaffo_api.src.Domain.Entities;
+public class Company
 {
-    public class Company
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string ABN { get; set; } = string.Empty;
-        // public List<Guid>? TopCollaborationsStaffsIds { get; set; }
-        [JsonIgnore]
-        public ICollection<UserAdmin>? OwnersAndAdmins { get; set; }
-    }
+    public Guid Id { get; set; }
+    public required string Name { get; set; }
+    public required string ABN { get; set; }
+    public string? WebsiteUrl { get; set; }
+    public Guid? ContactInfoId { get; set; }
+    public ContactInfo? ContactInfo { get; set; }
 }
