@@ -60,7 +60,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register/staff")]
-    public async Task<ActionResult> RegisterUserStaff(Staff request)
+    public async Task<ActionResult> RegisterUserStaff(StaffDtoReq request)
     {
         try
         {
@@ -74,7 +74,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("singin/staff")]
-    public async Task<ActionResult<TokenUserDto<Staff>>> SinginStaff(AuthDtoReq request)
+    public async Task<ActionResult<TokenUserDto<StaffDtoRes>>> SinginStaff(AuthDtoReq request)
     {
         try
         {

@@ -1,11 +1,9 @@
-namespace fastaffo_api.src.Domain.Entities;
-public class Staff
+namespace fastaffo_api.src.Application.DTOs;
+public class StaffDtoReq
 {
-    public Guid Id { get; set; }
     public required string Name { get; set; }
     public required string Lastname { get; set; }
     public required string Email { get; set; }
     public required string Password { get; set; }
-    public Guid? ContactInfoId { get; set; }
-    public ContactInfo? ContactInfo { get; set; }
+    public ContactInfoDto? ContactInfo { get; set; }
 }

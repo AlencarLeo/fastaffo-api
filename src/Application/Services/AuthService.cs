@@ -46,7 +46,7 @@ public class AuthService : IAuthService
         string passwordHash
             = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-        Admin newAdmin = new Admin
+        admin = new Admin
         {
             Name = request.Name,
             Lastname = request.Lastname,
@@ -66,7 +66,7 @@ public class AuthService : IAuthService
             }
         };
 
-        await _context.AddAsync(newAdmin);
+        await _context.AddAsync(admin);
         await _context.SaveChangesAsync();
     }
     
@@ -106,51 +106,71 @@ public class AuthService : IAuthService
         return new TokenUserDto<AdminDtoRes>(adminDtoRes, token);
     }
     
-    public async Task RegisterStaffAsync(Staff request)
+    public async Task RegisterStaffAsync(StaffDtoReq request)
     {
-        Staff? userStaff = await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
+        Staff? staff = await _context.Staffs
+                                            .Include(s => s.ContactInfo)
+                                            .SingleOrDefaultAsync(s => s.Email == request.Email);
 
-        if(userStaff is not null){
+        if(staff is not null){
             throw new Exception("If you already have an account associated with this email, simply [click here] to reset your password and access your account.");
         }
 
         string passwordHash
             = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-        // userStaff = new UserStaff
-        // {
-        //     FirstName = request.FirstName,
-        //     LastName = request.LastName,
-        //     Phone = request.Phone,
-        //     Email = request.Email,
-        //     Password = passwordHash
-        // };
+        staff = new Staff
+        {
+            Name = request.Name,
+            Lastname = request.Lastname,
+            Email = request.Email,
+            Password = passwordHash,
+            ContactInfo = request.ContactInfo == null ? null : new ContactInfo
+            {
+                PhotoLogoUrl = request.ContactInfo.PhotoLogoUrl,
+                PhoneNumber = request.ContactInfo.PhoneNumber,
+                PostalCode = request.ContactInfo.PostalCode,
+                State = request.ContactInfo.State,
+                City = request.ContactInfo.City,
+                AddressLine1 = request.ContactInfo.AddressLine1,
+                AddressLine2 = request.ContactInfo.AddressLine2
+            }
+        };
 
-        await _context.Staffs.AddAsync(userStaff);
+        await _context.Staffs.AddAsync(staff);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<TokenUserDto<Staff>> AuthenticateStaffAsync(AuthDtoReq request)
+    public async Task<TokenUserDto<StaffDtoRes>> AuthenticateStaffAsync(AuthDtoReq request)
     {
-        Staff? userStaff = await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
+        Staff? staff = await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
 
-        if (userStaff is null || !BCrypt.Net.BCrypt.Verify(request.Password, userStaff.Password))
+        if (staff is null || !BCrypt.Net.BCrypt.Verify(request.Password, staff.Password))
         {
             throw new Exception("User not found or wrong password.");
         }
 
-        string token = _tokenService.CreateToken(userStaff.Id, "staff");
+        string token = _tokenService.CreateToken(staff.Id, "staff");
 
-        // UserStaffDtoRes userStaffDtoRes = new UserStaffDtoRes{
-        //     Id = userStaff.Id,
-        //     Role = userStaff.Role,    
-        //     FirstName = userStaff.FirstName,
-        //     LastName = userStaff.LastName,
-        //     Phone = userStaff.Phone,
-        //     Email = userStaff.Email
-        // };
+        StaffDtoRes staffDtoRes = new StaffDtoRes
+        {
+            Id = staff.Id,
+            Name = staff.Name,
+            Lastname = staff.Lastname,
+            Email = staff.Email,
+            ContactInfo = staff.ContactInfo == null ? null : new ContactInfoDto
+            {
+                PhotoLogoUrl = staff.ContactInfo.PhotoLogoUrl,
+                PhoneNumber = staff.ContactInfo.PhoneNumber,
+                PostalCode = staff.ContactInfo.PostalCode,
+                State = staff.ContactInfo.State,
+                City = staff.ContactInfo.City,
+                AddressLine1 = staff.ContactInfo.AddressLine1,
+                AddressLine2 = staff.ContactInfo.AddressLine2
+            }
+        };
 
-        return new TokenUserDto<Staff>(userStaff, token);
+        return new TokenUserDto<StaffDtoRes>(staffDtoRes, token);
     }
     
 }
