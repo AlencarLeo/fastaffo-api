@@ -45,12 +45,26 @@ public class AuthController : ControllerBase
         }
     }
 
+    [HttpPost("singin/admin")]
+    public async Task<ActionResult<TokenUserDto<AdminDtoRes>>> SinginAdmin(AuthDtoReq request)
+    {
+        try
+        {
+            var result = await _authService.AuthenticateAdminAsync(request);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpPost("register/staff")]
     public async Task<ActionResult> RegisterUserStaff(Staff request)
     {
         try
         {
-            await _authService.RegisterUserStaffAsync(request);
+            await _authService.RegisterStaffAsync(request);
             return Ok();
         }
         catch (Exception ex)
@@ -65,20 +79,6 @@ public class AuthController : ControllerBase
         try
         {
             var result = await _authService.AuthenticateStaffAsync(request);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-
-    [HttpPost("singin/admin")]
-    public async Task<ActionResult<TokenUserDto<Admin>>> SinginAdmin(AuthDtoReq request)
-    {
-        try
-        {
-            var result = await _authService.AuthenticateAdminAsync(request);
             return Ok(result);
         }
         catch (Exception ex)

@@ -69,7 +69,44 @@ public class AuthService : IAuthService
         await _context.AddAsync(newAdmin);
         await _context.SaveChangesAsync();
     }
-    public async Task RegisterUserStaffAsync(Staff request)
+    
+    public async Task<TokenUserDto<AdminDtoRes>> AuthenticateAdminAsync(AuthDtoReq request)
+    {
+        Admin? admin = await _context.Admins
+                                        .Include(a => a.ContactInfo)
+                                        .SingleOrDefaultAsync(s => s.Email == request.Email);
+
+        if (admin is null || !BCrypt.Net.BCrypt.Verify(request.Password, admin.Password))
+        {
+            throw new Exception("User not found or wrong password.");
+        }
+
+        string token = _tokenService.CreateToken(admin.Id, admin.Role.ToString());
+
+        AdminDtoRes adminDtoRes = new AdminDtoRes
+        {
+            Id = admin.Id,
+            Name = admin.Name,
+            Lastname = admin.Lastname,
+            Email = admin.Email,
+            Role = admin.Role,
+            CompanyId = admin.CompanyId,
+            ContactInfo = admin.ContactInfo == null ? null : new ContactInfoDto
+            {
+                PhotoLogoUrl = admin.ContactInfo.PhotoLogoUrl,
+                PhoneNumber = admin.ContactInfo.PhoneNumber,
+                PostalCode = admin.ContactInfo.PostalCode,
+                State = admin.ContactInfo.State,
+                City = admin.ContactInfo.City,
+                AddressLine1 = admin.ContactInfo.AddressLine1,
+                AddressLine2 = admin.ContactInfo.AddressLine2
+            }
+        };
+
+        return new TokenUserDto<AdminDtoRes>(adminDtoRes, token);
+    }
+    
+    public async Task RegisterStaffAsync(Staff request)
     {
         Staff? userStaff = await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
 
@@ -92,34 +129,13 @@ public class AuthService : IAuthService
         await _context.Staffs.AddAsync(userStaff);
         await _context.SaveChangesAsync();
     }
-    public async Task<TokenUserDto<Admin>> AuthenticateAdminAsync(AuthDtoReq request)
-    {
-        Admin? userAdmin =  await _context.Admins.SingleOrDefaultAsync(s => s.Email == request.Email);
 
-        if(userAdmin is null || !BCrypt.Net.BCrypt.Verify(request.Password, userAdmin.Password)){
-            throw new Exception("User not found or wrong password.");
-        }
-
-        string token = _tokenService.CreateToken(userAdmin.Id, userAdmin.Role.ToString());
-        
-
-        // UserAdminDtoRes userAdminDtoRes = new UserAdminDtoRes{
-        //     Id = userAdmin.Id,
-        //     FirstName = userAdmin.FirstName,
-        //     LastName = userAdmin.LastName,
-        //     Email = userAdmin.Email,
-        //     Phone = userAdmin.Phone,
-        //     IsOwner = userAdmin.IsOwner,
-        //     Role = userAdmin.Role
-        // };
-
-        return new TokenUserDto<Admin>(userAdmin, token);
-    }
     public async Task<TokenUserDto<Staff>> AuthenticateStaffAsync(AuthDtoReq request)
     {
-        Staff? userStaff =  await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
+        Staff? userStaff = await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
 
-        if(userStaff is null || !BCrypt.Net.BCrypt.Verify(request.Password, userStaff.Password)){
+        if (userStaff is null || !BCrypt.Net.BCrypt.Verify(request.Password, userStaff.Password))
+        {
             throw new Exception("User not found or wrong password.");
         }
 

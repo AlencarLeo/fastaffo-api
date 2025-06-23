@@ -6,7 +6,7 @@ public interface IAuthService
 {
     (string? Id, List<string>? Roles) GetAuthenticatedUser();
     Task RegisterAdminAsync(AdminDtoReq request);
-    Task RegisterUserStaffAsync(Staff request);
-    Task<TokenUserDto<Admin>> AuthenticateAdminAsync(AuthDtoReq request);
+    Task<TokenUserDto<AdminDtoRes>> AuthenticateAdminAsync(AuthDtoReq request);
+    Task RegisterStaffAsync(Staff request);
     Task<TokenUserDto<Staff>> AuthenticateStaffAsync(AuthDtoReq request);
 }
