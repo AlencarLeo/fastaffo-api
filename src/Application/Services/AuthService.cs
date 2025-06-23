@@ -18,7 +18,7 @@ public class AuthService : IAuthService
         _tokenService = tokenService;
     }
 
-    public (string? Id, List<string>? Roles) GetCurrentUser()
+    public (string? Id, List<string>? Roles) GetAuthenticatedUser()
     {
         var user = _httpContextAccessor.HttpContext?.User;
 
@@ -33,29 +33,40 @@ public class AuthService : IAuthService
 
         return (id, roles);
     }
-    public async Task RegisterUserAdminAsync(Admin request)
+    
+    public async Task RegisterAdminAsync(AdminDtoReq request)
     {
-        Admin? userAdmin = await _context.Admins.SingleOrDefaultAsync(s => s.Email == request.Email);
+        Admin? admin = await _context.Admins.SingleOrDefaultAsync(s => s.Email == request.Email);
 
-        if(userAdmin is not null){
+        if (admin is not null)
+        {
             throw new Exception("If you already have an account associated with this email, simply [click here] to reset your password and access your account.");
         }
 
         string passwordHash
             = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-        // userAdmin = new Admin
-        // {
-        //     FirstName = request.FirstName,
-        //     LastName = request.LastName,
-        //     Email = request.Email,
-        //     Phone = request.Phone,
-        //     Password = passwordHash,
-        //     IsOwner = request.IsOwner,
-        //     CompanyId = null
-        // };
+        Admin newAdmin = new Admin
+        {
+            Name = request.Name,
+            Lastname = request.Lastname,
+            Email = request.Email,
+            Password = passwordHash,
+            Role = request.Role,
+            CompanyId = request.CompanyId,
+            ContactInfo = request.ContactInfo == null ? null : new ContactInfo
+            {
+                PhotoLogoUrl = request.ContactInfo.PhotoLogoUrl,
+                PhoneNumber = request.ContactInfo.PhoneNumber,
+                PostalCode = request.ContactInfo.PostalCode,
+                State = request.ContactInfo.State,
+                City = request.ContactInfo.City,
+                AddressLine1 = request.ContactInfo.AddressLine1,
+                AddressLine2 = request.ContactInfo.AddressLine2
+            }
+        };
 
-        await _context.AddAsync(userAdmin);
+        await _context.AddAsync(newAdmin);
         await _context.SaveChangesAsync();
     }
     public async Task RegisterUserStaffAsync(Staff request)

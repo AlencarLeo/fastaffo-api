@@ -20,7 +20,7 @@ public class AuthController : ControllerBase
     [Route("me"), Authorize]
     public ActionResult<string> GetMe()
     {
-        var (id, roles) = _authService.GetCurrentUser();
+        var (id, roles) = _authService.GetAuthenticatedUser();
 
         if (id == null)
         {
@@ -30,14 +30,13 @@ public class AuthController : ControllerBase
         return Ok(new { id, roles });
     }
 
-
     [HttpPost]
     [Route("register/admin")]
-    public async Task<ActionResult> RegisterUserAdmin(Admin request)
+    public async Task<ActionResult> RegisterAdmin(AdminDtoReq request)
     {
         try
         {
-            await _authService.RegisterUserAdminAsync(request);
+            await _authService.RegisterAdminAsync(request);
             return Ok();
         }
         catch (Exception ex)

@@ -12,8 +12,8 @@ using fastaffo_api.src.Infrastructure.Data;
 namespace fastaffo_api.src.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250622043117_NewDataBaseModel")]
-    partial class NewDataBaseModel
+    [Migration("20250623093432_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -209,13 +209,15 @@ namespace fastaffo_api.src.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("day_multiplier")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 4)
+                        .HasColumnType("decimal(10,4)");
 
                     b.Property<int>("kilometers_rate")
                         .HasColumnType("int");
 
                     b.Property<decimal>("overtime_multiplier")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 4)
+                        .HasColumnType("decimal(10,4)");
 
                     b.Property<int>("overtime_start_minutes")
                         .HasColumnType("int");
@@ -333,7 +335,8 @@ namespace fastaffo_api.src.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Kilometers")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
@@ -479,7 +482,7 @@ namespace fastaffo_api.src.Infrastructure.Migrations
                     b.HasOne("fastaffo_api.src.Domain.Entities.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("fastaffo_api.src.Domain.Entities.Admin", "CreatedBy")
@@ -575,7 +578,7 @@ namespace fastaffo_api.src.Infrastructure.Migrations
                     b.HasOne("fastaffo_api.src.Domain.Entities.Team", "Team")
                         .WithMany()
                         .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Staff");

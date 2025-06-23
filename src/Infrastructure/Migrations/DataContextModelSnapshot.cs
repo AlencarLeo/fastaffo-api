@@ -575,7 +575,7 @@ namespace fastaffo_api.src.Infrastructure.Migrations
                     b.HasOne("fastaffo_api.src.Domain.Entities.Team", "Team")
                         .WithMany()
                         .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Staff");
