@@ -73,8 +73,8 @@ public class AuthService : IAuthService
     public async Task<TokenUserDto<AdminDtoRes>> AuthenticateAdminAsync(AuthDtoReq request)
     {
         Admin? admin = await _context.Admins
-                                        .Include(a => a.ContactInfo)
-                                        .SingleOrDefaultAsync(s => s.Email == request.Email);
+                                            .Include(a => a.ContactInfo)
+                                            .SingleOrDefaultAsync(s => s.Email == request.Email);
 
         if (admin is null || !BCrypt.Net.BCrypt.Verify(request.Password, admin.Password))
         {
@@ -108,9 +108,7 @@ public class AuthService : IAuthService
     
     public async Task RegisterStaffAsync(StaffDtoReq request)
     {
-        Staff? staff = await _context.Staffs
-                                            .Include(s => s.ContactInfo)
-                                            .SingleOrDefaultAsync(s => s.Email == request.Email);
+        Staff? staff = await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
 
         if(staff is not null){
             throw new Exception("If you already have an account associated with this email, simply [click here] to reset your password and access your account.");
@@ -143,7 +141,9 @@ public class AuthService : IAuthService
 
     public async Task<TokenUserDto<StaffDtoRes>> AuthenticateStaffAsync(AuthDtoReq request)
     {
-        Staff? staff = await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
+        Staff? staff = await _context.Staffs
+                                            .Include(s => s.ContactInfo)
+                                            .SingleOrDefaultAsync(s => s.Email == request.Email);
 
         if (staff is null || !BCrypt.Net.BCrypt.Verify(request.Password, staff.Password))
         {

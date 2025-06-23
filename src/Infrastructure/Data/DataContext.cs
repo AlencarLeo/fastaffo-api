@@ -30,17 +30,17 @@ public class DataContext : DbContext
             .HasForeignKey(j => j.CompanyId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<StaffTeam>()
-            .HasOne(st => st.Staff)
-            .WithMany()
-            .HasForeignKey(st => st.StaffId)
-            .OnDelete(DeleteBehavior.Cascade); // permite cascade aqui
+        // modelBuilder.Entity<StaffTeam>()
+        //     .HasOne(st => st.Staff)
+        //     .WithMany()
+        //     .HasForeignKey(st => st.StaffId)
+        //     .OnDelete(DeleteBehavior.Cascade); // permite cascade aqui
 
-        modelBuilder.Entity<StaffTeam>()
-            .HasOne(st => st.Team)
-            .WithMany()
-            .HasForeignKey(st => st.TeamId)
-            .OnDelete(DeleteBehavior.Restrict); // evita conflito no outro lado
+        // modelBuilder.Entity<StaffTeam>()
+        //     .HasOne(st => st.Team)
+        //     .WithMany()
+        //     .HasForeignKey(st => st.TeamId)
+        //     .OnDelete(DeleteBehavior.Restrict); // evita conflito no outro lado
 
 
         // Corrige possíveis truncamentos de decimal
