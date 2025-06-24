@@ -45,11 +45,11 @@ public class DataContext : DbContext
 
         // Corrige possíveis truncamentos de decimal
         modelBuilder.Entity<RatePolicy>()
-            .Property(r => r.day_multiplier)
+            .Property(r => r.DayMultiplier)
             .HasPrecision(10, 4);
 
         modelBuilder.Entity<RatePolicy>()
-            .Property(r => r.overtime_multiplier)
+            .Property(r => r.OvertimeMultiplier)
             .HasPrecision(10, 4);
 
         modelBuilder.Entity<StaffJob>()
