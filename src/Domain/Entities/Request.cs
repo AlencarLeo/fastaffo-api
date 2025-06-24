@@ -10,7 +10,7 @@ public class Request
     public required RequestTarget Target { get; set; }
 
     public required Guid JobId { get; set; }
-    public Job Job { get; set; } = null!;
+    public Job? Job { get; set; }
 
     public Guid? TeamId { get; set; }
     public Team? Team { get; set; }

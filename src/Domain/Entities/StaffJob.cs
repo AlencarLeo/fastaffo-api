@@ -5,7 +5,7 @@ public class StaffJob
     public Guid Id { get; set; }
 
     public required Guid StaffId { get; set; }
-    public Staff Staff { get; set; } = null!;
+    public Staff? Staff { get; set; }
 
     public Guid? JobId { get; set; }
     public Job? Job { get; set; }
@@ -18,20 +18,12 @@ public class StaffJob
     public required DateTime StartTime { get; set; }
     public required DateTime FinishTime { get; set; }
 
-    public int BaseRate { get; set; }
-
-    // Extras adicionados pelo staff
-    public int TravelTimeMinutes { get; set; }
-    public decimal Kilometers { get; set; }
-
-    // Cópia de políticas (RatePolicy) - você pode expandir isso depois
+    public required int BaseRate { get; set; }
+    public int? TravelTimeMinutes { get; set; }
+    public decimal? Kilometers { get; set; }
     public string? Notes { get; set; }
-
-    // Valor total calculado
-    public int TotalAmount { get; set; }
-
-    // Campos exclusivos para jobs pessoais
+    public int? TotalAmount { get; set; }
     public string? Title { get; set; }
     public string? Location { get; set; }
-    public bool IsPersonalJob { get; set; }
+    public required bool IsPersonalJob { get; set; }
 }

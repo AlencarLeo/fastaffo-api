@@ -11,9 +11,9 @@ public class Job
     public string? Notes { get; set; }
     public JobStatus Status { get; set; } = JobStatus.Planning;
     public required Guid CompanyId { get; set; }
-    public Company Company { get; set; } = null!;
+    public Company? Company { get; set; }
     public required Guid CreatedByAdminId { get; set; }
-    public Admin CreatedBy { get; set; } = null!;
+    public Admin? CreatedBy { get; set; }
 }
 
 //     public string StartDateTimeZoneLocation { get; set; } = string.Empty;

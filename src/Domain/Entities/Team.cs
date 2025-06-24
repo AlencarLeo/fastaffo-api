@@ -4,7 +4,7 @@ public class Team
 {
     public Guid Id { get; set; }
     public required Guid JobId { get; set; }
-    public Job Job { get; set; } = null!;
+    public Job? Job { get; set; }
     public required string Name { get; set; }
     
     public Guid? SupervisorStaffId { get; set; }

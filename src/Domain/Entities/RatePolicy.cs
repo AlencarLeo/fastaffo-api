@@ -4,9 +4,9 @@ public class RatePolicy
 {
     public Guid Id { get; set; }
     public required Guid CompanyId { get; set; }
-    public int overtime_start_minutes { get; set; }
-    public decimal overtime_multiplier { get; set; }
-    public decimal day_multiplier { get; set; }
-    public int travel_time_rate { get; set; }
-    public int kilometers_rate { get; set; }
+    public int? OvertimeStartMinutes { get; set; }
+    public decimal? OvertimeMultiplier { get; set; }
+    public decimal? DayMultiplier { get; set; }
+    public int? TravelTimeRate { get; set; }
+    public int? KilometersRate { get; set; }
 }

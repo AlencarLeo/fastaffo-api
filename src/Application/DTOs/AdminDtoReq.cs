@@ -7,7 +7,7 @@ public class AdminDtoReq
     public required string Lastname { get; set; }
     public required string Email { get; set; }
     public required string Password { get; set; }
-    public SystemRole Role { get; set; }
+    public required SystemRole Role { get; set; }
     public required Guid CompanyId { get; set; }
     public ContactInfoDto? ContactInfo { get; set; }
 }
