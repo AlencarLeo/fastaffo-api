@@ -1,66 +1,48 @@
-# 🛠️ JobFlow
 
-**JobFlow** is a platform designed to help companies manage jobs, teams, and staff assignments — with separate experiences for **admins (web)** and **staff (mobile)**.
+---
+
+# 🛠️ Fastaffo API
+
+**Fastaffo** is a backend platform designed to help companies manage jobs, teams, and staff assignments — with distinct experiences for **admins (web)** and **staff (mobile)**.
 
 ---
 
 ## 📚 Overview
 
-The platform allows businesses to create and manage jobs, invite or approve workers, assign roles, and define flexible rate policies (e.g. overtime, travel time, kilometers, allowances).  
+The platform allows businesses to create and manage jobs, invite or approve workers, assign roles, and define flexible rate policies (e.g. overtime, travel time, kilometers, allowances).
 Staff can also log personal jobs and track their work directly from their mobile app.
+
+For a detailed overview of the database structure and relationships, please see the [Entity-Relationship Diagram (ERD)](https://dbdiagram.io/d/6856419ff039ec6d36397813).
 
 ---
 
 ## 🧱 Tech Stack
 
-- ⚙️ Backend: [.NET 8](https://dotnet.microsoft.com/)
-- 🛢️ Database: MySQL + [DBML](https://dbdiagram.io/)
-- 💻 Admin Interface (web): *coming soon*
-- 📱 Staff App (mobile): *coming soon*
-- ☁️ Hosting: Railway / Azure / Vercel (planned)
+* ⚙️ Backend: [.NET 8](https://dotnet.microsoft.com/) with Entity Framework Core
+* 🛢️ Database: MySQL + [DBML](https://dbdiagram.io/) for schema visualization
+* 💻 Admin Interface (web): *coming soon*
+* 📱 Staff App (mobile): *coming soon*
+* ☁️ Hosting: Railway / Azure / Vercel (planned)
 
 ---
 
 ## 🚧 Project Status
 
-📌 Database schema finalized  
-🔧 Backend development in progress  
+📌 Database schema finalized
+🔧 Backend development in progress
 📱 Mobile app to be started soon
-
----
-
-## 📁 Project Structure
-
-# FasStaffo API
-
-A back-end platform for managing job bookings, team organisation, and workforce coordination between companies and staff members (labourers). Built with .NET and Entity Framework.
 
 ---
 
 ## ✅ Phase 1 – Core Job Booking System (Completed)
 
-The first milestone of the project implements the full cycle of job creation and staff assignment:
+This phase covers the full cycle of job creation and staff assignment:
 
-### Features:
-- **Companies** and their admins (owners or regular) can:
-  - Create jobs and define teams.
-  - Invite staff or receive requests to join jobs/teams.
-- **Staff (labour)** users can:
-  - Accept or request jobs/teams.
-  - Create **personal jobs** for tracking their own work (e.g. freelance work).
-  - Add working time, travel time, kilometres, allowances.
-  - See their upcoming and past jobs.
-- **Requests system** supporting:
-  - Type: `invite` or `request`
-  - Target: `job` or `team`
-  - Approval workflow: staff + admin
-- **Company rate policies**:
-  - Overtime, day multipliers, travel and kilometre compensation.
-- **Allowances**:
-  - Custom types created by the company (e.g. meal, overnight)
-  - Staff can attach them to jobs with specific values.
-
-The system ensures data consistency, separation of concerns, and tracking of relationships between staff, teams, jobs, and companies.
+* Companies and admins can create jobs, define teams, invite staff, or handle join requests.
+* Staff users can accept invites or request to join jobs/teams, create personal jobs, and log work details such as hours, travel, and allowances.
+* Request system with dual approval (staff + admin).
+* Flexible company rate policies covering overtime, day multipliers, and travel compensation.
+* Allowances management, customizable per company.
 
 ---
 
@@ -137,29 +119,20 @@ The system ensures data consistency, separation of concerns, and tracking of rel
 
 ---
 
-## 🛠️ Tech Stack
+## 📂 Project Structure
 
-- **Backend:** .NET 8, Entity Framework Core
-- **Database:** SQL Server (Code-first approach with strong relational modeling)
-- **Authentication:** (To be defined)
-- **Frontend (planned):**
-  - Web App for Admins (React/Next.js)
-  - Mobile App for Labourers (React Native)
-
----
-
-## 📂 Structure (Coming soon)
-> Folder structure and API endpoints documentation will be added here.
+(To be documented soon — will include folder layout and API endpoint specs.)
 
 ---
 
 ## 📌 Contributing
-Contributions are welcome in future phases. For now, this project is in its early development and internal usage stage.
+
+Contributions are welcome in future phases. Currently, the project is under active backend development and internal testing.
 
 ---
 
 ## 📃 License
+
 [MIT License](LICENSE)
 
 ---
-

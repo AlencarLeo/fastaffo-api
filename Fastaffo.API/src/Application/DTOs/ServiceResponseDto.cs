@@ -1,3 +1,4 @@
+namespace fastaffo_api.src.Application.DTOs;
 public class ServiceResponseDto
 {
     public string Message { get; set; }
