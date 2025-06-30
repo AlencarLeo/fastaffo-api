@@ -1,6 +1,5 @@
 using fastaffo_api.src.Application.DTOs;
-using fastaffo_api.src.Domain.Entities;
-using fastaffo_api.src.Infrastructure.Data;
+using fastaffo_api.src.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace fastaffo_api.src.Api.Controllers;
@@ -9,38 +8,27 @@ namespace fastaffo_api.src.Api.Controllers;
 [ApiController]
 public class CompanyController : ControllerBase
 {
-    private readonly DataContext _context;
+    private readonly ICompanyService _companyService;
 
-    public CompanyController(DataContext context)
+    public CompanyController(ICompanyService companyService)
     {
-        _context = context;
+        _companyService = companyService;
 
     }
 
     [HttpPost]
     [Route("company")]
-    public async Task CreateCompany(CompanyDtoReq request)
+    public async Task<ActionResult> CreateCompany(CompanyDtoReq request)
     {
-        var newCompany = new Company
+        try
         {
-            Name = request.Name,
-            ABN = request.ABN,
-            WebsiteUrl = request.WebsiteUrl,
-            ContactInfo  = request.ContactInfo == null ? null : new ContactInfo
-            {
-                PhoneNumber = request.ContactInfo.PhoneNumber,
-                PhotoLogoUrl = request.ContactInfo.PhotoLogoUrl,
-                PostalCode = request.ContactInfo.PostalCode,
-                State = request.ContactInfo.State,
-                City = request.ContactInfo.City,
-                AddressLine1 = request.ContactInfo.AddressLine1,
-                AddressLine2 = request.ContactInfo.AddressLine2
-            }
-        };
-        
-
-        await _context.AddAsync(newCompany);
-        await _context.SaveChangesAsync();
+            await _companyService.CreateCompany(request);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
     
 }

@@ -1,5 +1,4 @@
 using fastaffo_api.src.Application.DTOs;
-using fastaffo_api.src.Domain.Entities;
 
 namespace fastaffo_api.src.Application.Interfaces;
 public interface IAuthService
