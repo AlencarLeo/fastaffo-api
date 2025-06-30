@@ -26,7 +26,7 @@ public class CompanyController : ControllerBase
             Name = request.Name,
             ABN = request.ABN,
             WebsiteUrl = request.WebsiteUrl,
-            ContactInfo  = new ContactInfo
+            ContactInfo  = request.ContactInfo == null ? null : new ContactInfo
             {
                 PhoneNumber = request.ContactInfo.PhoneNumber,
                 PhotoLogoUrl = request.ContactInfo.PhotoLogoUrl,
