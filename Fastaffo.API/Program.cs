@@ -1,7 +1,10 @@
 using System.Text;
+using fastaffo_api.src.Application.DTOs;
 using fastaffo_api.src.Application.Interfaces;
 using fastaffo_api.src.Application.Services;
+using fastaffo_api.src.Application.Validators;
 using fastaffo_api.src.Infrastructure.Data;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -63,9 +66,13 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.AddScoped<IValidator<AdminDtoReq>, AdminDtoReqValidator>();
+builder.Services.AddScoped<IValidator<StaffDtoReq>, StaffDtoReqValidator>();
+builder.Services.AddScoped<IValidator<AuthDtoReq>, AuthDtoReqValidator>();
 
 
 var app = builder.Build();
