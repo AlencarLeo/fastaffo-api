@@ -1,23 +1,21 @@
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using FluentValidation;
+using Swashbuckle.AspNetCore.Filters;
 using fastaffo_api.src.Application.DTOs;
 using fastaffo_api.src.Application.Interfaces;
 using fastaffo_api.src.Application.Services;
 using fastaffo_api.src.Application.Validators;
 using fastaffo_api.src.Infrastructure.Data;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -41,7 +39,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddAuthentication().AddJwtBearer(options => {
+
+builder.Services.AddAuthentication().AddJwtBearer(options =>
+{
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
@@ -51,9 +51,6 @@ builder.Services.AddAuthentication().AddJwtBearer(options => {
             builder.Configuration.GetSection("AppSettings:Token").Value!))
     };
 });
-
-builder.Services.AddScoped<TokenService>();
-
 
 builder.Services.AddCors(options =>
 {
@@ -71,16 +68,13 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddScoped<IValidator<AdminDtoReq>, AdminDtoReqValidator>();
-builder.Services.AddScoped<IValidator<StaffDtoReq>, StaffDtoReqValidator>();
 builder.Services.AddScoped<IValidator<AuthDtoReq>, AuthDtoReqValidator>();
-
+builder.Services.AddScoped<IValidator<StaffDtoReq>, StaffDtoReqValidator>();
 
 var app = builder.Build();
+
 app.UseCors("AllowAll");
 
-
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -93,9 +87,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
