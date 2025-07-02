@@ -1,14 +1,17 @@
 using System.Security.Claims;
+
 using fastaffo_api.src.Application.DTOs;
 using fastaffo_api.src.Application.Interfaces;
 using fastaffo_api.src.Domain.Entities;
 using fastaffo_api.src.Infrastructure.Data;
+
 using FluentValidation;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace fastaffo_api.src.Application.Services;
 public class AuthService : IAuthService
-{    
+{
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly DataContext _context;
     private readonly ITokenService _tokenService;
@@ -47,7 +50,7 @@ public class AuthService : IAuthService
 
         return (id, roles);
     }
-    
+
     public async Task RegisterAdminAsync(AdminDtoReq request)
     {
         var validationResult = await _adminDtoReqValidator.ValidateAsync(request);
@@ -90,7 +93,7 @@ public class AuthService : IAuthService
         await _context.AddAsync(admin);
         await _context.SaveChangesAsync();
     }
-    
+
     public async Task<TokenUserDto<AdminDtoRes>> AuthenticateAdminAsync(AuthDtoReq request)
     {
         var validationResult = await _authDtoReqValidator.ValidateAsync(request);
@@ -133,10 +136,10 @@ public class AuthService : IAuthService
 
         return new TokenUserDto<AdminDtoRes>(adminDtoRes, token);
     }
-    
+
     public async Task RegisterStaffAsync(StaffDtoReq request)
     {
-            var validationResult = await _staffDtoReqValidator.ValidateAsync(request);
+        var validationResult = await _staffDtoReqValidator.ValidateAsync(request);
         if (!validationResult.IsValid)
         {
             var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
@@ -145,7 +148,8 @@ public class AuthService : IAuthService
 
         Staff? staff = await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
 
-        if(staff is not null){
+        if (staff is not null)
+        {
             throw new Exception("If you already have an account associated with this email, simply [click here] to reset your password and access your account.");
         }
 
@@ -214,5 +218,5 @@ public class AuthService : IAuthService
 
         return new TokenUserDto<StaffDtoRes>(staffDtoRes, token);
     }
-    
+
 }

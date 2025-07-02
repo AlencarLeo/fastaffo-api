@@ -1,5 +1,6 @@
 using fastaffo_api.src.Application.DTOs;
 using fastaffo_api.src.Application.Interfaces;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace fastaffo_api.src.Api.Controllers;
@@ -30,5 +31,5 @@ public class CompanyController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-    
+
 }

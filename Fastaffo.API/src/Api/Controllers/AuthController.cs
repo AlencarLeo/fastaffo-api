@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using fastaffo_api.src.Application.Interfaces;
 using fastaffo_api.src.Application.DTOs;
-using fastaffo_api.src.Domain.Entities;
+using fastaffo_api.src.Application.Interfaces;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace fastaffo_api.src.Api.Controllers;
 [Route("api/")]

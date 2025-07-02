@@ -1,14 +1,18 @@
 using System.Text;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using FluentValidation;
-using Swashbuckle.AspNetCore.Filters;
+
 using fastaffo_api.src.Application.DTOs;
 using fastaffo_api.src.Application.Interfaces;
 using fastaffo_api.src.Application.Services;
 using fastaffo_api.src.Application.Validators;
 using fastaffo_api.src.Infrastructure.Data;
+
+using FluentValidation;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 

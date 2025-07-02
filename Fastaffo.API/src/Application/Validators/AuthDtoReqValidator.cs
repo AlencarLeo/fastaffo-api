@@ -1,4 +1,5 @@
 using fastaffo_api.src.Application.DTOs;
+
 using FluentValidation;
 
 namespace fastaffo_api.src.Application.Validators;
@@ -18,5 +19,5 @@ public class AuthDtoReqValidator : AbstractValidator<AuthDtoReq>
             .Matches(@"[a-z]+").WithMessage("Password must contain at least one lowercase letter.")
             .Matches(@"\d+").WithMessage("Password must contain at least one number.")
             .Matches(@"[\W_]+").WithMessage("Password must contain at least one special character.");
-    } 
+    }
 }

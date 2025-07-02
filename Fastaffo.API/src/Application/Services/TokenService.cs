@@ -1,8 +1,10 @@
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
+
 using fastaffo_api.src.Application.Interfaces;
+
+using Microsoft.IdentityModel.Tokens;
 
 namespace fastaffo_api.src.Application.Services;
 

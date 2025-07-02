@@ -2,6 +2,7 @@ using fastaffo_api.src.Application.DTOs;
 using fastaffo_api.src.Application.Interfaces;
 using fastaffo_api.src.Domain.Entities;
 using fastaffo_api.src.Infrastructure.Data;
+
 using FluentValidation;
 
 namespace fastaffo_api.src.Application.Services;
@@ -30,7 +31,7 @@ public class CompanyService : ICompanyService
             Name = request.Name,
             ABN = request.ABN,
             WebsiteUrl = request.WebsiteUrl,
-            ContactInfo  = request.ContactInfo == null ? null : new ContactInfo
+            ContactInfo = request.ContactInfo == null ? null : new ContactInfo
             {
                 PhoneNumber = request.ContactInfo.PhoneNumber,
                 PhotoLogoUrl = request.ContactInfo.PhotoLogoUrl,
@@ -41,7 +42,7 @@ public class CompanyService : ICompanyService
                 AddressLine2 = request.ContactInfo.AddressLine2
             }
         };
-        
+
 
         await _context.AddAsync(newCompany);
         await _context.SaveChangesAsync();

@@ -1,4 +1,5 @@
 using fastaffo_api.src.Domain.Entities;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace fastaffo_api.src.Infrastructure.Data;

@@ -1,4 +1,5 @@
 using fastaffo_api.src.Application.DTOs;
+
 using FluentValidation;
 
 namespace fastaffo_api.src.Application.Validators;

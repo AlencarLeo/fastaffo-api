@@ -1,4 +1,5 @@
 using fastaffo_api.src.Application.DTOs;
+
 using FluentValidation;
 
 namespace fastaffo_api.src.Application.Validators;
@@ -15,7 +16,7 @@ public class CompanyDtoReqValidator : AbstractValidator<CompanyDtoReq>
             .NotEmpty().WithMessage("ABN is required.")
             .Length(11).WithMessage("ABN must be exactly 11 digits.")
             .Matches(@"^\d{11}$").WithMessage("ABN must contain only digits.");
-            // https://abr.business.gov.au/
+        // https://abr.business.gov.au/
 
         RuleFor(company => company.WebsiteUrl)
             .Must(url => string.IsNullOrEmpty(url) || Uri.IsWellFormedUriString(url, UriKind.Absolute))
