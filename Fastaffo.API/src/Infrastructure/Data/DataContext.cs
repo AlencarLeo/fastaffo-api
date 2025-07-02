@@ -23,27 +23,12 @@ public class DataContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Evita erro de múltiplos caminhos de cascade delete
         modelBuilder.Entity<Job>()
             .HasOne(j => j.Company)
             .WithMany()
             .HasForeignKey(j => j.CompanyId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // modelBuilder.Entity<StaffTeam>()
-        //     .HasOne(st => st.Staff)
-        //     .WithMany()
-        //     .HasForeignKey(st => st.StaffId)
-        //     .OnDelete(DeleteBehavior.Cascade); // permite cascade aqui
-
-        // modelBuilder.Entity<StaffTeam>()
-        //     .HasOne(st => st.Team)
-        //     .WithMany()
-        //     .HasForeignKey(st => st.TeamId)
-        //     .OnDelete(DeleteBehavior.Restrict); // evita conflito no outro lado
-
-
-        // Corrige possíveis truncamentos de decimal
         modelBuilder.Entity<RatePolicy>()
             .Property(r => r.DayMultiplier)
             .HasPrecision(10, 4);
