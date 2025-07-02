@@ -17,7 +17,7 @@ public class CompanyService : ICompanyService
         _companyDtoReqValidator = companyDtoReqValidator;
     }
 
-    public async Task CreateCompany(CompanyDtoReq request)
+    public async Task CreateCompanyAsync(CompanyDtoReq request)
     {
         var validationResult = await _companyDtoReqValidator.ValidateAsync(request);
         if (!validationResult.IsValid)

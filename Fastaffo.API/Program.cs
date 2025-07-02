@@ -71,12 +71,14 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IStaffService, StaffService>();
 builder.Services.AddScoped<IStaffJobService, StaffJobService>();
 
 builder.Services.AddScoped<IValidator<AdminDtoReq>, AdminDtoReqValidator>();
 builder.Services.AddScoped<IValidator<AuthDtoReq>, AuthDtoReqValidator>();
 builder.Services.AddScoped<IValidator<CompanyDtoReq>, CompanyDtoReqValidator>();
 builder.Services.AddScoped<IValidator<StaffDtoReq>, StaffDtoReqValidator>();
+builder.Services.AddScoped<IValidator<StaffJobDtoReq>, StaffJobDtoReqValidator>();
 
 var app = builder.Build();
 

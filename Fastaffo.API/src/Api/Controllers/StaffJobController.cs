@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace fastaffo_api.src.Api.Controllers;
 
-[Route("api/staff-job")]
+[Route("api/")]
 [ApiController]
 public class StaffJobController : ControllerBase
 {
@@ -16,7 +16,7 @@ public class StaffJobController : ControllerBase
     }
 
     [HttpPost]
-    [Route("/create")]
+    [Route("staff-job")]
     public async Task<ActionResult> CreateStaffJob(StaffJobDtoReq request)
     {
         try

@@ -4,5 +4,5 @@ namespace fastaffo_api.src.Application.Interfaces;
 
 public interface ICompanyService
 {
-    Task CreateCompany(CompanyDtoReq request);
+    Task CreateCompanyAsync(CompanyDtoReq request);
 }

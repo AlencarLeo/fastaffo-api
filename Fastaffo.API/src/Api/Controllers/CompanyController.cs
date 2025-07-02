@@ -23,7 +23,7 @@ public class CompanyController : ControllerBase
     {
         try
         {
-            await _companyService.CreateCompany(request);
+            await _companyService.CreateCompanyAsync(request);
             return Ok();
         }
         catch (Exception ex)
