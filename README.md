@@ -129,6 +129,34 @@ This phase covers the full cycle of job creation and staff assignment:
 
 Contributions are welcome in future phases. Currently, the project is under active backend development and internal testing.
 
+### 🚀 How to Run the Project
+
+#### Prerequisites
+
+- [.NET SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+- (Optional) Visual Studio or Visual Studio Code
+
+#### Running the Application
+
+```bash
+# Restore dependencies
+dotnet restore
+
+# Test the application
+dotnet test
+
+# Run the application
+dotnet run --project Fastaffo.API
+```
+
+### 🔧 Code Formatting
+
+Use the official formatter to ensure consistent C# code style:
+
+```bash
+dotnet format fastaffo-api.sln
+```
+
 ---
 
 ## 📃 License
