@@ -40,6 +40,5 @@ public class AdminDtoReqValidator : AbstractValidator<AdminDtoReq>
             RuleFor(admin => admin.ContactInfo!)
                 .SetValidator(new ContactInfoDtoValidator());
         });
-
     }
 }

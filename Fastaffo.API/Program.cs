@@ -70,6 +70,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddScoped<IValidator<AdminDtoReq>, AdminDtoReqValidator>();
 builder.Services.AddScoped<IValidator<AuthDtoReq>, AuthDtoReqValidator>();
+builder.Services.AddScoped<IValidator<CompanyDtoReq>, CompanyDtoReqValidator>();
 builder.Services.AddScoped<IValidator<StaffDtoReq>, StaffDtoReqValidator>();
 
 var app = builder.Build();
