@@ -53,9 +53,12 @@ public class StaffJobService : IStaffJobService
 
     public async Task<ServiceResponseDto<StaffJobDtoRes>> GetStaffJobByIdAsync(Guid staffJobId)
     {
-                var staffJob = await _context.StaffJobs
-                                        .Include(s => s.Staff)
-                                        .FirstOrDefaultAsync(s => s.Id == staffJobId);
+        var staffJob = await _context.StaffJobs
+                                .Include(sj => sj.Staff)
+                                    .ThenInclude(s => s!.ContactInfo)
+                                .Include(sj => sj.Job)
+                                .Include(sj => sj.Team)
+                                .FirstOrDefaultAsync(sj => sj.Id == staffJobId);
 
         if (staffJob == null)
         {
@@ -88,9 +91,121 @@ public class StaffJobService : IStaffJobService
                 }
                 : null,
             JobId = staffJob.JobId,
-            // Job = staffJob.Job,
+            Job = staffJob.Job is not null
+                ? new JobDtoRes
+                {
+                    Id = staffJob.Job.Id,
+                    JobRef = staffJob.Job.JobRef,
+                    EventName = staffJob.Job.EventName,
+                    ChargedAmount = staffJob.Job.ChargedAmount,
+                    ClientName = staffJob.Job.ClientName,
+                    Location = staffJob.Job.Location,
+                    Notes = staffJob.Job.Notes,
+                    Status = staffJob.Job.Status,
+                    CompanyId = staffJob.Job.CompanyId,
+                    Company = staffJob.Job.Company is not null ? new CompanyDtoRes
+                    {
+                        Id = staffJob.Job.Company.Id,
+                        Name = staffJob.Job.Company.Name,
+                        ABN = staffJob.Job.Company.ABN,
+                        WebsiteUrl = staffJob.Job.Company.WebsiteUrl,
+                        ContactInfoId = staffJob.Job.Company.ContactInfoId,
+                        ContactInfo = staffJob.Job.Company.ContactInfo is not null
+                        ? new ContactInfoDto
+                        {
+                            PhotoLogoUrl = staffJob.Staff.ContactInfo.PhotoLogoUrl,
+                            PhoneNumber = staffJob.Staff.ContactInfo.PhoneNumber,
+                            PostalCode = staffJob.Staff.ContactInfo.PostalCode,
+                            State = staffJob.Staff.ContactInfo.State,
+                            City = staffJob.Staff.ContactInfo.City,
+                            AddressLine1 = staffJob.Staff.ContactInfo.AddressLine1,
+                            AddressLine2 = staffJob.Staff.ContactInfo.AddressLine2
+                        }
+                        : null,
+                    }
+                    : null,
+                    CreatedByAdminId = staffJob.Job.CreatedByAdminId,
+                    CreatedBy = staffJob.Job.CreatedBy is not null
+                    ? new AdminDtoRes
+                    {
+                        Id = staffJob.Job.CreatedBy.Id,
+                        Name = staffJob.Job.CreatedBy.Name,
+                        Lastname = staffJob.Job.CreatedBy.Lastname,
+                        Email = staffJob.Job.CreatedBy.Email,
+                        Role = staffJob.Job.CreatedBy.Role,
+                        CompanyId = staffJob.Job.CreatedBy.CompanyId,
+                        ContactInfo = staffJob.Job.CreatedBy.ContactInfo is not null
+                        ? new ContactInfoDto
+                        {
+                            PhotoLogoUrl = staffJob.Staff.ContactInfo.PhotoLogoUrl,
+                            PhoneNumber = staffJob.Staff.ContactInfo.PhoneNumber,
+                            PostalCode = staffJob.Staff.ContactInfo.PostalCode,
+                            State = staffJob.Staff.ContactInfo.State,
+                            City = staffJob.Staff.ContactInfo.City,
+                            AddressLine1 = staffJob.Staff.ContactInfo.AddressLine1,
+                            AddressLine2 = staffJob.Staff.ContactInfo.AddressLine2
+                        }
+                        : null,
+                    }
+                    : null,
+
+                } : null,
             TeamId = staffJob.TeamId,
-            // Team = staffJob.Team,
+            Team = staffJob.Team is not null
+                ? new TeamDtoRes
+                {
+                    Id = staffJob.Team.Id,
+                    JobId = staffJob.Team.JobId,
+                    Job = null,
+                    Name = staffJob.Team.Name,
+                    SupervisorStaffId = staffJob.Team.SupervisorStaffId,
+                    SupervisorStaff = staffJob.Team.SupervisorStaff is not null
+                ? new StaffDtoRes
+                {
+                    Id = staffJob.Team.SupervisorStaff.Id,
+                    Name = staffJob.Team.SupervisorStaff.Name,
+                    Lastname = staffJob.Team.SupervisorStaff.Lastname,
+                    Email = staffJob.Team.SupervisorStaff.Email,
+                    ContactInfo = staffJob.Team.SupervisorStaff.ContactInfo is not null
+                        ? new ContactInfoDto
+                        {
+                            PhotoLogoUrl = staffJob.Team.SupervisorStaff.ContactInfo.PhotoLogoUrl,
+                            PhoneNumber = staffJob.Team.SupervisorStaff.ContactInfo.PhoneNumber,
+                            PostalCode = staffJob.Team.SupervisorStaff.ContactInfo.PostalCode,
+                            State = staffJob.Team.SupervisorStaff.ContactInfo.State,
+                            City = staffJob.Team.SupervisorStaff.ContactInfo.City,
+                            AddressLine1 = staffJob.Team.SupervisorStaff.ContactInfo.AddressLine1,
+                            AddressLine2 = staffJob.Team.SupervisorStaff.ContactInfo.AddressLine2
+                        }
+                        : null
+                }
+                : null,
+                    SupervisorAdminId = staffJob.Team.SupervisorAdminId,
+                    SupervisorAdmin = staffJob.Team.SupervisorAdmin is not null
+                    ? new AdminDtoRes
+                    {
+                        Id = staffJob.Job.CreatedBy.Id,
+                        Name = staffJob.Job.CreatedBy.Name,
+                        Lastname = staffJob.Job.CreatedBy.Lastname,
+                        Email = staffJob.Job.CreatedBy.Email,
+                        Role = staffJob.Job.CreatedBy.Role,
+                        CompanyId = staffJob.Job.CreatedBy.CompanyId,
+                        ContactInfo = staffJob.Job.CreatedBy.ContactInfo is not null
+                        ? new ContactInfoDto
+                        {
+                            PhotoLogoUrl = staffJob.Staff.ContactInfo.PhotoLogoUrl,
+                            PhoneNumber = staffJob.Staff.ContactInfo.PhoneNumber,
+                            PostalCode = staffJob.Staff.ContactInfo.PostalCode,
+                            State = staffJob.Staff.ContactInfo.State,
+                            City = staffJob.Staff.ContactInfo.City,
+                            AddressLine1 = staffJob.Staff.ContactInfo.AddressLine1,
+                            AddressLine2 = staffJob.Staff.ContactInfo.AddressLine2
+                        }
+                        : null,
+                    }
+                    : null,
+
+                } : null,
             Role = staffJob.Role,
             StartTime = staffJob.StartTime,
             FinishTime = staffJob.FinishTime,

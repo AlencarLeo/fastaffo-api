@@ -6,9 +6,9 @@ public class StaffJobDtoRes
     public required Guid StaffId { get; set; }
     public StaffDtoRes? Staff { get; set; }
     public Guid? JobId { get; set; }
-    // public Job? Job { get; set; }
+    public JobDtoRes? Job { get; set; }
     public Guid? TeamId { get; set; }
-    // public Team? Team { get; set; }
+    public TeamDtoRes? Team { get; set; }
     public string? Role { get; set; }
     public required DateTime StartTime { get; set; }
     public DateTime? FinishTime { get; set; }
