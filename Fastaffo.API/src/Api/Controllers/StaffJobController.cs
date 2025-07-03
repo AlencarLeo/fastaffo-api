@@ -30,4 +30,19 @@ public class StaffJobController : ControllerBase
         }
     }
 
+    [HttpGet]
+    [Route("staff-job")]
+    public async Task<ActionResult<StaffJobDtoRes>> GetStaffJobById(Guid staffJobId)
+    {
+        try
+        {
+            var result = await _staffJobService.GetStaffJobByIdAsync(staffJobId);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return Conflict(ex.Message);
+        }
+    }
+
 }
