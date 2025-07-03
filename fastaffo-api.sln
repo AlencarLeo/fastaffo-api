@@ -1,23 +1,40 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.5.002.0
+VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fastaffo-api", "fastaffo-api.csproj", "{C69C6E79-6048-4115-BA49-0E669C66F56B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Fastaffo.API", "Fastaffo.API", "{125D49EC-2BA1-B203-E650-AD27BCC47786}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fastaffo-api", "Fastaffo.API\fastaffo-api.csproj", "{E3853C35-3B71-4E53-BFFB-4C0DD44064B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C69C6E79-6048-4115-BA49-0E669C66F56B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C69C6E79-6048-4115-BA49-0E669C66F56B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C69C6E79-6048-4115-BA49-0E669C66F56B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C69C6E79-6048-4115-BA49-0E669C66F56B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3853C35-3B71-4E53-BFFB-4C0DD44064B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3853C35-3B71-4E53-BFFB-4C0DD44064B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3853C35-3B71-4E53-BFFB-4C0DD44064B5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E3853C35-3B71-4E53-BFFB-4C0DD44064B5}.Debug|x64.Build.0 = Debug|Any CPU
+		{E3853C35-3B71-4E53-BFFB-4C0DD44064B5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E3853C35-3B71-4E53-BFFB-4C0DD44064B5}.Debug|x86.Build.0 = Debug|Any CPU
+		{E3853C35-3B71-4E53-BFFB-4C0DD44064B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3853C35-3B71-4E53-BFFB-4C0DD44064B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3853C35-3B71-4E53-BFFB-4C0DD44064B5}.Release|x64.ActiveCfg = Release|Any CPU
+		{E3853C35-3B71-4E53-BFFB-4C0DD44064B5}.Release|x64.Build.0 = Release|Any CPU
+		{E3853C35-3B71-4E53-BFFB-4C0DD44064B5}.Release|x86.ActiveCfg = Release|Any CPU
+		{E3853C35-3B71-4E53-BFFB-4C0DD44064B5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E3853C35-3B71-4E53-BFFB-4C0DD44064B5} = {125D49EC-2BA1-B203-E650-AD27BCC47786}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {077DD787-9F95-4D7F-B4C3-22D95A05C5E0}
