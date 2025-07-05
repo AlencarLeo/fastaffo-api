@@ -23,7 +23,7 @@ public class CompanyService : ICompanyService
     public async Task CreateCompanyAsync(CompanyDtoReq request)
     {
         await _validatorService.ValidateAsync(_companyDtoReqValidator, request);
-        
+
         var newCompany = new Company
         {
             Name = request.Name,
