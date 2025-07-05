@@ -73,6 +73,7 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
 builder.Services.AddScoped<IStaffJobService, StaffJobService>();
+builder.Services.AddScoped<IValidatorService, ValidatorService>();
 
 builder.Services.AddScoped<IValidator<AdminDtoReq>, AdminDtoReqValidator>();
 builder.Services.AddScoped<IValidator<AuthDtoReq>, AuthDtoReqValidator>();
