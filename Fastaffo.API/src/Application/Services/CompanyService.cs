@@ -10,22 +10,19 @@ namespace fastaffo_api.src.Application.Services;
 public class CompanyService : ICompanyService
 {
     private readonly DataContext _context;
+    private readonly IValidatorService _validatorService;
     private readonly IValidator<CompanyDtoReq> _companyDtoReqValidator;
-    public CompanyService(DataContext context, IValidator<CompanyDtoReq> companyDtoReqValidator)
+    public CompanyService(DataContext context, IValidatorService validatorService, IValidator<CompanyDtoReq> companyDtoReqValidator)
     {
         _context = context;
+        _validatorService = validatorService;
         _companyDtoReqValidator = companyDtoReqValidator;
     }
 
     public async Task CreateCompanyAsync(CompanyDtoReq request)
     {
-        var validationResult = await _companyDtoReqValidator.ValidateAsync(request);
-        if (!validationResult.IsValid)
-        {
-            var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
-            throw new Exception($"Validation failed: {errors}");
-        }
-
+        await _validatorService.ValidateAsync(_companyDtoReqValidator, request);
+        
         var newCompany = new Company
         {
             Name = request.Name,
@@ -42,7 +39,6 @@ public class CompanyService : ICompanyService
                 AddressLine2 = request.ContactInfo.AddressLine2
             }
         };
-
 
         await _context.AddAsync(newCompany);
         await _context.SaveChangesAsync();

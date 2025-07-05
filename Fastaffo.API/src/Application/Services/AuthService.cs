@@ -15,6 +15,7 @@ public class AuthService : IAuthService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly DataContext _context;
     private readonly ITokenService _tokenService;
+    private readonly IValidatorService _validatorService;
     private readonly IValidator<AdminDtoReq> _adminDtoReqValidator;
     private readonly IValidator<StaffDtoReq> _staffDtoReqValidator;
     private readonly IValidator<AuthDtoReq> _authDtoReqValidator;
@@ -22,6 +23,7 @@ public class AuthService : IAuthService
         IHttpContextAccessor httpContextAccessor,
         DataContext context,
         ITokenService tokenService,
+        IValidatorService validatorService,
         IValidator<AdminDtoReq> adminDtoReqValidator,
         IValidator<AuthDtoReq> authDtoReqValidator,
         IValidator<StaffDtoReq> staffDtoReqValidator
@@ -30,6 +32,7 @@ public class AuthService : IAuthService
         _httpContextAccessor = httpContextAccessor;
         _context = context;
         _tokenService = tokenService;
+        _validatorService = validatorService;
         _adminDtoReqValidator = adminDtoReqValidator;
         _staffDtoReqValidator = staffDtoReqValidator;
         _authDtoReqValidator = authDtoReqValidator;
@@ -53,12 +56,7 @@ public class AuthService : IAuthService
 
     public async Task RegisterAdminAsync(AdminDtoReq request)
     {
-        var validationResult = await _adminDtoReqValidator.ValidateAsync(request);
-        if (!validationResult.IsValid)
-        {
-            var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
-            throw new Exception($"Validation failed: {errors}");
-        }
+        await _validatorService.ValidateAsync(_adminDtoReqValidator, request);
 
         Admin? admin = await _context.Admins.SingleOrDefaultAsync(s => s.Email == request.Email);
 
@@ -96,12 +94,7 @@ public class AuthService : IAuthService
 
     public async Task<TokenUserDto<AdminDtoRes>> AuthenticateAdminAsync(AuthDtoReq request)
     {
-        var validationResult = await _authDtoReqValidator.ValidateAsync(request);
-        if (!validationResult.IsValid)
-        {
-            var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
-            throw new Exception($"Validation failed: {errors}");
-        }
+        await _validatorService.ValidateAsync(_authDtoReqValidator, request);
 
         Admin? admin = await _context.Admins
                                             .Include(a => a.ContactInfo)
@@ -139,12 +132,7 @@ public class AuthService : IAuthService
 
     public async Task RegisterStaffAsync(StaffDtoReq request)
     {
-        var validationResult = await _staffDtoReqValidator.ValidateAsync(request);
-        if (!validationResult.IsValid)
-        {
-            var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
-            throw new Exception($"Validation failed: {errors}");
-        }
+        await _validatorService.ValidateAsync(_staffDtoReqValidator, request);
 
         Staff? staff = await _context.Staffs.SingleOrDefaultAsync(s => s.Email == request.Email);
 
@@ -180,12 +168,7 @@ public class AuthService : IAuthService
 
     public async Task<TokenUserDto<StaffDtoRes>> AuthenticateStaffAsync(AuthDtoReq request)
     {
-        var validationResult = await _authDtoReqValidator.ValidateAsync(request);
-        if (!validationResult.IsValid)
-        {
-            var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
-            throw new Exception($"Validation failed: {errors}");
-        }
+        await _validatorService.ValidateAsync(_authDtoReqValidator, request);
 
         Staff? staff = await _context.Staffs
                                             .Include(s => s.ContactInfo)

@@ -12,22 +12,20 @@ namespace fastaffo_api.src.Application.Services;
 public class StaffJobService : IStaffJobService
 {
     private readonly DataContext _context;
+    private readonly IValidatorService _validatorService;
+
     private readonly IValidator<StaffJobDtoReq> _staffJobDtoReqValidator;
 
-    public StaffJobService(DataContext context, IValidator<StaffJobDtoReq> staffJobDtoReqValidator)
+    public StaffJobService(DataContext context, IValidatorService validatorService, IValidator<StaffJobDtoReq> staffJobDtoReqValidator)
     {
         _context = context;
+        _validatorService = validatorService;
         _staffJobDtoReqValidator = staffJobDtoReqValidator;
     }
 
     public async Task CreateStaffJobAsync(StaffJobDtoReq request)
     {
-        var validationResult = await _staffJobDtoReqValidator.ValidateAsync(request);
-        if (!validationResult.IsValid)
-        {
-            var errors = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage));
-            throw new Exception($"Validation failed: {errors}");
-        }
+        await _validatorService.ValidateAsync(_staffJobDtoReqValidator, request);
 
         var newStaffJob = new StaffJob
         {
