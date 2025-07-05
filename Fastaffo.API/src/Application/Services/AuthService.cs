@@ -2,6 +2,7 @@ using System.Security.Claims;
 
 using fastaffo_api.src.Application.DTOs;
 using fastaffo_api.src.Application.Interfaces;
+using fastaffo_api.src.Application.Mappers;
 using fastaffo_api.src.Domain.Entities;
 using fastaffo_api.src.Infrastructure.Data;
 
@@ -76,16 +77,7 @@ public class AuthService : IAuthService
             Password = passwordHash,
             Role = request.Role,
             CompanyId = request.CompanyId,
-            ContactInfo = request.ContactInfo == null ? null : new ContactInfo
-            {
-                PhotoLogoUrl = request.ContactInfo.PhotoLogoUrl,
-                PhoneNumber = request.ContactInfo.PhoneNumber,
-                PostalCode = request.ContactInfo.PostalCode,
-                State = request.ContactInfo.State,
-                City = request.ContactInfo.City,
-                AddressLine1 = request.ContactInfo.AddressLine1,
-                AddressLine2 = request.ContactInfo.AddressLine2
-            }
+            ContactInfo = ContactInfoMapper.ToEntity(request.ContactInfo)
         };
 
         await _context.AddAsync(admin);
@@ -115,16 +107,7 @@ public class AuthService : IAuthService
             Email = admin.Email,
             Role = admin.Role,
             CompanyId = admin.CompanyId,
-            ContactInfo = admin.ContactInfo == null ? null : new ContactInfoDto
-            {
-                PhotoLogoUrl = admin.ContactInfo.PhotoLogoUrl,
-                PhoneNumber = admin.ContactInfo.PhoneNumber,
-                PostalCode = admin.ContactInfo.PostalCode,
-                State = admin.ContactInfo.State,
-                City = admin.ContactInfo.City,
-                AddressLine1 = admin.ContactInfo.AddressLine1,
-                AddressLine2 = admin.ContactInfo.AddressLine2
-            }
+            ContactInfo = ContactInfoMapper.ToDto(admin.ContactInfo)
         };
 
         return new TokenUserDto<AdminDtoRes>(adminDtoRes, token);
@@ -150,16 +133,7 @@ public class AuthService : IAuthService
             Lastname = request.Lastname,
             Email = request.Email,
             Password = passwordHash,
-            ContactInfo = request.ContactInfo == null ? null : new ContactInfo
-            {
-                PhotoLogoUrl = request.ContactInfo.PhotoLogoUrl,
-                PhoneNumber = request.ContactInfo.PhoneNumber,
-                PostalCode = request.ContactInfo.PostalCode,
-                State = request.ContactInfo.State,
-                City = request.ContactInfo.City,
-                AddressLine1 = request.ContactInfo.AddressLine1,
-                AddressLine2 = request.ContactInfo.AddressLine2
-            }
+            ContactInfo = ContactInfoMapper.ToEntity(request.ContactInfo)
         };
 
         await _context.Staffs.AddAsync(staff);
@@ -187,16 +161,7 @@ public class AuthService : IAuthService
             Name = staff.Name,
             Lastname = staff.Lastname,
             Email = staff.Email,
-            ContactInfo = staff.ContactInfo == null ? null : new ContactInfoDto
-            {
-                PhotoLogoUrl = staff.ContactInfo.PhotoLogoUrl,
-                PhoneNumber = staff.ContactInfo.PhoneNumber,
-                PostalCode = staff.ContactInfo.PostalCode,
-                State = staff.ContactInfo.State,
-                City = staff.ContactInfo.City,
-                AddressLine1 = staff.ContactInfo.AddressLine1,
-                AddressLine2 = staff.ContactInfo.AddressLine2
-            }
+            ContactInfo = ContactInfoMapper.ToDto(staff.ContactInfo)
         };
 
         return new TokenUserDto<StaffDtoRes>(staffDtoRes, token);

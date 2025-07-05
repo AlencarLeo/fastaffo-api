@@ -1,5 +1,6 @@
 using fastaffo_api.src.Application.DTOs;
 using fastaffo_api.src.Application.Interfaces;
+using fastaffo_api.src.Application.Mappers;
 using fastaffo_api.src.Infrastructure.Data;
 
 using Microsoft.EntityFrameworkCore;
@@ -32,18 +33,7 @@ public class StaffService : IStaffService
             Name = staff.Name,
             Lastname = staff.Lastname,
             Email = staff.Email,
-            ContactInfo = staff.ContactInfo is not null
-                ? new ContactInfoDto
-                {
-                    PhotoLogoUrl = staff.ContactInfo.PhotoLogoUrl,
-                    PhoneNumber = staff.ContactInfo.PhoneNumber,
-                    PostalCode = staff.ContactInfo.PostalCode,
-                    State = staff.ContactInfo.State,
-                    City = staff.ContactInfo.City,
-                    AddressLine1 = staff.ContactInfo.AddressLine1,
-                    AddressLine2 = staff.ContactInfo.AddressLine2
-                }
-                : null
+            ContactInfo = ContactInfoMapper.ToDto(staff.ContactInfo)
         };
 
         return new ServiceResponseDto<StaffDtoRes>(staffDtoRes, "Staff member retrieved successfully.", 200);

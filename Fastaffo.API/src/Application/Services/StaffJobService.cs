@@ -1,5 +1,6 @@
 using fastaffo_api.src.Application.DTOs;
 using fastaffo_api.src.Application.Interfaces;
+using fastaffo_api.src.Application.Mappers;
 using fastaffo_api.src.Domain.Entities;
 using fastaffo_api.src.Infrastructure.Data;
 
@@ -74,18 +75,7 @@ public class StaffJobService : IStaffJobService
                     Name = staffJob.Staff.Name,
                     Lastname = staffJob.Staff.Lastname,
                     Email = staffJob.Staff.Email,
-                    ContactInfo = staffJob.Staff.ContactInfo is not null
-                        ? new ContactInfoDto
-                        {
-                            PhotoLogoUrl = staffJob.Staff.ContactInfo.PhotoLogoUrl,
-                            PhoneNumber = staffJob.Staff.ContactInfo.PhoneNumber,
-                            PostalCode = staffJob.Staff.ContactInfo.PostalCode,
-                            State = staffJob.Staff.ContactInfo.State,
-                            City = staffJob.Staff.ContactInfo.City,
-                            AddressLine1 = staffJob.Staff.ContactInfo.AddressLine1,
-                            AddressLine2 = staffJob.Staff.ContactInfo.AddressLine2
-                        }
-                        : null
+                    ContactInfo = ContactInfoMapper.ToDto(staffJob.Staff.ContactInfo)
                 }
                 : null,
             JobId = staffJob.JobId,
@@ -108,18 +98,7 @@ public class StaffJobService : IStaffJobService
                         ABN = staffJob.Job.Company.ABN,
                         WebsiteUrl = staffJob.Job.Company.WebsiteUrl,
                         ContactInfoId = staffJob.Job.Company.ContactInfoId,
-                        ContactInfo = staffJob.Job.Company.ContactInfo is not null
-                        ? new ContactInfoDto
-                        {
-                            PhotoLogoUrl = staffJob.Staff.ContactInfo.PhotoLogoUrl,
-                            PhoneNumber = staffJob.Staff.ContactInfo.PhoneNumber,
-                            PostalCode = staffJob.Staff.ContactInfo.PostalCode,
-                            State = staffJob.Staff.ContactInfo.State,
-                            City = staffJob.Staff.ContactInfo.City,
-                            AddressLine1 = staffJob.Staff.ContactInfo.AddressLine1,
-                            AddressLine2 = staffJob.Staff.ContactInfo.AddressLine2
-                        }
-                        : null,
+                        ContactInfo = ContactInfoMapper.ToDto(staffJob.Staff.ContactInfo)
                     }
                     : null,
                     CreatedByAdminId = staffJob.Job.CreatedByAdminId,
@@ -132,18 +111,7 @@ public class StaffJobService : IStaffJobService
                         Email = staffJob.Job.CreatedBy.Email,
                         Role = staffJob.Job.CreatedBy.Role,
                         CompanyId = staffJob.Job.CreatedBy.CompanyId,
-                        ContactInfo = staffJob.Job.CreatedBy.ContactInfo is not null
-                        ? new ContactInfoDto
-                        {
-                            PhotoLogoUrl = staffJob.Staff.ContactInfo.PhotoLogoUrl,
-                            PhoneNumber = staffJob.Staff.ContactInfo.PhoneNumber,
-                            PostalCode = staffJob.Staff.ContactInfo.PostalCode,
-                            State = staffJob.Staff.ContactInfo.State,
-                            City = staffJob.Staff.ContactInfo.City,
-                            AddressLine1 = staffJob.Staff.ContactInfo.AddressLine1,
-                            AddressLine2 = staffJob.Staff.ContactInfo.AddressLine2
-                        }
-                        : null,
+                        ContactInfo = ContactInfoMapper.ToDto(staffJob.Staff.ContactInfo)
                     }
                     : null,
 
@@ -164,18 +132,7 @@ public class StaffJobService : IStaffJobService
                     Name = staffJob.Team.SupervisorStaff.Name,
                     Lastname = staffJob.Team.SupervisorStaff.Lastname,
                     Email = staffJob.Team.SupervisorStaff.Email,
-                    ContactInfo = staffJob.Team.SupervisorStaff.ContactInfo is not null
-                        ? new ContactInfoDto
-                        {
-                            PhotoLogoUrl = staffJob.Team.SupervisorStaff.ContactInfo.PhotoLogoUrl,
-                            PhoneNumber = staffJob.Team.SupervisorStaff.ContactInfo.PhoneNumber,
-                            PostalCode = staffJob.Team.SupervisorStaff.ContactInfo.PostalCode,
-                            State = staffJob.Team.SupervisorStaff.ContactInfo.State,
-                            City = staffJob.Team.SupervisorStaff.ContactInfo.City,
-                            AddressLine1 = staffJob.Team.SupervisorStaff.ContactInfo.AddressLine1,
-                            AddressLine2 = staffJob.Team.SupervisorStaff.ContactInfo.AddressLine2
-                        }
-                        : null
+                    ContactInfo = ContactInfoMapper.ToDto(staffJob.Staff.ContactInfo)
                 }
                 : null,
                     SupervisorAdminId = staffJob.Team.SupervisorAdminId,
@@ -188,18 +145,7 @@ public class StaffJobService : IStaffJobService
                         Email = staffJob.Job.CreatedBy.Email,
                         Role = staffJob.Job.CreatedBy.Role,
                         CompanyId = staffJob.Job.CreatedBy.CompanyId,
-                        ContactInfo = staffJob.Job.CreatedBy.ContactInfo is not null
-                        ? new ContactInfoDto
-                        {
-                            PhotoLogoUrl = staffJob.Staff.ContactInfo.PhotoLogoUrl,
-                            PhoneNumber = staffJob.Staff.ContactInfo.PhoneNumber,
-                            PostalCode = staffJob.Staff.ContactInfo.PostalCode,
-                            State = staffJob.Staff.ContactInfo.State,
-                            City = staffJob.Staff.ContactInfo.City,
-                            AddressLine1 = staffJob.Staff.ContactInfo.AddressLine1,
-                            AddressLine2 = staffJob.Staff.ContactInfo.AddressLine2
-                        }
-                        : null,
+                        ContactInfo = ContactInfoMapper.ToDto(staffJob.Staff.ContactInfo)
                     }
                     : null,
 

@@ -1,5 +1,6 @@
 using fastaffo_api.src.Application.DTOs;
 using fastaffo_api.src.Application.Interfaces;
+using fastaffo_api.src.Application.Mappers;
 using fastaffo_api.src.Domain.Entities;
 using fastaffo_api.src.Infrastructure.Data;
 
@@ -28,16 +29,7 @@ public class CompanyService : ICompanyService
             Name = request.Name,
             ABN = request.ABN,
             WebsiteUrl = request.WebsiteUrl,
-            ContactInfo = request.ContactInfo == null ? null : new ContactInfo
-            {
-                PhoneNumber = request.ContactInfo.PhoneNumber,
-                PhotoLogoUrl = request.ContactInfo.PhotoLogoUrl,
-                PostalCode = request.ContactInfo.PostalCode,
-                State = request.ContactInfo.State,
-                City = request.ContactInfo.City,
-                AddressLine1 = request.ContactInfo.AddressLine1,
-                AddressLine2 = request.ContactInfo.AddressLine2
-            }
+            ContactInfo = ContactInfoMapper.ToEntity(request.ContactInfo)
         };
 
         await _context.AddAsync(newCompany);
