@@ -68,16 +68,7 @@ public class StaffJobService : IStaffJobService
         {
             Id = staffJob.Id,
             StaffId = staffJob.StaffId,
-            Staff = staffJob.Staff is not null
-                ? new StaffDtoRes
-                {
-                    Id = staffJob.Staff.Id,
-                    Name = staffJob.Staff.Name,
-                    Lastname = staffJob.Staff.Lastname,
-                    Email = staffJob.Staff.Email,
-                    ContactInfo = ContactInfoMapper.ToDto(staffJob.Staff.ContactInfo)
-                }
-                : null,
+            Staff = staffJob.Staff is not null ?  StaffMapper.ToDto(staffJob.Staff) : null,
             JobId = staffJob.JobId,
             Job = staffJob.Job is not null
                 ? new JobDtoRes

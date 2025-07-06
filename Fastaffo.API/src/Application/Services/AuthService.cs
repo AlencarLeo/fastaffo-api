@@ -109,14 +109,7 @@ public class AuthService : IAuthService
         string passwordHash
             = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-        staff = new Staff
-        {
-            Name = request.Name,
-            Lastname = request.Lastname,
-            Email = request.Email,
-            Password = passwordHash,
-            ContactInfo = ContactInfoMapper.ToEntity(request.ContactInfo)
-        };
+        staff = StaffMapper.ToEntity(request);
 
         await _context.Staffs.AddAsync(staff);
         await _context.SaveChangesAsync();
@@ -137,14 +130,7 @@ public class AuthService : IAuthService
 
         string token = _tokenService.CreateToken(staff.Id, "staff");
 
-        StaffDtoRes staffDtoRes = new StaffDtoRes
-        {
-            Id = staff.Id,
-            Name = staff.Name,
-            Lastname = staff.Lastname,
-            Email = staff.Email,
-            ContactInfo = ContactInfoMapper.ToDto(staff.ContactInfo)
-        };
+        StaffDtoRes staffDtoRes =  StaffMapper.ToDto(staff);
 
         return new TokenUserDto<StaffDtoRes>(staffDtoRes, token);
     }
