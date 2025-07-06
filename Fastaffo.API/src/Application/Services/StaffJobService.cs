@@ -101,18 +101,7 @@ public class StaffJobService : IStaffJobService
                     }
                     : null,
                     CreatedByAdminId = staffJob.Job.CreatedByAdminId,
-                    CreatedBy = staffJob.Job.CreatedBy is not null
-                    ? new AdminDtoRes
-                    {
-                        Id = staffJob.Job.CreatedBy.Id,
-                        Name = staffJob.Job.CreatedBy.Name,
-                        Lastname = staffJob.Job.CreatedBy.Lastname,
-                        Email = staffJob.Job.CreatedBy.Email,
-                        Role = staffJob.Job.CreatedBy.Role,
-                        CompanyId = staffJob.Job.CreatedBy.CompanyId,
-                        ContactInfo = ContactInfoMapper.ToDto(staffJob.Job.CreatedBy.ContactInfo)
-                    }
-                    : null,
+                    CreatedBy = staffJob.Job.CreatedBy  is not null ? AdminMapper.ToDto(staffJob.Job.CreatedBy) : null,
 
                 } : null,
             TeamId = staffJob.TeamId,
@@ -135,18 +124,7 @@ public class StaffJobService : IStaffJobService
                 }
                 : null,
                     SupervisorAdminId = staffJob.Team.SupervisorAdminId,
-                    SupervisorAdmin = staffJob.Team.SupervisorAdmin is not null
-                    ? new AdminDtoRes
-                    {
-                        Id = staffJob.Team.SupervisorAdmin.Id,
-                        Name = staffJob.Team.SupervisorAdmin.Name,
-                        Lastname = staffJob.Team.SupervisorAdmin.Lastname,
-                        Email = staffJob.Team.SupervisorAdmin.Email,
-                        Role = staffJob.Team.SupervisorAdmin.Role,
-                        CompanyId = staffJob.Team.SupervisorAdmin.CompanyId,
-                        ContactInfo = ContactInfoMapper.ToDto(staffJob.Team.SupervisorAdmin.ContactInfo)
-                    }
-                    : null,
+                    SupervisorAdmin = staffJob.Team.SupervisorAdmin is not null ? AdminMapper.ToDto(staffJob.Team.SupervisorAdmin) : null,
 
                 } : null,
             Role = staffJob.Role,

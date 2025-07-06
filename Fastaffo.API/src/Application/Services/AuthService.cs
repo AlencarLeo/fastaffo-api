@@ -69,16 +69,7 @@ public class AuthService : IAuthService
         string passwordHash
             = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-        admin = new Admin
-        {
-            Name = request.Name,
-            Lastname = request.Lastname,
-            Email = request.Email,
-            Password = passwordHash,
-            Role = request.Role,
-            CompanyId = request.CompanyId,
-            ContactInfo = ContactInfoMapper.ToEntity(request.ContactInfo)
-        };
+        admin = AdminMapper.ToEntity(request);
 
         await _context.AddAsync(admin);
         await _context.SaveChangesAsync();
@@ -99,16 +90,7 @@ public class AuthService : IAuthService
 
         string token = _tokenService.CreateToken(admin.Id, admin.Role.ToString());
 
-        AdminDtoRes adminDtoRes = new AdminDtoRes
-        {
-            Id = admin.Id,
-            Name = admin.Name,
-            Lastname = admin.Lastname,
-            Email = admin.Email,
-            Role = admin.Role,
-            CompanyId = admin.CompanyId,
-            ContactInfo = ContactInfoMapper.ToDto(admin.ContactInfo)
-        };
+        AdminDtoRes adminDtoRes = AdminMapper.ToDto(admin);
 
         return new TokenUserDto<AdminDtoRes>(adminDtoRes, token);
     }
