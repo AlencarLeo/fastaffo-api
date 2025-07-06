@@ -82,15 +82,7 @@ public class StaffJobService : IStaffJobService
                     Notes = staffJob.Job.Notes,
                     Status = staffJob.Job.Status,
                     CompanyId = staffJob.Job.CompanyId,
-                    Company = staffJob.Job.Company is not null ? new CompanyDtoRes
-                    {
-                        Id = staffJob.Job.Company.Id,
-                        Name = staffJob.Job.Company.Name,
-                        ABN = staffJob.Job.Company.ABN,
-                        WebsiteUrl = staffJob.Job.Company.WebsiteUrl,
-                        ContactInfo = ContactInfoMapper.ToDto(staffJob.Job.Company.ContactInfo)
-                    }
-                    : null,
+                    Company = staffJob.Job.Company is not null ? CompanyMapper.ToDto(staffJob.Job.Company) : null,
                     CreatedByAdminId = staffJob.Job.CreatedByAdminId,
                     CreatedBy = staffJob.Job.CreatedBy  is not null ? AdminMapper.ToDto(staffJob.Job.CreatedBy) : null,
 

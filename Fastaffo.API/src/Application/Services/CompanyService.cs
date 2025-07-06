@@ -24,13 +24,7 @@ public class CompanyService : ICompanyService
     {
         await _validatorService.ValidateAsync(_companyDtoReqValidator, request);
 
-        var newCompany = new Company
-        {
-            Name = request.Name,
-            ABN = request.ABN,
-            WebsiteUrl = request.WebsiteUrl,
-            ContactInfo = ContactInfoMapper.ToEntity(request.ContactInfo)
-        };
+        var newCompany = CompanyMapper.ToEntity(request);
 
         await _context.AddAsync(newCompany);
         await _context.SaveChangesAsync();
