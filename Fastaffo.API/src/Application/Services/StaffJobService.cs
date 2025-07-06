@@ -68,25 +68,9 @@ public class StaffJobService : IStaffJobService
         {
             Id = staffJob.Id,
             StaffId = staffJob.StaffId,
-            Staff = staffJob.Staff is not null ?  StaffMapper.ToDto(staffJob.Staff) : null,
+            Staff = staffJob.Staff is not null ? StaffMapper.ToDto(staffJob.Staff) : null,
             JobId = staffJob.JobId,
-            Job = staffJob.Job is not null
-                ? new JobDtoRes
-                {
-                    Id = staffJob.Job.Id,
-                    JobRef = staffJob.Job.JobRef,
-                    EventName = staffJob.Job.EventName,
-                    ChargedAmount = staffJob.Job.ChargedAmount,
-                    ClientName = staffJob.Job.ClientName,
-                    Location = staffJob.Job.Location,
-                    Notes = staffJob.Job.Notes,
-                    Status = staffJob.Job.Status,
-                    CompanyId = staffJob.Job.CompanyId,
-                    Company = staffJob.Job.Company is not null ? CompanyMapper.ToDto(staffJob.Job.Company) : null,
-                    CreatedByAdminId = staffJob.Job.CreatedByAdminId,
-                    CreatedBy = staffJob.Job.CreatedBy  is not null ? AdminMapper.ToDto(staffJob.Job.CreatedBy) : null,
-
-                } : null,
+            Job = staffJob.Job is not null ? JobMapper.ToDto(staffJob.Job) : null,
             TeamId = staffJob.TeamId,
             Team = staffJob.Team is not null
                 ? new TeamDtoRes
@@ -96,16 +80,7 @@ public class StaffJobService : IStaffJobService
                     Job = null,
                     Name = staffJob.Team.Name,
                     SupervisorStaffId = staffJob.Team.SupervisorStaffId,
-                    SupervisorStaff = staffJob.Team.SupervisorStaff is not null
-                ? new StaffDtoRes
-                {
-                    Id = staffJob.Team.SupervisorStaff.Id,
-                    Name = staffJob.Team.SupervisorStaff.Name,
-                    Lastname = staffJob.Team.SupervisorStaff.Lastname,
-                    Email = staffJob.Team.SupervisorStaff.Email,
-                    ContactInfo = ContactInfoMapper.ToDto(staffJob.Team.SupervisorStaff.ContactInfo)
-                }
-                : null,
+                    SupervisorStaff = staffJob.Team.SupervisorStaff is not null ? StaffMapper.ToDto(staffJob.Team.SupervisorStaff) : null,
                     SupervisorAdminId = staffJob.Team.SupervisorAdminId,
                     SupervisorAdmin = staffJob.Team.SupervisorAdmin is not null ? AdminMapper.ToDto(staffJob.Team.SupervisorAdmin) : null,
 

@@ -130,7 +130,7 @@ public class AuthService : IAuthService
 
         string token = _tokenService.CreateToken(staff.Id, "staff");
 
-        StaffDtoRes staffDtoRes =  StaffMapper.ToDto(staff);
+        StaffDtoRes staffDtoRes = StaffMapper.ToDto(staff);
 
         return new TokenUserDto<StaffDtoRes>(staffDtoRes, token);
     }

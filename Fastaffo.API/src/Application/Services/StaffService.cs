@@ -27,7 +27,7 @@ public class StaffService : IStaffService
             return new ServiceResponseDto<StaffDtoRes>(null, "Staff member not found.", 404);
         }
 
-        var staffDtoRes =  StaffMapper.ToDto(staff);
+        var staffDtoRes = StaffMapper.ToDto(staff);
 
         return new ServiceResponseDto<StaffDtoRes>(staffDtoRes, "Staff member retrieved successfully.", 200);
     }

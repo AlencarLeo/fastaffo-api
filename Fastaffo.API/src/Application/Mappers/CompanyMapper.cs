@@ -20,9 +20,9 @@ public static class CompanyMapper
     {
         return new Company
         {
-            Name = dto.Name, 
-            ABN = dto.ABN, 
-            WebsiteUrl = dto.WebsiteUrl, 
+            Name = dto.Name,
+            ABN = dto.ABN,
+            WebsiteUrl = dto.WebsiteUrl,
             ContactInfo = ContactInfoMapper.ToEntity(dto.ContactInfo)
         };
     }
