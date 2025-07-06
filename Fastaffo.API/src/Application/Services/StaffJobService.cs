@@ -56,7 +56,25 @@ public class StaffJobService : IStaffJobService
                                 .Include(sj => sj.Staff)
                                     .ThenInclude(s => s!.ContactInfo)
                                 .Include(sj => sj.Job)
+                                    .ThenInclude(j => j!.CreatedBy)
+                                        .ThenInclude(j => j!.ContactInfo)
+                                .Include(sj => sj.Job)
+                                    .ThenInclude(j => j!.Company)
+                                        .ThenInclude(j => j!.ContactInfo)
                                 .Include(sj => sj.Team)
+                                    .ThenInclude(t => t!.SupervisorAdmin)
+                                        .ThenInclude(a => a!.ContactInfo)
+                                .Include(sj => sj.Team)
+                                    .ThenInclude(t => t!.SupervisorStaff)
+                                        .ThenInclude(s => s!.ContactInfo)
+                                .Include(sj => sj.Team)
+                                    .ThenInclude(t => t!.Job)
+                                        .ThenInclude(s => s!.CreatedBy)
+                                            .ThenInclude(j => j!.ContactInfo)
+                                .Include(sj => sj.Team)
+                                    .ThenInclude(t => t!.Job)
+                                        .ThenInclude(j => j!.Company)
+                                            .ThenInclude(j => j!.ContactInfo)
                                 .FirstOrDefaultAsync(sj => sj.Id == staffJobId);
 
         if (staffJob == null)
@@ -72,19 +90,7 @@ public class StaffJobService : IStaffJobService
             JobId = staffJob.JobId,
             Job = staffJob.Job is not null ? JobMapper.ToDto(staffJob.Job) : null,
             TeamId = staffJob.TeamId,
-            Team = staffJob.Team is not null
-                ? new TeamDtoRes
-                {
-                    Id = staffJob.Team.Id,
-                    JobId = staffJob.Team.JobId,
-                    Job = null,
-                    Name = staffJob.Team.Name,
-                    SupervisorStaffId = staffJob.Team.SupervisorStaffId,
-                    SupervisorStaff = staffJob.Team.SupervisorStaff is not null ? StaffMapper.ToDto(staffJob.Team.SupervisorStaff) : null,
-                    SupervisorAdminId = staffJob.Team.SupervisorAdminId,
-                    SupervisorAdmin = staffJob.Team.SupervisorAdmin is not null ? AdminMapper.ToDto(staffJob.Team.SupervisorAdmin) : null,
-
-                } : null,
+            Team = staffJob.Team is not null ? TeamMapper.ToDto(staffJob.Team) : null,
             Role = staffJob.Role,
             StartTime = staffJob.StartTime,
             FinishTime = staffJob.FinishTime,
