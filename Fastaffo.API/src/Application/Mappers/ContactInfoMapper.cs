@@ -5,11 +5,11 @@ namespace fastaffo_api.src.Application.Mappers;
 
 public static class ContactInfoMapper
 {
-    public static ContactInfoDto? ToDto(ContactInfo? entity)
+    public static ContactInfoDtoRes? ToDto(ContactInfo? entity)
     {
         if (entity == null) return null;
 
-        return new ContactInfoDto
+        return new ContactInfoDtoRes
         {
             PhotoLogoUrl = entity.PhotoLogoUrl,
             PhoneNumber = entity.PhoneNumber,
@@ -21,7 +21,7 @@ public static class ContactInfoMapper
         };
     }
 
-    public static ContactInfo? ToEntity(ContactInfoDto? dto)
+    public static ContactInfo? ToEntity(ContactInfoDtoReq? dto)
     {
         if (dto == null) return null;
 

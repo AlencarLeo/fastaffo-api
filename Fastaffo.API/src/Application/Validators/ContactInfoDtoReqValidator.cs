@@ -3,9 +3,9 @@ using fastaffo_api.src.Application.DTOs;
 using FluentValidation;
 
 namespace fastaffo_api.src.Application.Validators;
-public class ContactInfoDtoValidator : AbstractValidator<ContactInfoDto>
+public class ContactInfoDtoReqValidator : AbstractValidator<ContactInfoDtoReq>
 {
-    public ContactInfoDtoValidator()
+    public ContactInfoDtoReqValidator()
     {
         RuleFor(x => x.PhoneNumber)
             .NotEmpty().WithMessage("Phone number is required.")

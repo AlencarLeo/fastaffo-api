@@ -1,7 +1,8 @@
 namespace fastaffo_api.src.Application.DTOs;
 
-public class ContactInfoDto
+public class ContactInfoDtoRes
 {
+    public Guid Id { get; set; }
     public string? PhotoLogoUrl { get; set; }
     public required string PhoneNumber { get; set; }
     public required string PostalCode { get; set; }

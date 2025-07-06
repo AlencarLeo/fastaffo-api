@@ -5,5 +5,5 @@ public class StaffDtoReq
     public required string Lastname { get; set; }
     public required string Email { get; set; }
     public required string Password { get; set; }
-    public ContactInfoDto? ContactInfo { get; set; }
+    public ContactInfoDtoReq? ContactInfo { get; set; }
 }

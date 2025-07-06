@@ -9,5 +9,5 @@ public class AdminDtoReq
     public required string Password { get; set; }
     public required SystemRole Role { get; set; }
     public required Guid CompanyId { get; set; }
-    public ContactInfoDto? ContactInfo { get; set; }
+    public ContactInfoDtoReq? ContactInfo { get; set; }
 }

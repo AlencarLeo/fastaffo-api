@@ -97,7 +97,6 @@ public class StaffJobService : IStaffJobService
                         Name = staffJob.Job.Company.Name,
                         ABN = staffJob.Job.Company.ABN,
                         WebsiteUrl = staffJob.Job.Company.WebsiteUrl,
-                        ContactInfoId = staffJob.Job.Company.ContactInfoId,
                         ContactInfo = ContactInfoMapper.ToDto(staffJob.Staff.ContactInfo)
                     }
                     : null,

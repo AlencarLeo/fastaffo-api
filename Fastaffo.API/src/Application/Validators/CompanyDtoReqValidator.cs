@@ -25,7 +25,7 @@ public class CompanyDtoReqValidator : AbstractValidator<CompanyDtoReq>
         When(admin => admin.ContactInfo != null, () =>
         {
             RuleFor(admin => admin.ContactInfo!)
-                .SetValidator(new ContactInfoDtoValidator());
+                .SetValidator(new ContactInfoDtoReqValidator());
         });
     }
 }

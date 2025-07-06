@@ -31,7 +31,7 @@ public class StaffDtoReqValidator : AbstractValidator<StaffDtoReq>
         When(staff => staff.ContactInfo != null, () =>
         {
             RuleFor(staff => staff.ContactInfo!)
-                .SetValidator(new ContactInfoDtoValidator());
+                .SetValidator(new ContactInfoDtoReqValidator());
         });
     }
 }

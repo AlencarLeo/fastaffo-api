@@ -9,5 +9,5 @@ public class AdminDtoRes
     public required string Email { get; set; }
     public required SystemRole Role { get; set; }
     public required Guid CompanyId { get; set; }
-    public ContactInfoDto? ContactInfo { get; set; }
+    public ContactInfoDtoRes? ContactInfo { get; set; }
 }

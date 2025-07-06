@@ -5,5 +5,5 @@ public class CompanyDtoReq
     public required string Name { get; set; }
     public required string ABN { get; set; }
     public string? WebsiteUrl { get; set; }
-    public ContactInfoDto? ContactInfo { get; set; }
+    public ContactInfoDtoReq? ContactInfo { get; set; }
 }

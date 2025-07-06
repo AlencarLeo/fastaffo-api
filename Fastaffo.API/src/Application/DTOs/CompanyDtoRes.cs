@@ -5,6 +5,5 @@ public class CompanyDtoRes
     public required string Name { get; set; }
     public required string ABN { get; set; }
     public string? WebsiteUrl { get; set; }
-    public Guid? ContactInfoId { get; set; }
-    public ContactInfoDto? ContactInfo { get; set; }
+    public ContactInfoDtoRes? ContactInfo { get; set; }
 }
