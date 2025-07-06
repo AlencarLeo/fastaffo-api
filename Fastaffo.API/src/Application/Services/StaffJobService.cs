@@ -97,7 +97,7 @@ public class StaffJobService : IStaffJobService
                         Name = staffJob.Job.Company.Name,
                         ABN = staffJob.Job.Company.ABN,
                         WebsiteUrl = staffJob.Job.Company.WebsiteUrl,
-                        ContactInfo = ContactInfoMapper.ToDto(staffJob.Staff.ContactInfo)
+                        ContactInfo = ContactInfoMapper.ToDto(staffJob.Job.Company.ContactInfo)
                     }
                     : null,
                     CreatedByAdminId = staffJob.Job.CreatedByAdminId,
@@ -110,7 +110,7 @@ public class StaffJobService : IStaffJobService
                         Email = staffJob.Job.CreatedBy.Email,
                         Role = staffJob.Job.CreatedBy.Role,
                         CompanyId = staffJob.Job.CreatedBy.CompanyId,
-                        ContactInfo = ContactInfoMapper.ToDto(staffJob.Staff.ContactInfo)
+                        ContactInfo = ContactInfoMapper.ToDto(staffJob.Job.CreatedBy.ContactInfo)
                     }
                     : null,
 
@@ -131,20 +131,20 @@ public class StaffJobService : IStaffJobService
                     Name = staffJob.Team.SupervisorStaff.Name,
                     Lastname = staffJob.Team.SupervisorStaff.Lastname,
                     Email = staffJob.Team.SupervisorStaff.Email,
-                    ContactInfo = ContactInfoMapper.ToDto(staffJob.Staff.ContactInfo)
+                    ContactInfo = ContactInfoMapper.ToDto(staffJob.Team.SupervisorStaff.ContactInfo)
                 }
                 : null,
                     SupervisorAdminId = staffJob.Team.SupervisorAdminId,
                     SupervisorAdmin = staffJob.Team.SupervisorAdmin is not null
                     ? new AdminDtoRes
                     {
-                        Id = staffJob.Job.CreatedBy.Id,
-                        Name = staffJob.Job.CreatedBy.Name,
-                        Lastname = staffJob.Job.CreatedBy.Lastname,
-                        Email = staffJob.Job.CreatedBy.Email,
-                        Role = staffJob.Job.CreatedBy.Role,
-                        CompanyId = staffJob.Job.CreatedBy.CompanyId,
-                        ContactInfo = ContactInfoMapper.ToDto(staffJob.Staff.ContactInfo)
+                        Id = staffJob.Team.SupervisorAdmin.Id,
+                        Name = staffJob.Team.SupervisorAdmin.Name,
+                        Lastname = staffJob.Team.SupervisorAdmin.Lastname,
+                        Email = staffJob.Team.SupervisorAdmin.Email,
+                        Role = staffJob.Team.SupervisorAdmin.Role,
+                        CompanyId = staffJob.Team.SupervisorAdmin.CompanyId,
+                        ContactInfo = ContactInfoMapper.ToDto(staffJob.Team.SupervisorAdmin.ContactInfo)
                     }
                     : null,
 
