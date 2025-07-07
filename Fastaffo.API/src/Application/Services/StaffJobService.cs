@@ -1,7 +1,6 @@
 using fastaffo_api.src.Application.DTOs;
 using fastaffo_api.src.Application.Interfaces;
 using fastaffo_api.src.Application.Mappers;
-using fastaffo_api.src.Domain.Entities;
 using fastaffo_api.src.Infrastructure.Data;
 
 using FluentValidation;
