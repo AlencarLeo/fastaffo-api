@@ -16,6 +16,7 @@ public class JobController : ControllerBase
     }
 
     [HttpGet]
+    [Route("job/{jobId}")]
     public async Task<ActionResult<JobDtoRes>> GetJobById(Guid jobId)
     {
         try
@@ -30,6 +31,7 @@ public class JobController : ControllerBase
     }
 
     [HttpGet]
+    [Route("job")]
     public async Task<ActionResult<List<JobDtoRes>>> GetJobs(int page = 1, int pageSize = 10)
     {
         try
@@ -44,6 +46,7 @@ public class JobController : ControllerBase
     }
 
     [HttpPost]
+    [Route("job")]
     public async Task<ActionResult> CreateJob(JobDtoReq request)
     {
         try

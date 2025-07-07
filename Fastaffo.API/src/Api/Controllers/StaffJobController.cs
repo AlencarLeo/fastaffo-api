@@ -31,7 +31,7 @@ public class StaffJobController : ControllerBase
     }
 
     [HttpGet]
-    [Route("staff-job")]
+    [Route("staff-job/{staffJobId}")]
     public async Task<ActionResult<StaffJobDtoRes>> GetStaffJobById(Guid staffJobId)
     {
         try

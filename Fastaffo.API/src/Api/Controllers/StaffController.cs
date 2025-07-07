@@ -18,7 +18,7 @@ public class StaffController : ControllerBase
     }
 
     [HttpGet]
-    [Route("staff")]
+    [Route("staff/{staffId}")]
     public async Task<ActionResult<StaffDtoRes>> GetStaffById(Guid staffId)
     {
         try
