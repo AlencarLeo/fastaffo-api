@@ -23,11 +23,20 @@ public static class JobMapper
         };
     }
 
-    // public static Job ToEntity(JobDtoReq dto)
-    // {
-    //     return new Job
-    //     {
-    //     };
-    // }
+    public static Job ToEntity(JobDtoReq dto)
+    {
+        return new Job
+        {
+            JobRef = dto.JobRef,
+            EventName = dto.EventName,
+            ChargedAmount = dto.ChargedAmount,
+            ClientName = dto.ClientName,
+            Location = dto.Location,
+            Notes = dto.Notes,
+            Status = dto.Status,
+            CompanyId = dto.CompanyId,
+            CreatedByAdminId = dto.CreatedByAdminId
+        };
+    }
 
 }
