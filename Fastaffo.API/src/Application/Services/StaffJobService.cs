@@ -28,23 +28,7 @@ public class StaffJobService : IStaffJobService
     {
         await _validatorService.ValidateAsync(_staffJobDtoReqValidator, request);
 
-        var newStaffJob = new StaffJob
-        {
-            StaffId = request.StaffId,
-            JobId = request.JobId,
-            TeamId = request.TeamId,
-            Role = request.Role,
-            StartTime = request.StartTime,
-            FinishTime = request.FinishTime,
-            BaseRate = request.BaseRate,
-            TravelTimeMinutes = request.TravelTimeMinutes,
-            Kilometers = request.Kilometers,
-            Notes = request.Notes,
-            TotalAmount = request.TotalAmount,
-            Title = request.Title,
-            Location = request.Location,
-            IsPersonalJob = request.IsPersonalJob
-        };
+        var newStaffJob = StaffJobMapper.ToEntity(request);
 
         await _context.AddAsync(newStaffJob);
         await _context.SaveChangesAsync();
@@ -82,27 +66,7 @@ public class StaffJobService : IStaffJobService
             return new ServiceResponseDto<StaffJobDtoRes>(null, "StaffJob not found.", 404);
         }
 
-        var staffDtoRes = new StaffJobDtoRes
-        {
-            Id = staffJob.Id,
-            StaffId = staffJob.StaffId,
-            Staff = staffJob.Staff is not null ? StaffMapper.ToDto(staffJob.Staff) : null,
-            JobId = staffJob.JobId,
-            Job = staffJob.Job is not null ? JobMapper.ToDto(staffJob.Job) : null,
-            TeamId = staffJob.TeamId,
-            Team = staffJob.Team is not null ? TeamMapper.ToDto(staffJob.Team) : null,
-            Role = staffJob.Role,
-            StartTime = staffJob.StartTime,
-            FinishTime = staffJob.FinishTime,
-            BaseRate = staffJob.BaseRate,
-            TravelTimeMinutes = staffJob.TravelTimeMinutes,
-            Kilometers = staffJob.Kilometers,
-            Notes = staffJob.Notes,
-            TotalAmount = staffJob.TotalAmount,
-            Title = staffJob.Title,
-            Location = staffJob.Location,
-            IsPersonalJob = staffJob.IsPersonalJob,
-        };
+        var staffDtoRes = StaffJobMapper.ToDto(staffJob);
 
         return new ServiceResponseDto<StaffJobDtoRes>(staffDtoRes, "StaffJob retrieved successfully.", 200);
     }
