@@ -68,9 +68,9 @@ public class JobService : IJobService
     {
         await _validatorService.ValidateAsync(_jobDtoReqValidator, request);
 
-        var newJob = JobMapper.ToEntity(request);
+        string jobRef = await GenerateJobRefAsync(request.CompanyId);
 
-        newJob.JobRef = await GenerateJobRefAsync(request.CompanyId);
+        var newJob = JobMapper.ToEntity(request, jobRef);
 
         await _context.AddAsync(newJob);
         await _context.SaveChangesAsync();

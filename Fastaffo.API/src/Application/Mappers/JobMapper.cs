@@ -23,11 +23,11 @@ public static class JobMapper
         };
     }
 
-    public static Job ToEntity(JobDtoReq dto)
+    public static Job ToEntity(JobDtoReq dto, string jobRef)
     {
         return new Job
         {
-            JobRef = dto.JobRef,
+            JobRef = jobRef,
             EventName = dto.EventName,
             ChargedAmount = dto.ChargedAmount,
             ClientName = dto.ClientName,
