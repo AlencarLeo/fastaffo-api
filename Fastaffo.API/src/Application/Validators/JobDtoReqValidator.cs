@@ -1,4 +1,6 @@
 using fastaffo_api.src.Application.DTOs;
+using fastaffo_api.src.Application.Interfaces;
+using fastaffo_api.src.Domain.Entities;
 
 using FluentValidation;
 
@@ -6,7 +8,7 @@ namespace fastaffo_api.src.Application.Validators;
 
 public class JobDtoReqValidator : AbstractValidator<JobDtoReq>
 {
-    public JobDtoReqValidator()
+    public JobDtoReqValidator(IValidatorService validatorService)
     {
         RuleFor(j => j.EventName)
             .NotEmpty().WithMessage("Event name is required.")
@@ -30,9 +32,11 @@ public class JobDtoReqValidator : AbstractValidator<JobDtoReq>
             .When(j => !string.IsNullOrWhiteSpace(j.Notes));
 
         RuleFor(j => j.CompanyId)
-            .NotEqual(Guid.Empty).WithMessage("CompanyId is required.");
+            .NotEmpty().WithMessage("CompanyId is required.")
+            .MustAsync(async (id, ct) => await validatorService.ExistsAsync<Company>(id, ct)).WithMessage("CompanyId must refer to an existing Company.");
 
         RuleFor(j => j.CreatedByAdminId)
-            .NotEqual(Guid.Empty).WithMessage("CreatedByAdminId is required.");
+            .NotEmpty().WithMessage("CreatedByAdminId is required.")
+            .MustAsync(async (id, ct) => await validatorService.ExistsAsync<Admin>(id, ct)).WithMessage("CreatedByAdminId must refer to an existing Admin.");
     }
 }

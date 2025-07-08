@@ -1,5 +1,6 @@
 using fastaffo_api.src.Application.DTOs;
-using fastaffo_api.src.Infrastructure.Data;
+using fastaffo_api.src.Application.Interfaces;
+using fastaffo_api.src.Domain.Entities;
 
 using FluentValidation;
 
@@ -9,11 +10,11 @@ namespace fastaffo_api.src.Application.Validators;
 
 public class StaffJobDtoReqValidator : AbstractValidator<StaffJobDtoReq>
 {
-    public StaffJobDtoReqValidator(DataContext context)
+    public StaffJobDtoReqValidator(IValidatorService validatorService)
     {
         RuleFor(x => x.StaffId)
             .NotEmpty().WithMessage("StaffId is required.")
-            .MustAsync(async (staffId, cancellation) => await context.Staffs.AnyAsync(s => s.Id == staffId, cancellation)).WithMessage("StaffId must refer to an existing Staff.");
+            .MustAsync(async (id, ct) => await validatorService.ExistsAsync<Staff>(id, ct)).WithMessage("StaffId must refer to an existing Staff.");
 
         RuleFor(x => x.StartTime)
             .NotEmpty().WithMessage("StartTime is required.")
@@ -42,11 +43,13 @@ public class StaffJobDtoReqValidator : AbstractValidator<StaffJobDtoReq>
 
         When(x => !x.IsPersonalJob, () =>
         {
-            RuleFor(x => x.JobId)
-                .NotEmpty().WithMessage("JobId is required for non-personal jobs.");
+            RuleFor(x => x!.JobId)
+                .NotEmpty().WithMessage("JobId is required for non-personal jobs.")
+                .MustAsync(validatorService.ExistsAsync<Job>).WithMessage("JobId must refer to an existing Job.");
 
             RuleFor(x => x.TeamId)
-                .NotEmpty().WithMessage("TeamId is required for non-personal jobs.");
+                .NotEmpty().WithMessage("TeamId is required for non-personal jobs.")
+                .MustAsync(validatorService.ExistsAsync<Team>).WithMessage("TeamId must refer to an existing Team.");
 
             RuleFor(x => x.TravelTimeMinutes)
                 .NotNull().WithMessage("TravelTimeMinutes is required for non-personal jobs.");

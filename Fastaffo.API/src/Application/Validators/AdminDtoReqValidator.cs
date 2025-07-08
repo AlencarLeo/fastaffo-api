@@ -1,4 +1,6 @@
 using fastaffo_api.src.Application.DTOs;
+using fastaffo_api.src.Application.Interfaces;
+using fastaffo_api.src.Domain.Entities;
 
 using FluentValidation;
 
@@ -6,7 +8,7 @@ namespace fastaffo_api.src.Application.Validators;
 
 public class AdminDtoReqValidator : AbstractValidator<AdminDtoReq>
 {
-    public AdminDtoReqValidator()
+    public AdminDtoReqValidator(IValidatorService validatorService)
     {
         RuleFor(admin => admin.Name)
             .NotEmpty().WithMessage("Name is required.")
@@ -34,7 +36,7 @@ public class AdminDtoReqValidator : AbstractValidator<AdminDtoReq>
 
         RuleFor(admin => admin.CompanyId)
             .NotEmpty().WithMessage("CompanyId is required.")
-            .Must(id => id != Guid.Empty).WithMessage("CompanyId must be a valid GUID.");
+            .MustAsync(async (id, ct) => await validatorService.ExistsAsync<Company>(id, ct)).WithMessage("CompanyId must refer to an existing Company.");
 
         When(admin => admin.ContactInfo != null, () =>
         {
