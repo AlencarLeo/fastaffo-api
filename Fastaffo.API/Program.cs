@@ -71,9 +71,10 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IJobService, JobService>();
-builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IRatePolicyService, RatePolicyService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
 builder.Services.AddScoped<IStaffJobService, StaffJobService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IValidatorService, ValidatorService>();
 
 builder.Services.AddScoped<IValidator<AdminDtoReq>, AdminDtoReqValidator>();
