@@ -121,17 +121,20 @@ Company-specific payment rules.
 
 Join or invite logic for jobs/teams.
 
-| Field        | Type     | Description                                    |
-| ------------ | -------- | ---------------------------------------------- |
-| `id`         | string   | Primary key                                    |
-| `type`       | enum     | 'request' (by staff) or 'invite' (by admin)    |
-| `target`     | enum     | 'job' or 'team'                                |
-| `job_id`     | string   | FK to `Job`                                    |
-| `team_id`    | string   | Optional FK to `Team`                          |
-| `staff_id`   | string   | FK to `Staff`                                  |
-| `sent_by`    | string   | ID of who sent (must resolve in backend logic) |
-| `status`     | enum     | 'pending', 'approved', 'rejected', etc.        |
-| `created_at` | datetime | Creation timestamp                             |
+| Field             | Type     | Description                                         |
+| ------------------| -------- | ----------------------------------------------------|
+| `id`              | string   | Primary key                                         |
+| `type`            | enum     | 'request' (by staff) or 'invite' (by admin)         |
+| `target`          | enum     | 'job' or 'team'                                     |
+| `job_id`          | string   | FK to `Job`                                         |
+| `team_id`         | string   | Optional FK to `Team`                               |
+| `staff_id`        | string   | FK to `Staff`                                       |
+| `admin_id`        | string   | Optional FK to `Admin` (filled at some point)       |
+| `company_id`      | string   | FK to `Company`                                     |
+| `sent_by_id`      | string   | ID of who sent (must resolve in backend logic)      |
+| `responsed_by_id` | string   | ID of who responsed (must resolve in backend logic) |
+| `status`          | enum     | 'pending', 'approved', 'rejected', etc.             |
+| `created_at`      | datetime | Creation timestamp                                  |
 
 ---
 
