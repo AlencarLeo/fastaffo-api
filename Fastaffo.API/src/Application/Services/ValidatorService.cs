@@ -30,7 +30,7 @@ public class ValidatorService : IValidatorService
         {
             return false;
         }
-        
+
         var set = _context.Set<TEntity>();
         var entity = await set.FindAsync([id], ct);
         return entity != null;

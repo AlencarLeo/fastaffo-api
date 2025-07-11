@@ -10,7 +10,7 @@ namespace fastaffo_api.src.Application.Services;
 public class CompanyService : ICompanyService
 {
     private readonly DataContext _context;
-        private readonly IRatePolicyService _ratePolicyService;
+    private readonly IRatePolicyService _ratePolicyService;
     private readonly IValidatorService _validatorService;
     private readonly IValidator<CompanyDtoReq> _companyDtoReqValidator;
     public CompanyService(DataContext context, IRatePolicyService ratePolicyService, IValidatorService validatorService, IValidator<CompanyDtoReq> companyDtoReqValidator)
@@ -30,7 +30,7 @@ public class CompanyService : ICompanyService
         await _context.AddAsync(newCompany);
         await _context.SaveChangesAsync();
 
-        await _ratePolicyService.CreateRatePolicyAsync(new RatePolicyDtoReq{ CompanyId = newCompany.Id });
+        await _ratePolicyService.CreateRatePolicyAsync(new RatePolicyDtoReq { CompanyId = newCompany.Id });
     }
 
 }

@@ -6,17 +6,17 @@ public class Request
 {
     public Guid Id { get; set; }
     public required RequestType Type { get; set; }
-    public required RequestTarget Target { get; set; }
     public required Guid JobId { get; set; }
     public Job? Job { get; set; }
-    public Guid? TeamId { get; set; }
-    public Team? Team { get; set; }
-    public Guid? SupervisorStaffId { get; set; }
-    public Staff? SupervisorStaff { get; set; }
-    public Guid? SupervisorAdminId { get; set; }
-    public Admin? SupervisorAdmin { get; set; }
+    public required Guid StaffId { get; set; }
+    public Staff? Staff { get; set; }
+    public Guid? AdminId { get; set; }
+    public Admin? Admin { get; set; }
+    public required Guid CompanyId { get; set; }
+    public Company? Company { get; set; }
     public required Guid SentById { get; set; }
-    public required SystemRole SentByType { get; set; }
+    public Guid? ResponsedById { get; set; }
     public required RequestStatus Status { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // REVER ISSO TIMEZONE
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // CHECK TIMEZONE LATER ON
+    public DateTime? ResponseDate { get; set; }
 }

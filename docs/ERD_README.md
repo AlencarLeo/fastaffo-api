@@ -125,9 +125,7 @@ Join or invite logic for jobs/teams.
 | ------------------| -------- | ----------------------------------------------------|
 | `id`              | string   | Primary key                                         |
 | `type`            | enum     | 'request' (by staff) or 'invite' (by admin)         |
-| `target`          | enum     | 'job' or 'team'                                     |
 | `job_id`          | string   | FK to `Job`                                         |
-| `team_id`         | string   | Optional FK to `Team`                               |
 | `staff_id`        | string   | FK to `Staff`                                       |
 | `admin_id`        | string   | Optional FK to `Admin` (filled at some point)       |
 | `company_id`      | string   | FK to `Company`                                     |

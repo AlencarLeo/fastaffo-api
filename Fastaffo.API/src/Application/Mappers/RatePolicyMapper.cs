@@ -16,11 +16,11 @@ public static class RatePolicyMapper
         return new RatePolicy
         {
             CompanyId = dto.CompanyId,
-            OvertimeStartMinutes = dto.OvertimeStartMinutes, 
-            OvertimeMultiplier = dto.OvertimeMultiplier, 
-            DayMultiplier = dto.DayMultiplier, 
-            TravelTimeRate = dto.TravelTimeRate, 
-            KilometersRate = dto.KilometersRate 
+            OvertimeStartMinutes = dto.OvertimeStartMinutes,
+            OvertimeMultiplier = dto.OvertimeMultiplier,
+            DayMultiplier = dto.DayMultiplier,
+            TravelTimeRate = dto.TravelTimeRate,
+            KilometersRate = dto.KilometersRate
         };
     }
 
