@@ -36,4 +36,15 @@ public class ValidatorService : IValidatorService
         return entity != null;
     }
 
+    public async Task<TEntity?> GetEntityAsync<TEntity>(Guid? id, CancellationToken ct = default) where TEntity : class
+    {
+        if (id is null)
+        {
+            return null;
+        }
+
+        var set = _context.Set<TEntity>();
+        return await set.FindAsync(new object[] { id.Value }, ct);
+    }
+
 }

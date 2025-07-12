@@ -83,6 +83,7 @@ builder.Services.AddScoped<IValidator<AuthDtoReq>, AuthDtoReqValidator>();
 builder.Services.AddScoped<IValidator<CompanyDtoReq>, CompanyDtoReqValidator>();
 builder.Services.AddScoped<IValidator<JobDtoReq>, JobDtoReqValidator>();
 builder.Services.AddScoped<IValidator<RequestDtoCreateReq>, RequestDtoCreateReqValidator>();
+builder.Services.AddScoped<IValidator<RequestDtoUpdateReq>, RequestDtoUpdateReqValidator>();
 builder.Services.AddScoped<IValidator<StaffDtoReq>, StaffDtoReqValidator>();
 builder.Services.AddScoped<IValidator<StaffJobDtoReq>, StaffJobDtoReqValidator>();
 

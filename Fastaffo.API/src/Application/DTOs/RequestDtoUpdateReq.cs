@@ -5,9 +5,9 @@ namespace fastaffo_api.src.Application.DTOs;
 
 public class RequestDtoUpdateReq
 {
-    public required Guid AdminId { get; set; }
+    public Guid Id { get; set; }
+    public Guid? AdminId { get; set; }
     public required Guid ResponsedById { get; set; }
     public required RequestStatus Status { get; set; }
-    public required DateTime ResponseDate { get; set; }
 }
 

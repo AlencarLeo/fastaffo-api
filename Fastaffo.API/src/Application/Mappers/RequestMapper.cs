@@ -28,10 +28,13 @@ public static class RequestMapper
 
     public static Request ToEntity(RequestDtoUpdateReq dto, Request entity)
     {
-        entity.AdminId = dto.AdminId;
+        if (entity.AdminId is null)
+        {
+            entity.AdminId = dto.AdminId;
+        }
+        entity.ResponseDate = DateTime.Now;
         entity.ResponsedById = dto.ResponsedById;
-        entity.ResponseDate = dto.ResponseDate;
-        entity.Status = entity.Status;
+        entity.Status = dto.Status;
 
         return entity;
     }

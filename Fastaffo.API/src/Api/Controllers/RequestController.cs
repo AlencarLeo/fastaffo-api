@@ -30,4 +30,34 @@ public class RequestController : ControllerBase
         }
     }
 
+    [HttpPatch]
+    [Route("request/approve")]
+    public async Task<ActionResult> ApproveRequest(RequestDtoUpdateReq request)
+    {
+        try
+        {
+            await _requestService.ApproveRequestAsync(request);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPatch]
+    [Route("request/reject")]
+    public async Task<ActionResult> RejectRequest(RequestDtoUpdateReq request)
+    {
+        try
+        {
+            await _requestService.RejectRequestAsync(request);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
 }

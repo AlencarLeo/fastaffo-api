@@ -6,4 +6,5 @@ public interface IValidatorService
 {
     public Task ValidateAsync<T>(IValidator<T> validator, T request);
     public Task<bool> ExistsAsync<TEntity>(Guid? id, CancellationToken ct = default) where TEntity : class;
+    public Task<TEntity?> GetEntityAsync<TEntity>(Guid? id, CancellationToken ct = default) where TEntity : class;
 }
