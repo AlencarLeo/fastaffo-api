@@ -4,6 +4,8 @@ using fastaffo_api.src.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using Swashbuckle.AspNetCore.Annotations;
+
 namespace fastaffo_api.src.Api.Controllers;
 [Route("api/")]
 [ApiController]
@@ -17,6 +19,10 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet]
+    [SwaggerOperation(
+        Summary = "Title",
+        Description = "Description"
+    )]
     [Route("me"), Authorize]
     public ActionResult<string> GetMe()
     {
