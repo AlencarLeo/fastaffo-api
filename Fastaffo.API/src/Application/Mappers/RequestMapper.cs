@@ -22,8 +22,7 @@ public static class RequestMapper
             StaffId = dto.StaffId,
             AdminId = dto.AdminId,
             CompanyId = dto.CompanyId,
-            SentById = dto.SentById,
-            Status = RequestStatus.Pending
+            SentById = dto.SentById
         };
     }
 
@@ -32,7 +31,7 @@ public static class RequestMapper
         entity.AdminId = dto.AdminId;
         entity.ResponsedById = dto.ResponsedById;
         entity.ResponseDate = dto.ResponseDate;
-        entity.Status = RequestStatus.Pending;
+        entity.Status = entity.Status;
 
         return entity;
     }

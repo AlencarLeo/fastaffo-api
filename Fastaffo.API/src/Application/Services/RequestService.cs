@@ -24,33 +24,31 @@ public class RequestService : IRequestService
 
     public async Task CreateRequestAsync(RequestDtoCreateReq request, CancellationToken ct = default)
     {
-        // REQUEST PARA ENTRAR NO JOB => TEAM EH ORGANIZADO COM STAFFS DENTRO DO JOB
+        // REQUEST TO JOIN A JOB => THEN THE ADMINS IS RESPONSABLE TO STRUCT STAFFS MEMBERS INSIDE THE JOB'S TEAMS
 
         await _validatorService.ValidateAsync(_requestDtoCreateReqValidator, request);
 
-        var duplicatedRequest = await _context.Requests
-                .Where(r =>
-                    r.Type == request.Type &&
-                    r.JobId == request.JobId &&
-                    r.StaffId == request.StaffId &&
-                    r.CompanyId == request.CompanyId
-                )
-                .FirstOrDefaultAsync(ct);
+        bool isDuplicate = await _context.Requests.AnyAsync(r =>
+            r.Type == request.Type &&
+            r.JobId == request.JobId &&
+            r.StaffId == request.StaffId &&
+            r.CompanyId == request.CompanyId,
+            ct
+        );
 
-        if (duplicatedRequest is not null)
+        if (isDuplicate)
         {
-            throw new Exception("A requisição já existe para este Staff e Target.");
+            throw new Exception("A request with the same type, job, staff, and company already exists.");
         }
 
 
-        var existingRequest = await _context.Requests
-            .Where(r =>
-                r.Type != request.Type &&
-                r.JobId == request.JobId &&
-                r.StaffId == request.StaffId &&
-                r.CompanyId == request.CompanyId
-            )
-            .FirstOrDefaultAsync(ct);
+        var existingRequest = await _context.Requests.FirstOrDefaultAsync(r =>
+            r.Type != request.Type &&
+            r.JobId == request.JobId &&
+            r.StaffId == request.StaffId &&
+            r.CompanyId == request.CompanyId,
+            ct
+        );
 
         if (existingRequest is not null)
         {

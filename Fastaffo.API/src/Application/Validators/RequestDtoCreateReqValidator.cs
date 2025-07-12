@@ -49,10 +49,6 @@ public class RequestDtoCreateReqValidator : AbstractValidator<RequestDtoCreateRe
                 await validatorService.ExistsAsync<Staff>(id, ct))
             .WithMessage("SentById must reference a valid admin or staff.");
 
-        // Status => must be Pending (default on creation)
-        RuleFor(x => x.Status)
-            .Equal(RequestStatus.Pending)
-            .WithMessage("Status must be Pending by default.");
     }
 
     // Type => Request or Invite (have enum for this); not null

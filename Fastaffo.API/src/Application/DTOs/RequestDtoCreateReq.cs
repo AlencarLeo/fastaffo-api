@@ -11,6 +11,5 @@ public class RequestDtoCreateReq
     public Guid? AdminId { get; set; }
     public required Guid CompanyId { get; set; }
     public required Guid SentById { get; set; }
-    public required RequestStatus Status { get; set; }
 }
 

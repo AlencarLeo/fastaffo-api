@@ -16,7 +16,7 @@ public class Request
     public Company? Company { get; set; }
     public required Guid SentById { get; set; }
     public Guid? ResponsedById { get; set; }
-    public required RequestStatus Status { get; set; }
+    public RequestStatus Status { get; set; } = RequestStatus.Pending;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // CHECK TIMEZONE LATER ON
     public DateTime? ResponseDate { get; set; }
 }
