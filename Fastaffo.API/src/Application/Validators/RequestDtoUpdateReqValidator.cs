@@ -34,11 +34,5 @@ public class RequestDtoUpdateReqValidator : AbstractValidator<RequestDtoUpdateRe
                 await validatorService.ExistsAsync<Admin>(id, ct) ||
                 await validatorService.ExistsAsync<Staff>(id, ct))
             .WithMessage("ResponsedById must reference a valid admin or staff.");
-
-        RuleFor(x => x.Status)
-            .IsInEnum().WithMessage("Invalid status.")
-            .Must(status => status == RequestStatus.Approved || status == RequestStatus.Rejected)
-            .WithMessage("Status must be either Approved or Rejected.");
-
     }
 }

@@ -82,7 +82,7 @@ public class RequestService : IRequestService
         if (existingRequest.Status != RequestStatus.Pending)
             throw new Exception("Only pending requests can be updated.");
 
-        request.Status = status;
+        existingRequest.Status = status;
         RequestMapper.ToEntity(request, existingRequest);
 
         await _context.SaveChangesAsync(ct);

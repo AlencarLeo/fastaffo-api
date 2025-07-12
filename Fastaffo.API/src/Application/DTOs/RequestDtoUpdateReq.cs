@@ -8,6 +8,5 @@ public class RequestDtoUpdateReq
     public Guid Id { get; set; }
     public Guid? AdminId { get; set; }
     public required Guid ResponsedById { get; set; }
-    public required RequestStatus Status { get; set; }
 }
 

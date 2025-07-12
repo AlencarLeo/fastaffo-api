@@ -34,7 +34,6 @@ public static class RequestMapper
         }
         entity.ResponseDate = DateTime.Now;
         entity.ResponsedById = dto.ResponsedById;
-        entity.Status = dto.Status;
 
         return entity;
     }
